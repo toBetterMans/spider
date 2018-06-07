@@ -1,0 +1,94 @@
+2018-03-28 03:19:37,873 - tyc_company_search.py - login()- INFO - Login false!
+2018-03-28 03:19:37,887 - tyc_company_search.py - get_company_list()- INFO - Search Company 重庆市明帆园林景观设计有限公司
+2018-03-28 03:19:37,953 - tyc_company_search.py - get_company_list()- INFO - test: <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>è®¿é®ç¦æ­¢</title>
+	<style type="text/css">
+		html{
+			padding: 0;
+			margin: 0;
+		}
+		body{
+			padding: 0;
+			margin: 0;
+			background-color: #fff;
+		}
+		.imgCenter{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+		}
+	</style>
+</head>
+<body>
+	<img class="imgCenter" src="http://static.tianyancha.com/wap/images/forbidden3.png">
+</body>
+</html>
+2018-03-28 03:19:37,953 - tyc_company_search.py - get_company_list()- INFO - IP is forbid!
+2018-03-28 03:19:39,955 - tyc_company_search.py - get_company_list()- INFO - Search Company 重庆市明帆园林景观设计有限公司
+2018-03-28 03:19:40,123 - tyc_company_search.py - get_company_list()- INFO - test: <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>è®¿é®ç¦æ­¢</title>
+	<style type="text/css">
+		html{
+			padding: 0;
+			margin: 0;
+		}
+		body{
+			padding: 0;
+			margin: 0;
+			background-color: #fff;
+		}
+		.imgCenter{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+		}
+	</style>
+</head>
+<body>
+	<img class="imgCenter" src="http://static.tianyancha.com/wap/images/forbidden3.png">
+</body>
+</html>
+2018-03-28 03:19:40,124 - tyc_company_search.py - get_company_list()- INFO - IP is forbid!
+2018-03-28 03:19:42,126 - tyc_company_search.py - get_company_list()- INFO - Search Company 重庆市明帆园林景观设计有限公司
+2018-03-28 03:19:42,283 - tyc_company_search.py - get_company_list()- INFO - test: <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>è®¿é®ç¦æ­¢</title>
+	<style type="text/css">
+		html{
+			padding: 0;
+			margin: 0;
+		}
+		body{
+			padding: 0;
+			margin: 0;
+			background-color: #fff;
+		}
+		.imgCenter{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+		}
+	</style>
+</head>
+<body>
+	<img class="imgCenter" src="http://static.tianyancha.com/wap/images/forbidden3.png">
+</body>
+</html>
+2018-03-28 03:19:42,284 - tyc_company_search.py - get_company_list()- INFO - IP is forbid!
