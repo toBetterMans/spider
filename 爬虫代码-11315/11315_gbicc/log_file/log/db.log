@@ -1,0 +1,38 @@
+2019-05-17 16:43:33,553 - db.py - oracle_update()- DEBUG - update py_st_com_info_count set company_11315_add_count=company_11315_add_count+1 , company_11315_count=company_11315_count+1 where data_date=1558022400.0
+2019-05-17 16:43:45,806 - db.py - oracle_insert_param()- DEBUG - insert into company_11315(company_number) values (22)
+2019-05-17 16:45:55,642 - db.py - oracle_update()- DEBUG - update py_st_com_info_count set company_11315_add_count=company_11315_add_count+1 , company_11315_count=company_11315_count+1 where data_date=1558022400.0
+2019-05-17 16:46:12,205 - db.py - oracle_insert_param()- DEBUG - insert into company_11315(company_number) values (22)
+2019-05-17 16:50:49,362 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from py_st_com_info_count where data_date=1558022400.0
+2019-05-17 16:50:57,486 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_11315 
+2019-05-17 16:50:58,650 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_basic_info 
+2019-05-17 16:51:13,287 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from py_st_com_info_count where data_date=1558022400.0
+2019-05-17 16:51:17,090 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_11315 
+2019-05-17 16:51:21,480 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_basic_info 
+2019-05-17 16:51:26,754 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from py_st_com_info_count where data_date=1558022400.0
+2019-05-17 16:51:27,399 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_11315 
+2019-05-17 16:51:27,710 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_basic_info 
+2019-05-17 16:54:32,065 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from py_st_com_info_count where data_date=1558022400.0
+2019-05-17 16:54:33,175 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_11315 
+2019-05-17 16:54:33,611 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_basic_info 
+2019-05-17 16:54:36,595 - db.py - oracle_insert_param_only()- DEBUG - insert into py_st_com_info_count(company_11315_count,qyxq_info_count,company_11315_add_count,qyxq_info_add_count,data_date) values ([(150579,)],[(44034,)],0,0,1558022400.0)
+2019-05-17 16:54:36,747 - db.py - oracle_insert_param_only()- ERROR - Execute insert into py_st_com_info_count(company_11315_count,qyxq_info_count,company_11315_add_count,qyxq_info_add_count,data_date) values ([(150579,)],[(44034,)],0,0,1558022400.0) error: Traceback (most recent call last):
+  File "E:/python_svn/05开发/爬虫代码/爬虫代码-11315/11315_gbicc/11315_package/db.py", line 121, in oracle_insert_param_only
+    self.execute(sql)
+  File "E:/python_svn/05开发/爬虫代码/爬虫代码-11315/11315_gbicc/11315_package/db.py", line 70, in execute
+    self._cursor.execute(sql)  # 执行语句
+cx_Oracle.DatabaseError: ORA-00936: 缺失表达式
+Traceback (most recent call last):
+  File "E:/python_svn/05开发/爬虫代码/爬虫代码-11315/11315_gbicc/11315_package/db.py", line 121, in oracle_insert_param_only
+    self.execute(sql)
+  File "E:/python_svn/05开发/爬虫代码/爬虫代码-11315/11315_gbicc/11315_package/db.py", line 70, in execute
+    self._cursor.execute(sql)  # 执行语句
+cx_Oracle.DatabaseError: ORA-00936: 缺失表达式
+2019-05-17 16:54:39,312 - db.py - oracle_insert_param()- DEBUG - insert into company_11315(company_number) values (22)
+2019-05-17 16:57:04,011 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from py_st_com_info_count where data_date=1558022400.0
+2019-05-17 16:57:04,941 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_11315 
+2019-05-17 16:57:05,344 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from company_basic_info 
+2019-05-17 16:57:13,268 - db.py - oracle_insert_param_only()- DEBUG - insert into py_st_com_info_count(company_11315_count,qyxq_info_count,company_11315_add_count,qyxq_info_add_count,data_date) values (150580,44034,0,0,1558022400.0)
+2019-05-17 16:57:19,300 - db.py - oracle_insert_param()- DEBUG - insert into company_11315(company_number) values (22)
+2019-05-17 16:57:55,300 - db.py - oracle_find_by_param_all()- DEBUG - select count(1) from py_st_com_info_count where data_date=1558022400.0
+2019-05-17 16:57:55,467 - db.py - oracle_update()- DEBUG - update py_st_com_info_count set company_11315_add_count=company_11315_add_count+1 , company_11315_count=company_11315_count+1 where data_date=1558022400.0
+2019-05-17 16:57:55,569 - db.py - oracle_insert_param()- DEBUG - insert into company_11315(company_number) values (23)
