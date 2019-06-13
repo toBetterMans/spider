@@ -102,3 +102,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+/gbicc/爬虫代码-天眼查/tyc0510/test/setting.py
+/gbicc/爬虫代码-天眼查模拟登陆/decode_phone/detail/setting.py
+/gbicc/.idea/dictionaries
+/gbicc/.idea/dictionaries/*.xml
+/gbicc/.idea/dictionaries/niu.xml

@@ -1,3 +1,0 @@
-2019-05-31 10:57:36,723-input_port.py[line:29]-get_company()-INFO-20576-收到请求：ImmutableMultiDict([('ENTINFO', '科沃斯机器人股份有限公司'), ('TYPE', '0')])
-2019-05-31 10:57:36,776-get_company.py[line:178]-get_company_list()-DEBUG-20576-Search Company 科沃斯机器人股份有限公司
-2019-05-31 10:57:36,781-get_company.py[line:181]-get_company_list()-DEBUG-20576-https://www.tianyancha.com/search?key=%E7%A7%91%E6%B2%83%E6%96%AF%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&checkFrom=searchBox
