@@ -17,6 +17,8 @@ from request_file import *
 from setting import tyc_page, detail_href, detail_onclick, proxy_user, proxy_pass, USER_AGENTS
 
 # 爬取企业详情与分页
+from tyc0510.util.remove_tags_util import remove_unused_tags
+
 urllib3.disable_warnings()  # 如果不加这句话，还会有警告
 
 logging.config.fileConfig("../log_file/pageA.conf")
@@ -337,6 +339,8 @@ class PageSpider(object):
                     logger.debug('获取分页状态码：{}'.format(con_page.status_code))
                     if self.check_login(con_page):
                         tycText = con_page.text
+                        if '<!DOCTYPE' in tycText:
+                            tycText=remove_unused_tags(tycText)
                         return tycText
                     else:
                         self.func(id, i, table_key, company_name)

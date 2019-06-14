@@ -1126,8 +1126,10 @@ class TycJyzkGdxx(object):
     agency_name = ''
     # 批次
     batch = ''
+    # 购地信息详情
+    gd_info = ''
     table_name = "tyc_jyzk_gdxx"
-    column_name = "(txt_id,company_name,gd_sign_date,gd_num,gd_act_date,gd_area,gd_region,gd_operate,located,land_use,supply_method,mark,agency_num,agency_name,batch, add_time)"
+    column_name = "(txt_id,company_name,gd_sign_date,gd_num,gd_act_date,gd_area,gd_region,gd_operate,located,land_use,supply_method,mark,agency_num,agency_name,batch,gd_info, add_time)"
     
     # sql = "insert into tyc_jyzk_gdxx (txt_id,company_name,gd_sign_date,gd_num,gd_act_date,gd_area,gd_region,gd_operate,located,land_use,supply_method,mark,add_time,agency_num,agency_name,batch) values ('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',{},{},'{}','{}','{}')".formate(txt_id,company_name,gd_sign_date,gd_num,gd_act_date,gd_area,gd_region,gd_operate,located,land_use,supply_method,mark,add_time,agency_num,agency_name,batch)
 

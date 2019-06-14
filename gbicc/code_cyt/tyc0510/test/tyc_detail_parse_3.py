@@ -10,6 +10,9 @@ from bson import ObjectId
 from cpca import *
 from lxml import etree
 
+
+from ..util.replace_special_util import replace_special_chars
+from ..util.try_and_except_util import try_and_text
 from db import single_mongodb, single_oracle
 from redis_cache import single_redis
 from tyc_bean_1 import *
@@ -22,16 +25,6 @@ logger = logging.getLogger("loggerText")
 
 CURRENT_VERSION_NULL = '此版本无此信息'
 
-def try_and_text(func, variable):
-    s = 'NA'
-    if not func:
-        return 'NA'
-    try:
-        s = eval(func)
-    except Exception as e:
-        logger.error(e)
-    finally:
-        return s
 
 def decode_dict_date(word, dicts):
     logger.debug('decode_dict_date  yuan==='.format(word))
@@ -55,49 +48,6 @@ def create_insert_sql(table_name, table_column, column_count):
         insert_sql += ':' + str(i) + ','
     insert_sql += 'sysdate)'
     return insert_sql
-
-def replace_special_string(strings=''):
-    return strings.replace(
-        u'<em>',
-        u'').replace(
-        u'</em>',
-        u'').replace(
-        u'\ue004',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\u2022',
-        u'').replace(
-        u'\xb3',
-        u'').replace(
-        u'\ue005',
-        u'').replace(
-        u'\xa9',
-        '').replace(
-        u'\u003C',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\xa9',
-        u'').replace(
-        u'\u002F',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u"'",
-        u'"').replace(
-        u'\u003c\u0065\u006d\u003e',
-        u'').replace(
-        u'\u003c\u002f\u0065\u006d\u003e',
-        '').replace(
-        u'\xa5',
-        u'').replace(
-        u'\xa0',
-        u'').replace(r'\uff08', '(').replace(u'\u0029', ')').replace('（', '(').replace('）', ')')
 
 class TycDetailParse(object):
     txtId = ''
@@ -484,14 +434,14 @@ class TycDetailParse(object):
                 alterBefor = try_and_text("variable[3].xpath('./div')[0].xpath('string(.)')", tds)
             
                 try:
-                    alterBefor = replace_special_string(alterBefor)
+                    alterBefor = replace_special_chars(alterBefor)
                 except:
-                    alterBefor = replace_special_string(alterBefor)
+                    alterBefor = replace_special_chars(alterBefor)
                 alterRecord.alterBefor = alterBefor
                 alterAfter = try_and_text("variable[4].xpath('./div')[0].xpath('string(.)')", tds)
-                # alterAfter = replace_special_string(alterAfter)
+                # alterAfter = replace_special_chars(alterAfter)
             
-                alterAfter = replace_special_string(alterAfter)
+                alterAfter = replace_special_chars(alterAfter)
             
                 alterRecord.alterAfter = alterAfter
                 # <em><font color="#EF5644">长</font></em>
@@ -921,7 +871,7 @@ class TycDetailParse(object):
                 # 详情 \u003C\u002Fa\u003E
             
                 detail = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
-                ktggInfo.detail = replace_special_string(detail)
+                ktggInfo.detail = replace_special_chars(detail)
             
                 ktggInfo.txtId = self.txtId
                 ktggInfo.company_name = key
@@ -999,7 +949,7 @@ class TycDetailParse(object):
                     except BaseException:
                         pass
                 
-                    flss.text_info = replace_special_string(text_info)
+                    flss.text_info = replace_special_chars(text_info)
                     value_list = [
                         flss.txt_id,
                         flss.company_name,
@@ -1053,7 +1003,7 @@ class TycDetailParse(object):
                 flss.announcement_type = try_and_text("variable[4].xpath('string(.)')", tds)
                 flss.court = try_and_text("variable[5].xpath('string(.)')", tds)
                 text_info = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
                 flss.txt_id = self.txtId
                 flss.company_name = key
@@ -1117,7 +1067,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_dishonest"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail_info = text_info
@@ -1182,7 +1132,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_zhixing"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail = text_info
@@ -1245,7 +1195,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_judicialAid"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 sfxzInfo.detail = text_info
@@ -1524,7 +1474,7 @@ class TycDetailParse(object):
                 flss.status = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 flss.pledged_amount = try_and_text("variable[6].xpath('.//text()')[0]", tds)
                 text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
                 # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
                 flss.txt_id = self.txtId
@@ -1588,7 +1538,7 @@ class TycDetailParse(object):
             
                 detail_info = try_and_text("variable[7].xpath('.//script/text()')[0]", tds)
                 # tds[7].text.replace("详情 》", "").strip().replace("'", '\\"')
-                flss.detail_info = replace_special_string(detail_info)
+                flss.detail_info = replace_special_chars(detail_info)
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -1705,7 +1655,7 @@ class TycDetailParse(object):
                     text_info = self.detail_info["_container_judicialSale"][href.split('/')[-1].replace('.', '_')]
                 except BaseException:
                     pass
-                sfpaInfo.auction_detail = replace_special_string(text_info)
+                sfpaInfo.auction_detail = replace_special_chars(text_info)
             
                 # sfpaInfo.auction_detail = '详情'
             
@@ -1813,7 +1763,7 @@ class TycDetailParse(object):
                 gscgInfo.announcementDate = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 # 详情
                 text_info = try_and_text("variable[6].xpath('.//text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 gscgInfo.detail = text_info
             
                 gscgInfo.txtId = self.txtId
@@ -2146,7 +2096,7 @@ class TycDetailParse(object):
                     text_info = self.detail_info["_container_baipin"][text_info_key]
                 except BaseException:
                     text_info = '解析出错'
-                flss.detail_info = replace_special_string(text_info)
+                flss.detail_info = replace_special_chars(text_info)
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -2293,7 +2243,7 @@ class TycDetailParse(object):
                 dxxkInfo.licenseDate = try_and_text("variable[3].xpath( './/text()')[0]", tds)
                 # 详情
                 text_info = try_and_text("variable[4].xpath('.//script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 dxxkInfo.detail = text_info
             
                 dxxkInfo.txtId = self.txtId
@@ -2455,7 +2405,7 @@ class TycDetailParse(object):
                     text_info = self.detail_info["_container_certificate"][href]
                 except BaseException:
                     pass
-                certificateInfo.detail = replace_special_string(text_info)
+                certificateInfo.detail = replace_special_chars(text_info)
                 certificateInfo.txtId = self.txtId
                 certificateInfo.company_name = key
                 certificateInfo.mark = 0
@@ -2568,7 +2518,7 @@ class TycDetailParse(object):
                 try:
                     text_info = self.detail_info["_container_product"][href.split(
                         r'/')[-1]]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail_info = text_info
@@ -2671,7 +2621,7 @@ class TycDetailParse(object):
                 flss.register_date = try_and_text("variable[4].xpath('./text()')[0]", tds)
                 flss.detail_info = 'NA'
                 detail_info = try_and_text("variable[5].xpath('.//script/text()')[0]", tds)
-                flss.detail_info = replace_special_string(detail_info)
+                flss.detail_info = replace_special_chars(detail_info)
                 flss.txtId = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -2734,7 +2684,7 @@ class TycDetailParse(object):
                 flss.bond_type = try_and_text("variable[4].xpath('.//text()')[0]", tds)
                 flss.latest_rating = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 text_info = try_and_text("variable[6].xpath('.//script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
                 # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
                 flss.txt_id = self.txtId
@@ -2866,7 +2816,7 @@ class TycDetailParse(object):
                 dxxkInfo.available = try_and_text("variable[3].xpath('./text()')[0]", tds)
                 # 详情
                 text_info = try_and_text("variable[4].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 dxxkInfo.detailInfo = text_info
             
                 dxxkInfo.txtId = self.txtId
@@ -2934,7 +2884,7 @@ class TycDetailParse(object):
                     try:
                         text_info = self.detail_info["_container_tmInfo"][href.split(
                             r'/')[-1]]
-                        text_info = replace_special_string(text_info)
+                        text_info = replace_special_chars(text_info)
                     except BaseException:
                         pass
     
@@ -3009,7 +2959,7 @@ class TycDetailParse(object):
                         r'/')[-1]]
                 except BaseException:
                     pass
-                flss.detail_info = replace_special_string(text_info)
+                flss.detail_info = replace_special_chars(text_info)
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -3071,7 +3021,7 @@ class TycDetailParse(object):
                 flss.type_number = try_and_text("variable[5].xpath('./span/text()')[0]", tds)
                 flss.version_number = try_and_text("variable[6].xpath('./span/text()')[0]", tds)
                 text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
             
                 flss.txt_id = self.txtId

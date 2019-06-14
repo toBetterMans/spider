@@ -13,7 +13,9 @@ from lxml import etree
 from db import single_mongodb, single_oracle
 from request_file import *
 from setting import proxy_pass, proxy_user, USER_AGENTS
-
+from tyc_company_search_A import try_and_text, replace_special_string
+from ..util import remove_tags_util
+from ..util import replace_special_util
 urllib3.disable_warnings()
 # ua=UserAgent()
 logging.config.fileConfig("../log_file/search.conf")
@@ -35,63 +37,8 @@ proxies = {
     "https": proxyMeta,
 }
 
-def try_and_text(func, variable):
-    s = '解析有误'
-    if not func:
-        return 'NA'
-    try:
-        s = eval(func) or 'NA'
-    except Exception as e:
-        logger.error(e)
-    finally:
-        return s
 
 # proxies = {}
-
-def replace_special_string(strings=''):
-    if not strings:
-        return 'NA'
-    return strings.replace(
-        u'<em>',
-        u'').replace(
-        u'</em>',
-        u'').replace(
-        u'\ue004',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\u2022',
-        u'').replace(
-        u'\xb3',
-        u'').replace(
-        u'\ue005',
-        u'').replace(
-        u'\xa9',
-        '').replace(
-        u'\u003C',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\xa9',
-        u'').replace(
-        u'\u002F',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u"'",
-        u'"').replace(
-        u'\u003c\u0065\u006d\u003e',
-        u'').replace(
-        u'\u003c\u002f\u0065\u006d\u003e',
-        '').replace(
-        u'\xa5',
-        u'').replace(
-        u'\xa0',
-        u'').replace(r'\uff08', '(').replace(u'\u0029', ')').replace('（', '(').replace('）', ')')
 
 class DetailSpider(object):
     
