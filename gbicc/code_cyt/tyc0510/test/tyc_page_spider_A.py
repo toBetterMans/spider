@@ -242,20 +242,30 @@ class PageSpider(object):
         self.username, self.cookie = self.tyc.login()
 
     def check_login(self, con):
-        if con and con.status_code == 200 and 'antirobot' not in con.url:
+        if con and con.status_code == 404:
             return True
-        elif con.status_code == 404:
+        if u"我们只是确认一下你不是机器人" in con.text or 'antirobot' in con.url:
             logger.info("userName: {}  forbid  status_code={}".format(self.username, con.status_code))
+            single_redis.put_cookies(phone=self.tyc.username, cookie=self.cookie, name='forbids')
+            self.login()
+            return False
+        elif con and con.status_code == 200:
             return True
-        elif not con or u"请输入您的手机号码" in con.text or con.status_code == 401 or '密码登录' in con.text:
-            logger.info("userName: {}  cookie失效！！  status_code={}".format(self.username, con.status_code))
+        elif con.status_code >= 400:
+            logger.info("userName: {}  forbid  status_code={}".format(self.username, con.status_code))
+            self.login()
+            return False
+        elif not con or not '退出登录' in con.text:
+            logger.exception("userName: {}  cookie失效！！  status_code={}".format(self.username, con.status_code))
             single_redis.server.hdel('cookies', self.tyc.username)
             single_redis.server.lpush('users', self.tyc.username)
             self.login()
             return False
-        elif u"我们只是确认一下你不是机器人" in con.text or 'antirobot' in con.url:
+    
+        else:
             logger.info("userName: {}  forbid  status_code={}".format(self.username, con.status_code))
-            single_redis.put_cookies(phone=self.tyc.username, cookie=self.cookie, name='forbids')
+            single_redis.server.hdel('cookies', self.tyc.username)
+            single_redis.server.lpush('users', self.tyc.username)
             self.login()
             return False
 
@@ -344,6 +354,7 @@ class PageSpider(object):
                     continue
                 except Exception as e:
                     logger.exception("Exception Logged!{}".format(e))
+                    self.login()
                     mark_page -= 1
                     continue
 
