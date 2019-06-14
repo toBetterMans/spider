@@ -2136,28 +2136,23 @@ class TycDetailParse(object):
         
             trs = self.selector.xpath('//table/tbody/tr')
         
-            gsjInfo = TycJyzkGsj()
-        
-            key = self.search_name
-        
-            for tr in trs:
-                insert_value = ""
-                tds = tr.xpath('./td')
-                # 许可书文编号
-                gsjInfo.licenseDocNum = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                # 许可文件名称
-                gsjInfo.licenseDocName = try_and_text("variable[2].xpath('./text()')[0]", tds)
-                # 有效期自
-            
-                gsjInfo.validityBegin = try_and_text("variable[3].xpath('./text()')[0]", tds)
-                # 有效期至
-            
-                gsjInfo.validityEnd = try_and_text("variable[4].xpath('./text()')[0]", tds)
-                # 许可机关
-            
-                gsjInfo.licenseAuthority = try_and_text("variable[5].xpath('./text()')[0]", tds)
-                # 许可内容
-                gsjInfo.licenseContent = try_and_text("variable[6].xpath('./text()')[0]", tds)
+            # gsjInfo = TycJyzkGsj()
+            # key = self.search_name
+            # for tr in trs:
+            #     insert_value = ""
+            #     tds = tr.xpath('./td')
+            #     # 许可书文编号
+            #     gsjInfo.licenseDocNum = try_and_text("variable[1].xpath('./text()')[0]", tds)
+            #     # 许可文件名称
+            #     gsjInfo.licenseDocName = try_and_text("variable[2].xpath('./text()')[0]", tds)
+            #     # 有效期自
+            #     gsjInfo.validityBegin = try_and_text("variable[3].xpath('./text()')[0]", tds)
+            #     # 有效期至
+            #     gsjInfo.validityEnd = try_and_text("variable[4].xpath('./text()')[0]", tds)
+            #     # 许可机关
+            #     gsjInfo.licenseAuthority = try_and_text("variable[5].xpath('./text()')[0]", tds)
+            #     # 许可内容
+            #     gsjInfo.licenseContent = try_and_text("variable[6].xpath('./text()')[0]", tds)
     
         else:
             trs = self.selector.xpath(
@@ -2175,47 +2170,43 @@ class TycDetailParse(object):
                     # 许可文件名称
                     gsjInfo.licenseDocName = try_and_text("variable[2].xpath('./text()')[0]", tds)
                     # 有效期自
-                
                     gsjInfo.validityBegin = try_and_text("variable[3].xpath('./text()')[0]", tds)
                     # 有效期至
-                
                     gsjInfo.validityEnd = try_and_text("variable[4].xpath('./text()')[0]", tds)
                     # 许可机关
-                
                     gsjInfo.licenseAuthority = try_and_text("variable[5].xpath('./text()')[0]", tds)
                     # 许可内容
                     gsjInfo.licenseContent = try_and_text("variable[6].xpath('./text()')[0]", tds)
             
-                gsjInfo.txtId = self.txtId
-                gsjInfo.company_name = key
-                gsjInfo.mark = 0
-                gsjInfo.add_time = datetime.now()
-                gsjInfo.agency_num = self.agency_num
-                gsjInfo.agency_name = self.agency_name
-                gsjInfo.batch = self.batch
-            
-                value_list = [
-                    gsjInfo.batch,
-                    gsjInfo.agency_name,
-                    gsjInfo.agency_num,
-                    gsjInfo.mark,
-                    gsjInfo.licenseContent,
-                    gsjInfo.licenseAuthority,
-                    gsjInfo.validityEnd,
-                    gsjInfo.validityBegin,
-                    gsjInfo.licenseDocName,
-                    gsjInfo.licenseDocNum,
-                    gsjInfo.company_name,
-                    gsjInfo.txtId]
-            
-                #
-                column_name = "(batch,agency_name,agency_num,mark,license_content,license_authority,validity_end,validity_begin,license_document_name,license_documet_num,company_name,txt_id,add_time)"
-            
-                value_list = ["'" + str(value) + "'" for value in value_list]
-                insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
-                single_oracle.oracle_insert(
-                    gsjInfo.table_name, gsjInfo.column_name, insert_value)
+                    gsjInfo.txtId = self.txtId
+                    gsjInfo.company_name = key
+                    gsjInfo.mark = 0
+                    gsjInfo.add_time = datetime.now()
+                    gsjInfo.agency_num = self.agency_num
+                    gsjInfo.agency_name = self.agency_name
+                    gsjInfo.batch = self.batch
+                    value_list = [
+                        gsjInfo.batch,
+                        gsjInfo.agency_name,
+                        gsjInfo.agency_num,
+                        gsjInfo.mark,
+                        gsjInfo.licenseContent,
+                        gsjInfo.licenseAuthority,
+                        gsjInfo.validityEnd,
+                        gsjInfo.validityBegin,
+                        gsjInfo.licenseDocName,
+                        gsjInfo.licenseDocNum,
+                        gsjInfo.company_name,
+                        gsjInfo.txtId]
+
+                    #
+                    column_name = "(batch,agency_name,agency_num,mark,license_content,license_authority,validity_end,validity_begin,license_document_name,license_documet_num,company_name,txt_id,add_time)"
+
+                    value_list = ["'" + str(value) + "'" for value in value_list]
+                    insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
+
+                    single_oracle.oracle_insert(
+                        gsjInfo.table_name, gsjInfo.column_name, insert_value)
 
     # 解析：经营状况-->行政许可【信用中国】
     def html_parse_xyzg(self, index):
@@ -2567,8 +2558,8 @@ class TycDetailParse(object):
                 entWeChat.mp_name = try_and_text("variable.xpath('./td')[1].xpath('.//span/text()')[1]", tr)
                 entWeChat.mp_number = try_and_text("variable.xpath('./td')[2].xpath('./span/text()')[0]", tr)
                 entWeChat.mp_info = try_and_text("variable.xpath('./td')[4].xpath('./div/div/text()')[0]", tr)
-                entWeChat.detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
-            
+                detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
+                entWeChat.detail = detail.replace(r'\u002F','/')       #0614修改
                 entWeChat.txtId = self.txtId
                 entWeChat.company_name = key
                 entWeChat.mark = 0
@@ -2684,8 +2675,8 @@ class TycDetailParse(object):
                 flss.bond_type = try_and_text("variable[4].xpath('.//text()')[0]", tds)
                 flss.latest_rating = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 text_info = try_and_text("variable[6].xpath('.//script/text()')[0]", tds)
-                text_info = replace_special_chars(text_info)
-                flss.detail_info = text_info
+                #text_info = replace_special_chars(text_info)
+                flss.text_info = text_info.replace(r'\u002F','')
                 # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
                 flss.txt_id = self.txtId
                 flss.company_name = key
