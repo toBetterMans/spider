@@ -2822,7 +2822,7 @@ class TycDetailParse(object):
                     buyInfo.txtId,
                     buyInfo.company_name,
                     buyInfo.gdSignDate,
-                    buyInfo.gdNum,  # 此版本无此信息
+                    buyInfo.gdNum,      # 此版本无此信息
                     buyInfo.gdActDate,  # 此版本无此信息
                     buyInfo.gdArea,
                     buyInfo.gdRegion,
