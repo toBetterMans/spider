@@ -9,7 +9,9 @@ from urllib import parse
 from bs4 import BeautifulSoup
 # from fake_useragent import UserAgent
 from lxml import etree
-
+from ..util.remove_tags_util import remove_unused_tags
+from ..util.try_and_except_util import try_and_text
+from ..util.replace_special_util import replace_special_chars
 from db import single_mongodb, single_oracle
 from request_file import *
 from setting import proxy_pass, proxy_user, USER_AGENTS
@@ -35,63 +37,10 @@ proxies = {
     "https": proxyMeta,
 }
 
-def try_and_text(func, variable):
-    s = '解析有误'
-    if not func:
-        return 'NA'
-    try:
-        s = eval(func) or 'NA'
-    except Exception as e:
-        logger.error(e)
-    finally:
-        return s
+
 
 # proxies = {}
 
-def replace_special_string(strings=''):
-    if not strings:
-        return 'NA'
-    return strings.replace(
-        u'<em>',
-        u'').replace(
-        u'</em>',
-        u'').replace(
-        u'\ue004',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\u2022',
-        u'').replace(
-        u'\xb3',
-        u'').replace(
-        u'\ue005',
-        u'').replace(
-        u'\xa9',
-        '').replace(
-        u'\u003C',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\xa9',
-        u'').replace(
-        u'\u002F',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u"'",
-        u'"').replace(
-        u'\u003c\u0065\u006d\u003e',
-        u'').replace(
-        u'\u003c\u002f\u0065\u006d\u003e',
-        '').replace(
-        u'\xa5',
-        u'').replace(
-        u'\xa0',
-        u'').replace(r'\uff08', '(').replace(u'\u0029', ')').replace('（', '(').replace('）', ')')
 
 class DetailSpider(object):
     
@@ -254,16 +203,16 @@ class DetailSpider(object):
                 txt_id = mongo_result
                 column = '(search_name,company_name,legal_representative,registered_capital,registration_date,location,score,used_name,status_type,url,txt_id)'
 
-                insert_values = [key, key, replace_special_string(legal_representative),
-                                 replace_special_string(registered_capital), registration_date,
-                                 location, score, replace_special_string(used_name), status_type, url, txt_id]
+                insert_values = [key, key, replace_special_chars(legal_representative),
+                                 replace_special_chars(registered_capital), registration_date,
+                                 location, score, replace_special_chars(used_name), status_type, url, txt_id]
                 logger.debug(insert_values)
                 # single_oracle.oracle_insert_sql_param(create_insert_sql('company_basic_info',column,len(column.split(','))),insert_values)
                 single_oracle.oracle_insert_param(
                     "insert into company_basic_info (search_name,company_name,legal_representative,registered_capital,registration_date,location,score,used_name,status_type,url,txt_id,add_time) values('{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}',sysdate)".format(
-                        key, key, replace_special_string(legal_representative),
-                        replace_special_string(registered_capital), registration_date, location, score,
-                        replace_special_string(used_name), status_type, url, txt_id))
+                        key, key, replace_special_chars(legal_representative),
+                        replace_special_chars(registered_capital), registration_date, location, score,
+                        replace_special_chars(used_name), status_type, url, txt_id))
                 if cache['table'] == 'batch_detail':
                     update_sql = "update {} set searched=1,error=0,txt_id='{}' where company_number='{}'".format(
                         cache['table'], txt_id, cache['number'])
@@ -305,6 +254,12 @@ class DetailSpider(object):
                 if self.check_login(con):
                     res["page_spide"] = 0
                     res["text"] = con.text
+                    if '<!DOCTYPE' in res["text"]:
+                        res["text"] = remove_unused_tags(res["text"])
+                    else:
+                        self.login()
+                        logger.exception(res['text'])
+                        self.get_detail(ent_name,url,cache)
                     res["error_list"] = ""
                     res["addTime"] = datetime.datetime.now()
                     res["address"] = cache['address']
