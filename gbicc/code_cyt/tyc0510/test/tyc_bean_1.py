@@ -422,8 +422,6 @@ class TycSffxFlss(object):
     case_number = ""
     # 文书连接
     document_url = ""
-    # 文书详情
-    text_info = ""
     # 标记号
     mark = ""
     # 添加时间
@@ -438,7 +436,7 @@ class TycSffxFlss(object):
     batch = ''
 
     table_name = "tyc_sffx_flss"
-    column_name = "(txt_id, company_name, judgment_date, judgment_name, judgment_document, case_type, case_identity, case_number, document_url, text_info, mark, detail_status, agency_num, agency_name, batch, add_time)"
+    column_name = "(txt_id, company_name, judgment_date, judgment_name, judgment_document, case_type, case_identity, case_number, document_url, mark, detail_status, agency_num, agency_name, batch, add_time)"
 
     # sql = "insert into tyc_sffx_flss (text_info,batch,agency_name,agency_num,detail_status,mark,document_url,case_number,case_identity,case_type,judgment_document,company_name,txt_id,case_action,add_time,judgment_date) values ('{}','{}','{}','{}',{},{},'{}','{}','{}','{}','{}','{}','{}','{}',{},'{}')".formate(text_info,batch,agency_name,agency_num,detail_status,mark,document_url,case_number,case_identity,case_type,judgment_document,company_name,txt_id,case_action,add_time,judgment_date)
 
@@ -1128,6 +1126,7 @@ class TycJyzkGdxx(object):
     batch = ''
     # 购地信息详情
     gd_info = ''
+
     table_name = "tyc_jyzk_gdxx"
     column_name = "(txt_id,company_name,gd_sign_date,gd_num,gd_act_date,gd_area,gd_region,gd_operate,located,land_use,supply_method,mark,agency_num,agency_name,batch,gd_info, add_time)"
     
