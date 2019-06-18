@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 
-""" 
-@author: niuweidong 
-@software: PyCharm 
-@file: re_util.py 
+"""
+@author: niuweidong
+@software: PyCharm
+@file: re_util.py
 @time: 2019/06/18 17:13
 
 正则验证工具
@@ -86,7 +86,7 @@ IP地址：((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01
 
 def all_chinese(text, max_len: int, must_len: int):
     '''全中文校验 max_len不为空则校验，must_len不为空则校验
-    
+
     :param text: string
     :param max_len: 最大长度
     :param must_len: len(text) 必须 ==must_len
@@ -96,7 +96,7 @@ def all_chinese(text, max_len: int, must_len: int):
 
 def all_number(text, max_len: int, must_len: int):
     '''全数字校验 max_len不为空则校验，must_len不为空则校验
-    
+
     :param text: string
     :param max_len: text  的最大长度
     :param must_len: len(text) 必须 ==must_len
@@ -106,7 +106,7 @@ def all_number(text, max_len: int, must_len: int):
 
 def all_english(text, max_len: int, must_len: int):
     '''全英文校验 max_len不为空则校验，must_len不为空则校验
-    
+
     :param text: string
     :param max_len: text  的最大长度
     :param must_len: len(text) 必须 ==must_len
@@ -116,7 +116,7 @@ def all_english(text, max_len: int, must_len: int):
 
 def date(text, splite: str):
     '''日期校验 max_len不为空则校验，must_len不为空则校验
-    
+
     :param text: string
     :param splite: 分隔符 如：'-','/'
     :return:True or False
@@ -125,7 +125,7 @@ def date(text, splite: str):
 
 def percent(text):
     '''百分百校验
-    
+
     :param text: string
     :return:True or False
     '''
