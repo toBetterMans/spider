@@ -7,12 +7,17 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 from bson import ObjectId
-from cpca import *
+# from cpca import *
 from lxml import etree
+from sqlalchemy import select
 
+from util.replace_special_util import replace_special_chars
+from util.try_and_except_util import try_and_text
 from db import single_mongodb, single_oracle
 from redis_cache import single_redis
-from tyc_bean_1 import *
+# from tyc_bean_1 import *
+from sqlalchemy import func
+from models import *
 
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
@@ -22,16 +27,134 @@ logger = logging.getLogger("loggerText")
 
 CURRENT_VERSION_NULL = '此版本无此信息'
 
-def try_and_text(func, variable):
-    s = 'NA'
-    if not func:
-        return 'NA'
+NEXT_PAGE_DICT = {'北京百度网讯科技有限公司':{'tyc_zscq_wzba':'网站备案','tyc_qybj_dwtz':'对外投资','tyc_jyfx_xzcf':'行政处罚 工商局',
+                                  'tyc_qybj_bgjl':'变更记录','tyc_sffx_ktgg':'开庭公告','tyc_sffx_flss':'法律诉讼','tyc_sffx_fygg':'法院公告',
+                                  'tyc_jyfx_gqcz':'股权出质','tyc_qyfz_hxtd':'核心团队','tyc_qyfz_qyyw':'企业业务','tyc_qyfz_tzsj':'投资事件',
+                                  'tyc_qyfz_jpxx':'竞品信息','tyc_jyzk_zp':'招聘信息','tyc_jyzk_gsj':'行政许可 工商局','tyc_jyzk_ccjc':'抽查检查',
+                                  'tyc_jyzk_zzzs':'资质证书','tyc_jyzk_ztb':'招投标','tyc_jyzk_cpxx':'产品信息','tyc_jyzk_wxgzh':'微信公众号',
+                                  'tyc_zscq_sbxx':'商标信息','tyc_zscq_zl':'专利','tyc_zscq_zzq':'软件著作权','tyc_zscq_zpzzq':'作品著作权'},
+                  '中国移动通信集团广东有限公司':{'tyc_zscq_wzba':'网站备案','tyc_qybj_bgjl':'变更记录','tyc_qybj_fzjg':'分支机构',
+                                  'tyc_sffx_ktgg':'开庭公告', 'tyc_sffx_flss':'法律诉讼','tyc_sffx_fygg':'法院公告','tyc_jyzk_gsj':'行政许可 工商局',
+                                  'tyc_jyzk_ztb':'招投标','tyc_jyzk_wxgzh':'微信公众号','tyc_jyzk_gdxx':'购地信息',
+                                  'tyc_zscq_sbxx':'商标信息','tyc_zscq_zl':'专利','tyc_zscq_zzq':'软件著作权'},
+                  '佐源集团有限公司':{'tyc_sffx_sxr':'失信人','tyc_sffx_bzxr':'被执行人','司法协助':'司法协助',
+                                  'tyc_qybj_bgjl':'变更记录','tyc_sffx_ktgg':'开庭公告','tyc_sffx_flss':'法律诉讼','tyc_sffx_fygg':'法院公告',
+                                  'tyc_jyfx_qsgg':'欠税公告', 'tyc_zscq_sbxx':'商标信息','tyc_zscq_zl':'专利'},
+                  '乐视控股（北京）有限公司':{'tyc_qybj_dwtz':'对外投资','tyc_sffx_sxr':'失信人','tyc_sffx_bzxr':'被执行人',
+                                  'tyc_qybj_bgjl':'变更记录','tyc_sffx_ktgg':'开庭公告','tyc_sffx_flss':'法律诉讼','tyc_sffx_fygg':'法院公告',
+                                  '司法协助':'司法协助','tyc_jyfx_gqcz':'股权出质','tyc_qyfz_jpxx':'竞品信息'},
+                  '北京京东世纪贸易有限公司':{'tyc_qybj_dwtz':'对外投资','tyc_jyzk_ccjc':'抽查检查','tyc_jyzk_xyzg':'行政许可 信用中国',
+                                  'tyc_qybj_bgjl':'变更记录','tyc_sffx_ktgg':'开庭公告','tyc_sffx_flss':'法律诉讼','tyc_sffx_fygg':'法院公告',
+                                  'tyc_jyfx_xzcf':'行政处罚 工商局','tyc_jyfx_sfpm':'司法拍卖','tyc_qyfz_tzsj':'投资事件',
+                                  'tyc_qyfz_jpxx':'竞品信息','tyc_jyzk_zp':'招聘信息','tyc_jyzk_zzzs':'资质证书',
+                                  'tyc_jyzk_ztb':'招投标','tyc_jyzk_wxgzh':'微信公众号','tyc_zscq_sbxx':'商标信息',
+                                  'tyc_zscq_zl':'专利','tyc_zscq_zzq':'软件著作权','tyc_zscq_zpzzq':'作品著作权'},
+                  '武汉品口科技有限责任公司':{},
+                  '浙江海正动物保健品有限公司':{'tyc_jyzk_gsj':'行政许可 工商局','tyc_zscq_zl':'专利'},
+                  '河南丰利环保科技有限公司':{'tyc_qybj_bgjl':'变更记录','tyc_sffx_fygg':'法院公告', 'tyc_zscq_sbxx':'商标信息',}
+                  }
+
+def check_next_page(company_name, table_name):
+    '''
+    翻页解析方法正确执行时，从全局翻页页面的字典中去掉当前模块，最终剩余id则为未执行分页解析的模块
+    :param table_name: 当前模块对应的表名;company_name:当前解析的企业名称
+    :return: 无
+    '''
+    global NEXT_PAGE_DICT
     try:
-        s = eval(func)
+        if  table_name in NEXT_PAGE_DICT[company_name] and NEXT_PAGE_DICT[company_name].get(table_name):
+            del NEXT_PAGE_DICT[company_name][table_name]
     except Exception as e:
-        logger.error(e)
-    finally:
-        return s
+        print('check next page errot:{}'.format(e))
+
+def check_parse(flss, add_result, unique_field):
+    '''
+    检测解析字段是否有误，检测到第一个有误的，只记录第一条然后停止检测
+    :param add_result: check_result对象
+    :param current_table:当前模块的表名
+    :param unique_field:当前模块对应库表可做唯一值的字段
+    :param flss:当前模块对象
+    :return:
+    '''
+    flss_dict = flss.__dict__
+    if flss_dict:
+        for table_field, current_value in flss_dict.items():
+            if current_value == '解析有误':
+                add_result.table_field = table_field
+                add_result.current_value = current_value
+                qurey_import_and_standard(add_result, unique_field)
+                return 1
+
+def qurey_import_and_standard(add_result, unique_field):
+    '''
+    查询该字段重要等级，和标准值
+    :param add_result: check_result对象
+    :param current_table:当前模块的表名
+    :param unique_field:当前模块对应库表可做唯一值的字段
+    :return:
+    '''
+    orc_conn = engine.connect()
+    table_field = add_result.table_field
+    check_import_field = CheckImportField  # 关键字表的model类名
+    current_table = add_result.table_name  # 当前表名
+    unique_field_name = unique_field[0]  # 唯一值字段名
+    unique_field_value = unique_field[1]  # 唯一值
+    try:
+        add_result.risk_level = single_oracle_orm.query(check_import_field).filter_by(
+            column_name=table_field).first().column_level  # 查询当前字段的重要等级
+    except Exception as e:
+        print('CheckImportField search error === {}'.format(e))
+    try:
+        query_sql = "select " + table_field + " from " + current_table + " WHERE " + unique_field_name + " = '" + unique_field_value + "'"
+        add_result.standard_value = orc_conn.execute(query_sql).fetchone()[0]  # 查询当前字段的唯一标准值
+    except Exception as e:
+        print('CheckImportField search error === {}'.format(e))
+    single_oracle_orm.add(add_result)
+    single_oracle_orm.commit()
+
+def check_obj(cls_spider,cls_standard):
+    '''
+    对比爬虫解析对象和标准库对象各字段值（detail详情clob除外）
+    :param cls_spider: 解析字段的对象
+    :param cls_standard: 标准库对象
+    :return: 不同于标准库的字段
+    '''
+    cls_spider_dict=cls_spider.__dict__
+    cls_standard_dict=cls_standard.__dict__
+    change_dict={}
+    for k,v in cls_spider_dict.items():
+        if 'detail'in k :
+            continue
+        if v == cls_standard_dict[k]:
+            pass
+        else:
+            change_dict[k]=v
+    return change_dict
+
+
+def check_all_data(add_result,cls_spider, current_class):
+    '''
+    页面解析第一条和标准库每一条进行对比，有一条匹配则通过，没有匹配则认为：全字段不匹配
+    :param cls_spider: 页面解析的数据对象
+    :param cls_standard: 表中库对象
+    :return:有无匹配到数据：1 匹配到，None 未匹配
+    '''
+
+    change_flag = 0
+    standard_datas = single_oracle_orm.query(current_class).all()
+    for cls_standard in standard_datas:
+        if check_obj(cls_spider, cls_standard):
+            #全字段不匹配
+            pass
+        else:
+            #有匹配到的行
+            change_flag = 1
+    if  change_flag:
+        return 1 #匹配到数据
+    else:
+        return  #没匹配到数据
+
+###########################################################################
 
 def decode_dict_date(word, dicts):
     logger.debug('decode_dict_date  yuan==='.format(word))
@@ -55,49 +178,6 @@ def create_insert_sql(table_name, table_column, column_count):
         insert_sql += ':' + str(i) + ','
     insert_sql += 'sysdate)'
     return insert_sql
-
-def replace_special_string(strings=''):
-    return strings.replace(
-        u'<em>',
-        u'').replace(
-        u'</em>',
-        u'').replace(
-        u'\ue004',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\u2022',
-        u'').replace(
-        u'\xb3',
-        u'').replace(
-        u'\ue005',
-        u'').replace(
-        u'\xa9',
-        '').replace(
-        u'\u003C',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\xa9',
-        u'').replace(
-        u'\u002F',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u"'",
-        u'"').replace(
-        u'\u003c\u0065\u006d\u003e',
-        u'').replace(
-        u'\u003c\u002f\u0065\u006d\u003e',
-        '').replace(
-        u'\xa5',
-        u'').replace(
-        u'\xa0',
-        u'').replace(r'\uff08', '(').replace(u'\u0029', ')').replace('（', '(').replace('）', ')')
 
 class TycDetailParse(object):
     txtId = ''
@@ -222,7 +302,7 @@ class TycDetailParse(object):
                         address_2 = df.loc[addr].values[1]
                         address_3 = df.loc[addr].values[2]
                 
-                    businessScope = replace_special_string(try_and_text("variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1))
+                    businessScope = try_and_text("variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     baseinfo.businessScope = businessScope.replace(
                         "'", '') if businessScope else 'NA'
                 
@@ -280,11 +360,11 @@ class TycDetailParse(object):
                         business_term_begin,
                         business_term_end
                     ]
-                
+
                     # logger.debug('基本信息获取到数据====', value_list)
                     value_list = ["'" + str(value) + "'" for value in value_list]
                     insert_value = '(' + ','.join(value_list) + ',sysdate' + ')'
-                
+
                     # logger.debug insert_value
                     single_oracle.oracle_insert(
                         baseinfo.table_name, baseinfo.column_name, insert_value)
@@ -348,7 +428,8 @@ class TycDetailParse(object):
     def html_parse_shareholderInfo(self, index):
         logger.debug("Parse detail info 股东信息 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = (self.selector.xpath('//table/tbody/tr'))
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qybj_gdxx')
         else:
     
             trs = (self.selector.xpath(
@@ -401,8 +482,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 对外投资 {}".format(self.search_name))
     
         if index == 1 and not isinstance(self.selector, int):
-        
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qybj_dwtz')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_invest"]/table/tbody/tr')
@@ -464,7 +545,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 变更记录 {}".format(self.search_name))
     
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath('//table[position()=1]/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qybj_bgjl')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_changeinfo"]//table/tbody/tr')
@@ -484,14 +566,14 @@ class TycDetailParse(object):
                 alterBefor = try_and_text("variable[3].xpath('./div')[0].xpath('string(.)')", tds)
             
                 try:
-                    alterBefor = replace_special_string(alterBefor)
+                    alterBefor = replace_special_chars(alterBefor)
                 except:
-                    alterBefor = replace_special_string(alterBefor)
+                    alterBefor = replace_special_chars(alterBefor)
                 alterRecord.alterBefor = alterBefor
                 alterAfter = try_and_text("variable[4].xpath('./div')[0].xpath('string(.)')", tds)
-                # alterAfter = replace_special_string(alterAfter)
+                # alterAfter = replace_special_chars(alterAfter)
             
-                alterAfter = replace_special_string(alterAfter)
+                alterAfter = replace_special_chars(alterAfter)
             
                 alterRecord.alterAfter = alterAfter
                 # <em><font color="#EF5644">长</font></em>
@@ -825,7 +907,8 @@ class TycDetailParse(object):
         key = self.search_name
         logger.debug("Parse detail info 分支机构 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath(".//table[position()=1]")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qybj_fzjg')
         else:
             # 获得分支机构大标签
             root_div = self.selector.xpath(
@@ -889,8 +972,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 开庭公告 {}".format(self.search_name))
     
         if index == 1 and not isinstance(self.selector, int):
-        
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_sffx_ktgg')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_announcementcourt"]/table/tbody/tr')
@@ -921,7 +1004,7 @@ class TycDetailParse(object):
                 # 详情 \u003C\u002Fa\u003E
             
                 detail = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
-                ktggInfo.detail = replace_special_string(detail)
+                ktggInfo.detail = replace_special_chars(detail)
             
                 ktggInfo.txtId = self.txtId
                 ktggInfo.company_name = key
@@ -953,7 +1036,8 @@ class TycDetailParse(object):
     def html_parse_lawsuit(self, index):
         logger.debug("Parse detail info 法律诉讼 {}".format(self.search_name))
         if index == 1:
-            root_div = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_sffx_flss')
         else:
             root_div = self.selector.xpath(
                 '//div[@id="_container_lawsuit"]/table/tbody/tr')
@@ -970,7 +1054,7 @@ class TycDetailParse(object):
                 tds = tr.xpath("./td")
                 if tds:
                     flss.judgment_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
-                    # flss.judgment_document = try_and_text("variable[2].xpath('./a/text()')[0]", tds)
+                    flss.judgment_document = try_and_text("variable[2].xpath('./a/text()')[0]", tds)
                 
                     tds_href = try_and_text("variable[2].xpath('./a/@href')[0]", tds)
                     flss.judgment_name = try_and_text("variable[2].xpath('./a//text()')[0]", tds)
@@ -978,20 +1062,9 @@ class TycDetailParse(object):
                     flss.document_url = tds_href if tds_href else 'NA'
                     case_type = try_and_text("variable[3].xpath('./span/text()')", tds)
                     flss.case_type = case_type[0] if case_type else 'NA'
-                    # case_identity = try_and_text("variable[4].xpath('.//text()')", tds)
-                    # flss.case_identity = ','.join(
-                    #     case_identity) if case_identity else 'NA'
-                    s1 = s2 = ''
-                    plaintiff = try_and_text("variable[4].xpath('./div[position()=1]//text()')", tds)
-                    defendant = try_and_text("variable[4].xpath('./div[position()=2]//text()')", tds)
-                    if len(plaintiff) != 0:
-                        for i in plaintiff:
-                            s1 += i
-                    if len(defendant) != 0:
-                        for j in defendant:
-                            s2 += j
-                    flss.case_identity = s1 + ';' + s2
-
+                    case_identity = try_and_text("variable[4].xpath('.//text()')", tds)
+                    flss.case_identity = ','.join(
+                        case_identity) if case_identity else 'NA'
                     case_number = try_and_text("variable[5].xpath('./span/text()')", tds)
                     flss.case_number = case_number[0] if case_number else 'NA'
                     flss.txt_id = self.txtId
@@ -1010,7 +1083,7 @@ class TycDetailParse(object):
                     except BaseException:
                         pass
                 
-                    flss.judgment_document = replace_special_string(text_info)
+                    flss.text_info = replace_special_chars(text_info)
                     value_list = [
                         flss.txt_id,
                         flss.company_name,
@@ -1021,6 +1094,7 @@ class TycDetailParse(object):
                         flss.case_identity,
                         flss.case_number,
                         flss.document_url,
+                        flss.text_info,
                         flss.mark,
                         flss.detail_status,
                         flss.agency_num,
@@ -1037,7 +1111,8 @@ class TycDetailParse(object):
     def html_parse_announcement(self, index):
         logger.debug("Parse detail info 法院公告 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath('//table')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_sffx_fygg')
         else:
             # 获得法院公告大标签
             root_div = self.selector.xpath(
@@ -1063,7 +1138,7 @@ class TycDetailParse(object):
                 flss.announcement_type = try_and_text("variable[4].xpath('string(.)')", tds)
                 flss.court = try_and_text("variable[5].xpath('string(.)')", tds)
                 text_info = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
                 flss.txt_id = self.txtId
                 flss.company_name = key
@@ -1094,7 +1169,8 @@ class TycDetailParse(object):
     def html_parse_shixinren(self, index):
         logger.debug("Parse detail info 失信人{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table[position()=1]")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_sffx_sxr')
         else:
             # 获得失信人大标签
             root_div = self.selector.xpath(
@@ -1127,7 +1203,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_dishonest"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail_info = text_info
@@ -1167,7 +1243,8 @@ class TycDetailParse(object):
     def html_parse_executed(self, index):
         logger.debug("Parse detail info 被执行人{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table[position()=1]")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_sffx_bzxr')
         else:
             # 获得被执行人大标签
             root_div = self.selector.xpath(
@@ -1192,7 +1269,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_zhixing"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail = text_info
@@ -1226,8 +1303,8 @@ class TycDetailParse(object):
     def html_parse_sfxz(self, index):
         logger.debug("Parse detail info 司法协助 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-        
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_sffx_sfxz')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_judicialAid"]/table/tbody/tr')
@@ -1255,7 +1332,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_judicialAid"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 sfxzInfo.detail = text_info
@@ -1291,7 +1368,8 @@ class TycDetailParse(object):
     def html_parse_abnormal(self, index):
         logger.debug("Parse detail info 经营异常 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table/tbody/tr")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyfx_jyyc')
         else:
             # 获得经营异常大标签
             root_div = self.selector.xpath(
@@ -1366,7 +1444,8 @@ class TycDetailParse(object):
     def html_parse_xingzhengchufa(self, index):
         logger.debug("Parse detail info 行政处罚{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table[position()=1]")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyfx_xzcf')
         else:
             # 获得行政处罚大标签
             root_div = self.selector.xpath(
@@ -1507,7 +1586,8 @@ class TycDetailParse(object):
         # 无变化
         logger.debug("Parse detail info 股权出质{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table/tbody/tr")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyfx_gqcz')
         elif index == 0:
             # 获得股权出质大标签  nav-main-equityCount
             root_div = self.selector.xpath(
@@ -1534,7 +1614,7 @@ class TycDetailParse(object):
                 flss.status = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 flss.pledged_amount = try_and_text("variable[6].xpath('.//text()')[0]", tds)
                 text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
                 # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
                 flss.txt_id = self.txtId
@@ -1572,7 +1652,8 @@ class TycDetailParse(object):
     def html_parse_dongchandiya(self, index):
         logger.debug("Parse detail info 动产抵押{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.soup.find("//table/tbody/tr")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyfx_dcdy')
         else:
             # 获得动产抵押大标签
             root_div = self.selector.xpath(
@@ -1598,7 +1679,7 @@ class TycDetailParse(object):
             
                 detail_info = try_and_text("variable[7].xpath('.//script/text()')[0]", tds)
                 # tds[7].text.replace("详情 》", "").strip().replace("'", '\\"')
-                flss.detail_info = replace_special_string(detail_info)
+                flss.detail_info = replace_special_chars(detail_info)
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -1631,8 +1712,8 @@ class TycDetailParse(object):
     def html_parse_taxesNotice(self, index):
         logger.debug("Parse detail info 欠税公告{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath(
-                '//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyfx_qsgg')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_towntax"][position()=1]//table[position()=1]/tbody/tr')
@@ -1687,8 +1768,8 @@ class TycDetailParse(object):
     def html_parse_sfpm(self, index):
         logger.debug("Parse detail info 司法拍卖 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-        
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyfx_sfpm')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_judicialSale"]/table/tbody/tr')
@@ -1715,7 +1796,7 @@ class TycDetailParse(object):
                     text_info = self.detail_info["_container_judicialSale"][href.split('/')[-1].replace('.', '_')]
                 except BaseException:
                     pass
-                sfpaInfo.auction_detail = replace_special_string(text_info)
+                sfpaInfo.auction_detail = replace_special_chars(text_info)
             
                 # sfpaInfo.auction_detail = '详情'
             
@@ -1751,8 +1832,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 清算信息 {}".format(self.search_name))
     
         if index == 1 and not isinstance(self.selector, int):
-        
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyfx_qsxx')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_clearingCount"]/table/tbody/tr')
@@ -1823,7 +1904,7 @@ class TycDetailParse(object):
                 gscgInfo.announcementDate = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 # 详情
                 text_info = try_and_text("variable[6].xpath('.//text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 gscgInfo.detail = text_info
             
                 gscgInfo.txtId = self.txtId
@@ -1911,7 +1992,8 @@ class TycDetailParse(object):
     def html_parse_coreTeam(self, index):
         logger.debug("Parse detail info 核心团队 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qyfz_hxtd')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_teamMember"]/div/table/tbody/tr')
@@ -1932,7 +2014,7 @@ class TycDetailParse(object):
                 coreTeam.personName = personName
             
                 coreTeam.position = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                personInfo = replace_special_string(try_and_text("variable[3].xpath('./div/div/text()')[0]", tds))
+                personInfo = try_and_text("variable[3].xpath('./div/div/text()')[0]", tds)
             
                 coreTeam.personInfo = ''.join(personInfo)
                 coreTeam.txtId = self.txtId
@@ -1961,7 +2043,8 @@ class TycDetailParse(object):
     def html_parse_entBusiness(self, index):
         logger.debug("Parse detail info 企业业务 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qyfz_qyyw')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_firmProduct"]/table/tbody/tr')
@@ -2008,7 +2091,8 @@ class TycDetailParse(object):
     def html_parse_investEvent(self, index):
         logger.debug("Parse detail info 投资事件 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qyfz_tzsj')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_touzi"]/table/tbody/tr')
@@ -2028,11 +2112,7 @@ class TycDetailParse(object):
                 investEvent.touziProduct = try_and_text("(variable[5].xpath('.//a/text()'))[0]", tds)
                 investEvent.touziArea = try_and_text("variable[6].xpath('string(.)')", tds)
                 investEvent.touziIndustry = try_and_text("variable[7].xpath('string(.)')", tds)
-                #investEvent.touziBusiness = try_and_text("variable[8].xpath('string(.)')", tds)
-                touziEnt = try_and_text("variable[4].xpath('.//text()')", tds)
-                touziEnt = [s for s in touziEnt if len(s.strip()) >= 4]
-                investEvent.touziEnt = str(touziEnt)[1:-1].replace("'", '')
-
+                investEvent.touziBusiness = try_and_text("variable[8].xpath('string(.)')", tds)
                 investEvent.txtId = self.txtId
                 investEvent.company_name = key
                 investEvent.mark = 0
@@ -2071,7 +2151,8 @@ class TycDetailParse(object):
         # TODO 解析有问题
         logger.debug("Parse detail info 竞品信息 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath('//table[@class="table"]/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qyfz_jpxx')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_jingpin"]/div/table/tbody/tr')
@@ -2082,8 +2163,7 @@ class TycDetailParse(object):
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
-                #jpInfo.jpProduct = try_and_text("variable[1].xpath('.//a/text()')[0]", tds)
-                jpInfo.jpProduct = try_and_text("variable[1].xpath('.//img/alt')[0]", tds)
+                jpInfo.jpProduct = try_and_text("variable[1].xpath('.//a/text()')[0]", tds)
                 jpInfo.jpArea = try_and_text("variable[2].xpath('.//text()')[0]", tds)
                 jpInfo.jpRound = try_and_text("variable[3].xpath('.//text()')[0]", tds)
                 jpInfo.jpIndustry = try_and_text("variable[4].xpath('.//text()')[0]", tds)
@@ -2124,8 +2204,8 @@ class TycDetailParse(object):
     
         # 判断分页
         if index == 1 and not isinstance(self.selector, int):
-            # 获得招聘大标签
-            root_div = self.selector.xpath('//table[position()=1]/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_zp')
         else:
             root_div = self.selector.xpath(
                 '//div[@id="_container_recruit"][position()=1]//table')
@@ -2150,7 +2230,7 @@ class TycDetailParse(object):
                 flss.work_city = try_and_text("variable[6].xpath('.//text()')[0]", tds)
             
                 flss.work_year = work_year
-                flss.recruitment_numbers = '此版本无此信息'
+                flss.recruitment_numbers = '无明确人数'
                 flss.education = education
                 href = tr_hrefs
             
@@ -2161,7 +2241,7 @@ class TycDetailParse(object):
                     text_info = self.detail_info["_container_baipin"][text_info_key]
                 except BaseException:
                     text_info = '解析出错'
-                flss.detail_info = replace_special_string(text_info)
+                flss.detail_info = replace_special_chars(text_info)
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -2198,31 +2278,14 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 工商局 {}".format(self.search_name))
     
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath('//table/tbody/tr')
-
-            # gsjInfo = TycJyzkGsj()
-            # key = self.search_name
-            # for tr in trs:
-            #     insert_value = ""
-            #     tds = tr.xpath('./td')
-            #     # 许可书文编号
-            #     gsjInfo.licenseDocNum = try_and_text("variable[1].xpath('./text()')[0]", tds)
-            #     # 许可文件名称
-            #     gsjInfo.licenseDocName = try_and_text("variable[2].xpath('./text()')[0]", tds)
-            #     # 有效期自
-            #     gsjInfo.validityBegin = try_and_text("variable[3].xpath('./text()')[0]", tds)
-            #     # 有效期至
-            #     gsjInfo.validityEnd = try_and_text("variable[4].xpath('./text()')[0]", tds)
-            #     # 许可机关
-            #     gsjInfo.licenseAuthority = try_and_text("variable[5].xpath('./text()')[0]", tds)
-            #     # 许可内容
-            #     gsjInfo.licenseContent = try_and_text("variable[6].xpath('./text()')[0]", tds)
-    
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_gsj')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_licensing"]/table/tbody/tr')
             if trs:
                 gsjInfo = TycJyzkGsj()
+            
                 key = self.search_name
             
                 for tr in trs:
@@ -2248,7 +2311,6 @@ class TycDetailParse(object):
                     gsjInfo.agency_num = self.agency_num
                     gsjInfo.agency_name = self.agency_name
                     gsjInfo.batch = self.batch
-
                     value_list = [
                         gsjInfo.batch,
                         gsjInfo.agency_name,
@@ -2277,8 +2339,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 信用中国 {}".format(self.search_name))
     
         if index == 1 and not isinstance(self.selector, int):
-        
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_xyzg')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_licensingXyzg"]//table/tbody/tr')
@@ -2298,7 +2360,7 @@ class TycDetailParse(object):
                 dxxkInfo.licenseDate = try_and_text("variable[3].xpath( './/text()')[0]", tds)
                 # 详情
                 text_info = try_and_text("variable[4].xpath('.//script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 dxxkInfo.detail = text_info
             
                 dxxkInfo.txtId = self.txtId
@@ -2336,7 +2398,8 @@ class TycDetailParse(object):
     def html_parse_tax(self, index):
         logger.debug("Parse detail info 税务评级{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table[position()=1]")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_swpj')
         else:
             # 获得税务评级大标签
             root_div = self.selector.xpath(
@@ -2386,7 +2449,8 @@ class TycDetailParse(object):
     def html_parse_check(self, index):
         logger.debug("Parse detail info 抽查检查 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = (self.selector.xpath('//table/tbody/tr'))
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_ccjc')
         else:
             # 获得抽查检查大标签
             root_div = (self.selector.xpath(
@@ -2435,7 +2499,8 @@ class TycDetailParse(object):
         key = self.search_name
         logger.debug("Parse detail info 资质证书 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath('//table[position()=1]/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_zzzs')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_certificate"][position()=1]//table[position()=1]/tbody/tr')
@@ -2460,7 +2525,7 @@ class TycDetailParse(object):
                     text_info = self.detail_info["_container_certificate"][href]
                 except BaseException:
                     pass
-                certificateInfo.detail = replace_special_string(text_info)
+                certificateInfo.detail = replace_special_chars(text_info)
                 certificateInfo.txtId = self.txtId
                 certificateInfo.company_name = key
                 certificateInfo.mark = 0
@@ -2501,7 +2566,8 @@ class TycDetailParse(object):
     def html_parse_bidding(self, index):
         logger.debug("Parse detail info 招投标{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath('//table')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_ztb')
         else:
             # 获得招投标大标签
             root_div = self.selector.xpath(
@@ -2549,7 +2615,8 @@ class TycDetailParse(object):
     def html_parse_product(self, index):
         logger.debug("Parse detail info 产品信息 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = (self.selector.xpath('//table/tbody/tr'))
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_cpxx')
         else:
             # 获得产品信息大标签
             root_div = self.selector.xpath(
@@ -2573,7 +2640,7 @@ class TycDetailParse(object):
                 try:
                     text_info = self.detail_info["_container_product"][href.split(
                         r'/')[-1]]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail_info = text_info
@@ -2609,7 +2676,8 @@ class TycDetailParse(object):
     def html_parse_entWechat(self, index):
         logger.debug("Parse detail info 微信公众号 {}".format(self.search_name))
         if index:
-            trs = self.selector.xpath('//table[@class="table"]/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_wxgzh')
         else:
             trs = self.selector.xpath('//div[@id="_container_wechat"]/table/tbody/tr')
     
@@ -2619,15 +2687,11 @@ class TycDetailParse(object):
             key = self.search_name
             for tr in trs:
                 insert_value = ""
-                #entWeChat.mp_name = try_and_text("variable.xpath('./td')[1].xpath('.//span/text()')[1]", tr)
-                entWeChat.mp_name = try_and_text("variable.xpath('./td')[1].xpath('.//td')[1].xpath('./span/text()')[0]", tr)
-
+                entWeChat.mp_name = try_and_text("variable.xpath('./td')[1].xpath('.//span/text()')[1]", tr)
                 entWeChat.mp_number = try_and_text("variable.xpath('./td')[2].xpath('./span/text()')[0]", tr)
                 entWeChat.mp_info = try_and_text("variable.xpath('./td')[4].xpath('./div/div/text()')[0]", tr)
-                #entWeChat.detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
-                detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)   # 新增
-                entWeChat.detail = replace_special_string(detail)
-
+                detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
+                entWeChat.detail = detail.replace(r'\u002F','/')       #0614修改
                 entWeChat.txtId = self.txtId
                 entWeChat.company_name = key
                 entWeChat.mark = 0
@@ -2659,8 +2723,7 @@ class TycDetailParse(object):
                                                )
                 single_oracle.oracle_insert_sql_param(insert_sql, value_list)
             
-                # 进出口信用
-
+    # 进出口信用
     def html_parse_outputxy(self):
         logger.debug("Parse detail info 进出口信用 {}".format(self.search_name))
         # 获得大标签
@@ -2680,7 +2743,7 @@ class TycDetailParse(object):
                 flss.register_date = try_and_text("variable[4].xpath('./text()')[0]", tds)
                 flss.detail_info = 'NA'
                 detail_info = try_and_text("variable[5].xpath('.//script/text()')[0]", tds)
-                flss.detail_info = replace_special_string(detail_info)
+                flss.detail_info = replace_special_chars(detail_info)
                 flss.txtId = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -2718,7 +2781,8 @@ class TycDetailParse(object):
     def html_parse_zhaiquan(self, index):
         logger.debug("Parse detail info 债券信息{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table[position()=1]")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_zqxx')
         else:
             # 获得债券信息大标签
             root_div = self.selector.xpath('//div[@id="_container_bond"]/table')
@@ -2743,8 +2807,8 @@ class TycDetailParse(object):
                 flss.bond_type = try_and_text("variable[4].xpath('.//text()')[0]", tds)
                 flss.latest_rating = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 text_info = try_and_text("variable[6].xpath('.//script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
-                flss.detail_info = text_info
+                #text_info = replace_special_chars(text_info)
+                flss.text_info = text_info.replace(r'\u002F','')
                 # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
                 flss.txt_id = self.txtId
                 flss.company_name = key
@@ -2781,7 +2845,8 @@ class TycDetailParse(object):
     def html_parse_buyInfo(self, index):
         logger.debug("Parse detail info 购地信息 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            trs = self.selector.xpath("//table[position()=1]/tbody/tr")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_gdxx')
         else:
             trs = self.selector.xpath('//div[@id="_container_purchaselandV2"]/table/tbody/tr')
     
@@ -2795,10 +2860,7 @@ class TycDetailParse(object):
                 # 签订日期
                 buyInfo.gdSignDate = try_and_text("variable[6].xpath('./text()')[0]", tds)
                 # 土地坐落
-                where = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
-                # 购地详情
-                gd_info = try_and_text("variable[1].xpath('./script/text()')[0]", tds)
-                gd_info = gd_info.replace('\u002F','/')
+                where = try_and_text("variable[1].xpath('./script/text()')[0]", tds)
                 # 土地用途
                 todo = try_and_text("variable[2].xpath('./text()')[0]", tds)
                 # 总面积（公顷）
@@ -2815,8 +2877,6 @@ class TycDetailParse(object):
             
                 # 新增 土地坐落
                 buyInfo.located = where
-                # 购地详情
-                buyInfo.gd_info = gd_info
                 # 新增 土地用途
                 buyInfo.land_use = todo
                 # 新增  供应方式
@@ -2832,7 +2892,7 @@ class TycDetailParse(object):
                     buyInfo.txtId,
                     buyInfo.company_name,
                     buyInfo.gdSignDate,
-                    buyInfo.gdNum,  # 此版本无此信息
+                    buyInfo.gdNum,      # 此版本无此信息
                     buyInfo.gdActDate,  # 此版本无此信息
                     buyInfo.gdArea,
                     buyInfo.gdRegion,
@@ -2843,9 +2903,8 @@ class TycDetailParse(object):
                     buyInfo.mark,
                     buyInfo.agency_num,
                     buyInfo.agency_name,
-                    buyInfo.batch,
-                    buyInfo.gd_info]
-
+                    buyInfo.batch]
+            
                 # column_name = "(txt_id,company_name,gd_sign_date,gd_area,located,land_use,supply_method,mark,agency_num,agency_name,batch,add_time)"
                 # "(txt_id,company_name,gd_sign_date,gd_area,gd_region,located,land_use,supply_method,mark,agency_num,agency_name,batch,add_time)"
                 
@@ -2860,8 +2919,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 电信许可 {}".format(self.search_name))
     
         if index == 1 and not isinstance(self.selector, int):
-        
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_jyzk_dxxk')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_permission"]/table/tbody/tr')
@@ -2881,7 +2940,7 @@ class TycDetailParse(object):
                 dxxkInfo.available = try_and_text("variable[3].xpath('./text()')[0]", tds)
                 # 详情
                 text_info = try_and_text("variable[4].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 dxxkInfo.detailInfo = text_info
             
                 dxxkInfo.txtId = self.txtId
@@ -2920,7 +2979,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 商标信息 {}".format(self.search_name))
         
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_zscq_sbxx')
         else:
             # 获得商标信息大标签
             root_div = self.selector.xpath(
@@ -2949,7 +3009,7 @@ class TycDetailParse(object):
                     try:
                         text_info = self.detail_info["_container_tmInfo"][href.split(
                             r'/')[-1]]
-                        text_info = replace_special_string(text_info)
+                        text_info = replace_special_chars(text_info)
                     except BaseException:
                         pass
     
@@ -2992,7 +3052,8 @@ class TycDetailParse(object):
     def html_parse_patent(self, index):
         logger.debug("Parse detail info 专利信息 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = (self.selector.xpath("//table"))
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_zscq_zl')
         else:
             # 获得专利信息大标签
             root_div = self.selector.xpath(
@@ -3024,7 +3085,7 @@ class TycDetailParse(object):
                         r'/')[-1]]
                 except BaseException:
                     pass
-                flss.detail_info = replace_special_string(text_info)
+                flss.detail_info = replace_special_chars(text_info)
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -3064,7 +3125,8 @@ class TycDetailParse(object):
     def html_parse_copyright(self, index):
         logger.debug("Parse detail info 软件著作权 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table[position()=1]")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_zscq_zzq')
         else:
             root_div = self.selector.xpath(
                 '//div[@id="_container_copyright"][position()=1]/table')
@@ -3086,7 +3148,7 @@ class TycDetailParse(object):
                 flss.type_number = try_and_text("variable[5].xpath('./span/text()')[0]", tds)
                 flss.version_number = try_and_text("variable[6].xpath('./span/text()')[0]", tds)
                 text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
             
                 flss.txt_id = self.txtId
@@ -3125,7 +3187,8 @@ class TycDetailParse(object):
     
         # 获得作品著作权大标签
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath("//table/tbody/tr")
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_zscq_zpzzq')
         else:
             root_div = self.selector.xpath(
                 '//div[@id="_container_copyrightWorks"]/table/tbody/tr')
@@ -3153,84 +3216,97 @@ class TycDetailParse(object):
                 flss.agency_num = self.agency_num
                 flss.agency_name = self.agency_name
                 flss.batch = self.batch
-                value_list = [
-                    flss.works_name,
-                    flss.mark,
-                    flss.txtId,
-                    flss.company_name,
-                    flss.register_name,
-                    flss.type,
-                    flss.create_date,
-                    flss.register_date,
-                    flss.firstpublish_date,
-                    flss.agency_num,
-                    flss.agency_name,
-                    flss.batch]
+                # value_list = [
+                #     flss.works_name,
+                #     flss.mark,
+                #     flss.txtId,
+                #     flss.company_name,
+                #     flss.register_name,
+                #     flss.type,
+                #     flss.create_date,
+                #     flss.register_date,
+                #     flss.firstpublish_date,
+                #     flss.agency_num,
+                #     flss.agency_name,
+                #     flss.batch]
+                # #
+                # column_name = "(works_name,mark,txt_id,company_name,register_name,type,create_date,register_date,firstpublish_date,agency_num,agency_name,batch,add_time)"
                 #
-                column_name = "(works_name,mark,txt_id,company_name,register_name,type,create_date,register_date,firstpublish_date,agency_num,agency_name,batch,add_time)"
-                
-                value_list = ["'" + str(value) + "'" for value in value_list]
-                insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-                
-                single_oracle.oracle_insert(
-                    flss.table_name, flss.column_name, insert_value)
+                # value_list = ["'" + str(value) + "'" for value in value_list]
+                # insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
+                #
+                # single_oracle.oracle_insert(
+                #     flss.table_name, flss.column_name, insert_value)
     
     # 网站备案
     def html_parse_website(self, index):
         logger.debug("Parse detail info 网站备案 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-            root_div = self.selector.xpath('//table')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_zscq_wzba')
+
         else:
             # 获得网站备案大标签
             root_div = self.selector.xpath('//div[@id="_container_icp"]/table')
 
-        if root_div:
-            flss = TycZscqWzba()
-            key = self.search_name
-            root_div = root_div[0]
-            # 一行是一个tr
-            trs = root_div.xpath("./tbody/tr")
+            if root_div:
+                flss = TycZscqWzba()
 
-            for tr in trs:
-                insert_value = ""
-                tds = tr.xpath('./td')
-                flss.audit_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
-                flss.web_name = try_and_text("variable[2].xpath('./span/text()')[0]", tds)
-                flss.web_homepage = try_and_text("variable[3].xpath('.//a//text()')[0]", tds)
-                domain_name = try_and_text("variable[4].xpath('./text()')[0]", tds)
-                flss.domain_name = domain_name if domain_name else 'NA'
-                record_number = try_and_text("variable[5].xpath('./span/text()')[0]", tds)
-                flss.record_number = record_number if record_number else 'NA'
+                key = self.search_name
+                root_div = root_div[0]
+                # 一行是一个tr
+                trs = root_div.xpath("./tbody/tr")
 
-                flss.status = CURRENT_VERSION_NULL
-                flss.department_type = CURRENT_VERSION_NULL
-                flss.txt_id = self.txtId
-                flss.company_name = key
-                flss.add_time = 'sysdate'
-                flss.mark = 0
-                flss.agency_num = self.agency_num
-                flss.agency_name = self.agency_name
-                flss.batch = self.batch
-                value_list = [
-                    flss.txt_id,
-                    flss.domain_name,
-                    flss.agency_num,
-                    flss.company_name,
-                    flss.audit_date,
-                    flss.web_name,
-                    flss.web_homepage,
-                    flss.record_number,
-                    flss.status,
-                    flss.department_type,
-                    flss.mark,
-                    flss.agency_name,
-                    flss.batch]
+                #创建新增对象
+                add_result = CheckResult()
+                add_result.company_name = key
+                add_result.add_time = func.now()
+                add_result.table_name = 'tyc_zscq_wzba'   #当前表名
+                current_class = TycZscqWzba             #当前模块对象名
+                first_parse_data = None
+                check_flag = 0     #检测首页是否有匹配到的一行数据
+                for tr in trs:
+                    insert_value = ""
+                    tds = tr.xpath('./td')
+                    flss.audit_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
+                    flss.web_name = try_and_text("variable[2].xpath('./span/text()')[0]", tds)
+                    flss.web_homepage = try_and_text("variable[3].xpath('.//a//text()')[0]", tds)
+                    domain_name = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                    flss.domain_name = domain_name if domain_name else 'NA'
+                    record_number = try_and_text("variable[5].xpath('./span/text()')[0]", tds)
+                    flss.record_number = record_number if record_number else 'NA'
 
-                value_list = ["'" + str(value) + "'" for value in value_list]
-                insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
+                    unique_field = ['domain_name',flss.domain_name]         #该模块中唯一值字段名和值
+                    if check_parse(flss,add_result, unique_field):
+                        break
 
-                single_oracle.oracle_insert(
-                    flss.table_name, flss.column_name, insert_value)
+                    #验证首页解析
+                    check_result = check_all_data(add_result, flss, current_class)
+                    if not first_parse_data:
+                        first_parse_data = flss   #保存第一条解析的数据
+                    if  check_result:
+                        check_flag = 1  #匹配到数据
+                    else:
+                        check_flag = 0  #没有匹配到
+                if not check_flag :
+                    #没有匹配到数据，则保存首页第一条数据到标准库，并记录其中一个字段
+                    try:
+                        single_oracle_orm.add(first_parse_data)
+                        single_oracle_orm.commit()
+                    except Exception as e:
+                        print('check all datas error===={}'.format(e))
+                    try:
+                        add_result.table_field = 'audit_date'        #保存第一各异常字段名   各模块手动添加
+                        add_result.current_value = flss.audit_date   #保存第一各异常字段值   各模块手动添加
+                        add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
+                        add_result.risk_level = 1
+                        add_result.standard_value = ''
+                        single_oracle_orm.add(add_result)
+                        single_oracle_orm.commit()
+                    except Exception as e:
+                        print('check all datas error===={}'.format(e))
+
+
 
     # 企业年报
     def html_parse_nianbao(self, year):
@@ -3306,8 +3382,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 最终受益人 {}".format(self.search_name))
 
         if index == 1 and not isinstance(self.selector, int):
-    
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qybj_zzsyr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_humanholding"]/table/tbody/tr')
@@ -3358,8 +3434,8 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 实际控制权 {}".format(self.search_name))
 
         if index == 1 and not isinstance(self.selector, int):
-    
-            trs = self.selector.xpath('//table/tbody/tr')
+            # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
+            check_next_page(self.search_name, 'tyc_qybj_sjkzq')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_companyholding"]//table/tbody/tr')
@@ -4246,6 +4322,29 @@ def main(i):
                 logger.exception("Exception Logged")
                 # single_mongodb = single_mongodb()
                 # single_oracle = single_oracle()
+
+            # 分页检测
+            #解析完成后统计翻页解析总体情况，未正常解析翻页的记录入库：
+            global NEXT_PAGE_DICT
+
+            if NEXT_PAGE_DICT[search_name]:
+                #记录未成功解析的企业和对应的模块，并入库记录
+                not_parse_table_names =  str(list(NEXT_PAGE_DICT[search_name].values()))[1:-1]    #得出未解析的模块名称拼接字符串
+                next_page_parse = Add_Result()
+                next_page_parse.company_name = search_name
+                next_page_parse.add_time = 'sysdate'
+                next_page_parse.different_reason = '分页未解析模块:'+ not_parse_table_names
+                next_page_parse.table_name = '-'
+                next_page_parse.table_field = '-'
+                next_page_parse.standard_value = '-'
+                next_page_parse.current_value = '-'
+                next_page_parse.risk_level = 1
+                next_page_parse.insert_data()
+
+            else:
+                #该公司分页解析完成
+                pass
+
         else:
             continue
             sql = "SELECT company_number FROM batch_detail WHERE searched=0"
