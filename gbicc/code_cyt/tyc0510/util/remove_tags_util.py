@@ -11,7 +11,7 @@ import html as ht
 from lxml import html
 from lxml import etree
 
-def remove_tag(lxml_html,tag):
+def __remove_tag(lxml_html, tag):
     head_ele = lxml_html.xpath('//{tag}'.format(tag=tag))
     for e in head_ele:
         e.getparent().remove(e)
@@ -24,9 +24,9 @@ def remove_unused_tags(text:str):
     '''
     try:
         lxml_html = etree.HTML(text)
-        remove_tag(lxml_html,'head')
-        remove_tag(lxml_html, 'path')
-        remove_tag(lxml_html, 'svg')
+        __remove_tag(lxml_html, 'head')
+        __remove_tag(lxml_html, 'path')
+        __remove_tag(lxml_html, 'svg')
         text = html.tostring(lxml_html).decode()
         text=ht.unescape(text)
     except Exception as e:
