@@ -205,9 +205,9 @@ class RedisUtil(object):
                         # self.insert(txt_id)
                         self.server.lpush('pages', txt_id)
                 else:
-                    single_oracle.oracle_update(
-                        "update config set over = 1 where id = {}".format(tablename_condition[2]))
-                    return
+                    # single_oracle.oracle_update(
+                    #     "update config set over = 1 where id = {}".format(tablename_condition[2]))
+                    # return
                     sql = "SELECT search_name,txt_id  FROM company_basic_info where parsed=0 and page_spider=0 "
                     results = single_oracle.oracle_find_by_param_all(sql)
                     for page in results:
@@ -597,13 +597,14 @@ class RedisUtil(object):
             projection = {'_id': 1}
             
             try:
-                sql = "SELECT txt_id,search_name  FROM company_basic_info WHERE {} and rownum <= 10000 and txt_id is not null"
-                # sql = "SELECT txt_id,search_name  FROM company_basic_info WHERE  parsed=0 and page_spider=1 and rownum <= 10000"
+                # sql = "SELECT txt_id,search_name  FROM company_basic_info WHERE {} and rownum <= 10000 and txt_id is not null"
+                sql = "SELECT txt_id,search_name  FROM company_basic_info WHERE  parsed=0 and page_spider=1 and rownum <= 10000"
                 # sql='select B.txt_id,B.search_name from company_basic_info  B where (select count(1) as num from tyc_qybj_jbxx A where A.txt_id = B.txt_id) = 0'
                 # results = single_mongodb.mongodb_find_limit('company_detail_info', param,projection, 1000)
                 # if results.count() == 0:
                 #     param = {'parse': {'$exists': False}}
                 #     results = single_mongodb.mongodb_find_limit('company_detail_info', param,projection, 100000)
+                ###!!!!!
                 tablename_condition = self.get_configs_by_tablename('put_parse')
                 results = single_oracle.oracle_find_by_param_all(sql.format(tablename_condition[0]))
                 print(len(results))
@@ -611,9 +612,9 @@ class RedisUtil(object):
 
                     time.sleep(60 * 30)
                 else:
-                    if tablename_condition[1] == 0:
-                        update_sql = "update config set over = 2 where id = {}".format(tablename_condition[2])
-                        single_oracle.oracle_update(update_sql)
+                    # if tablename_condition[1] == 0:
+                    #     update_sql = "update config set over = 2 where id = {}".format(tablename_condition[2])
+                    #     single_oracle.oracle_update(update_sql)
 
                     if len(results) > 10:
                         results = results[10:]

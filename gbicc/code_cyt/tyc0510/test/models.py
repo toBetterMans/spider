@@ -1,9 +1,11 @@
 # coding: utf-8
-from sqlalchemy import CHAR, Column, DateTime, Float, Table, Text, VARCHAR, text, create_engine
+from sqlalchemy import CHAR, Column, DateTime, Float, Table, Text, VARCHAR, text, create_engine,Integer
 from sqlalchemy.dialects.oracle import NUMBER
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-engine = create_engine('oracle://tyc:tyc@10.10.82.12:1521/tycprd', echo=True)
+from setting import *
+engine = create_engine('oracle://'+ORALCE_USER+':'+ORALCE_PASSWORD+'@'+ORALCE_HOST+'/'+SERVICE, echo=True)
+# engine = create_engine('oracle://tyc:tyc@10.10.82.12:1521/tycprd', echo=True)
 Database= sessionmaker(bind=engine)
 single_oracle_orm=Database()
 Base = declarative_base()
@@ -54,30 +56,28 @@ class Branch(Base):
 class CheckImportField(Base):
     __tablename__ = 'check_import_field'
 
-    id = Column(NUMBER(asdecimal=False), primary_key=True)
+    id = Column(NUMBER(6, 0, False), primary_key=True)
     table_name = Column(VARCHAR(500))
     column_name = Column(VARCHAR(200))
     data_type = Column(VARCHAR(200))
     column_comment = Column(VARCHAR(500))
-    column_level = Column(NUMBER(asdecimal=False))
+    column_level = Column(NUMBER(6, 0, False))
 
 
 class CheckResult(Base):
     __tablename__ = 'check_result'
 
-    id = Column(NUMBER(asdecimal=False), primary_key=True, server_default=text("0 "))
+    id = Column(NUMBER(6, 0, False), primary_key=True, server_default=text("NULL "))
     add_time = Column(DateTime, nullable=False)
-    table_name = Column(VARCHAR(200))
+    table_name = Column(VARCHAR(200), nullable=False)
     table_field = Column(VARCHAR(200))
     standard_value = Column(VARCHAR(2000))
     current_value = Column(VARCHAR(2000))
-    standard_version = Column(VARCHAR(200), nullable=False)
+    standard_version = Column(VARCHAR(3), server_default=text("NULL"))
     company_name = Column(VARCHAR(2000), nullable=False)
-    different_reason = Column(VARCHAR(2000), nullable=False)
-    risk_level = Column(NUMBER(asdecimal=False))
-    task_status = Column(NUMBER(asdecimal=False), server_default=text("""\
-0
-"""))
+    different_reason = Column(VARCHAR(2000))
+    risk_level = Column(VARCHAR(2), server_default=text("NULL"))
+    task_status = Column(VARCHAR(2), server_default=text("0"))
 
 
 t_company_11315 = Table(
@@ -107,7 +107,8 @@ t_company_11315 = Table(
     Column('business_scope', Text),
     Column('register_status', VARCHAR(150)),
     Column('credit_num', VARCHAR(200)),
-    Column('detail_url', VARCHAR(200))
+    Column('detail_url', VARCHAR(200)),
+    Column('standard_version', NUMBER(6, 0, False))
 )
 
 
@@ -195,6 +196,7 @@ class CompanyBasicInfo(Base):
     batch = Column(VARCHAR(100))
     branch = Column(VARCHAR(15))
     used_name = Column(VARCHAR(200))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class Config(Base):
@@ -246,6 +248,7 @@ class TycJyfxDcdy(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxGqcz(Base):
@@ -266,6 +269,7 @@ class TycJyfxGqcz(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     pledged_amount = Column(VARCHAR(100))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxGscg(Base):
@@ -285,6 +289,7 @@ class TycJyfxGscg(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
     add_time = Column(DateTime)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxHbcf(Base):
@@ -304,6 +309,7 @@ class TycJyfxHbcf(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxJyyc(Base):
@@ -323,6 +329,7 @@ class TycJyfxJyyc(Base):
     out_date = Column(VARCHAR(100))
     out_cause = Column(VARCHAR(3000))
     out_department = Column(VARCHAR(200))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxQsgg(Base):
@@ -343,6 +350,7 @@ class TycJyfxQsgg(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     detail = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxQsxx(Base):
@@ -358,6 +366,7 @@ class TycJyfxQsxx(Base):
     batch = Column(VARCHAR(150))
     principal = Column(VARCHAR(100))
     member = Column(VARCHAR(100))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxSfpm(Base):
@@ -376,6 +385,7 @@ class TycJyfxSfpm(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
     auction_detail = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxSswf(Base):
@@ -393,6 +403,7 @@ class TycJyfxSswf(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxTddy(Base):
@@ -412,6 +423,7 @@ class TycJyfxTddy(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxXzcf(Base):
@@ -433,6 +445,7 @@ class TycJyfxXzcf(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     punishment_contents = Column(VARCHAR(2000))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxXzchXyzg(Base):
@@ -452,6 +465,7 @@ class TycJyfxXzchXyzg(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyfxYzwf(Base):
@@ -471,13 +485,14 @@ class TycJyfxYzwf(Base):
     out_date = Column(VARCHAR(100))
     out_reason = Column(VARCHAR(3000))
     out_department = Column(VARCHAR(200))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkCcjc(Base):
     __tablename__ = 'tyc_jyzk_ccjc'
 
     add_time = Column(DateTime)
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     type = Column(VARCHAR(150))
     result = Column(VARCHAR(300))
     check_department = Column(VARCHAR(150))
@@ -488,6 +503,7 @@ class TycJyzkCcjc(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
     check_date = Column(VARCHAR(50))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkCpxx(Base):
@@ -506,6 +522,7 @@ class TycJyzkCpxx(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkDkg(Base):
@@ -526,6 +543,7 @@ class TycJyzkDkg(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkDxxk(Base):
@@ -543,6 +561,7 @@ class TycJyzkDxxk(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkGdxx(Base):
@@ -566,6 +585,7 @@ class TycJyzkGdxx(Base):
     land_use = Column(VARCHAR(100))
     supply_method = Column(VARCHAR(50))
     gd_info = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkGsj(Base):
@@ -585,6 +605,7 @@ class TycJyzkGsj(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkGy(Base):
@@ -604,6 +625,7 @@ class TycJyzkGy(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkJckxy(Base):
@@ -623,6 +645,7 @@ class TycJyzkJckxy(Base):
     batch = Column(VARCHAR(400))
     industry_category = Column(VARCHAR(50))
     register_date = Column(VARCHAR(100))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkKh(Base):
@@ -642,6 +665,7 @@ class TycJyzkKh(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkSwpj(Base):
@@ -649,7 +673,7 @@ class TycJyzkSwpj(Base):
 
     add_time = Column(DateTime)
     year = Column(VARCHAR(150))
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     tax_rating = Column(VARCHAR(150))
     tax_type = Column(VARCHAR(150))
     tax_identification_number = Column(VARCHAR(300))
@@ -660,6 +684,7 @@ class TycJyzkSwpj(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkTdzr(Base):
@@ -680,6 +705,7 @@ class TycJyzkTdzr(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkWxgzh(Base):
@@ -697,6 +723,7 @@ class TycJyzkWxgzh(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     detail = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkXyzg(Base):
@@ -714,6 +741,7 @@ class TycJyzkXyzg(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkZp(Base):
@@ -735,6 +763,7 @@ class TycJyzkZp(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     education = Column(VARCHAR(50))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkZqxx(Base):
@@ -754,6 +783,7 @@ class TycJyzkZqxx(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkZtb(Base):
@@ -771,6 +801,7 @@ class TycJyzkZtb(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycJyzkZzz(Base):
@@ -789,6 +820,7 @@ class TycJyzkZzz(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     detail = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjBgjl(Base):
@@ -806,6 +838,7 @@ class TycQybjBgjl(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjDwtz(Base):
@@ -826,6 +859,7 @@ class TycQybjDwtz(Base):
     id = Column(VARCHAR(50), primary_key=True)
     txt_id = Column(VARCHAR(500))
     company_name = Column(VARCHAR(1000))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjFzjg(Base):
@@ -843,6 +877,7 @@ class TycQybjFzjg(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(300))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjGdxx(Base):
@@ -860,6 +895,7 @@ class TycQybjGdxx(Base):
     company_name = Column(VARCHAR(1000))
     fund_time = Column(VARCHAR(100))
     add_time = Column(DateTime)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjGsg(Base):
@@ -880,6 +916,7 @@ class TycQybjGsg(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjJbxx(Base):
@@ -923,6 +960,7 @@ class TycQybjJbxx(Base):
     business_term_begin = Column(VARCHAR(150))
     business_term_end = Column(VARCHAR(150))
     used_name = Column(VARCHAR(300))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjQynb(Base):
@@ -938,6 +976,7 @@ class TycQybjQynb(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(200))
     company_name = Column(VARCHAR(1000))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjSjkzq(Base):
@@ -954,6 +993,7 @@ class TycQybjSjkzq(Base):
     holding_name = Column(VARCHAR(300))
     invest_proportion = Column(VARCHAR(30))
     equity_chain = Column(VARCHAR(500))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjZg(Base):
@@ -972,6 +1012,7 @@ class TycQybjZg(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjZyry(Base):
@@ -980,13 +1021,14 @@ class TycQybjZyry(Base):
     mark = Column(NUMBER(6, 0, False), server_default=text("'0'"))
     add_time = Column(DateTime)
     person_name = Column(VARCHAR(200))
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     txt_id = Column(VARCHAR(500))
     company_name = Column(VARCHAR(1000))
     position = Column(VARCHAR(200))
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(200))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQybjZzsyr(Base):
@@ -1003,6 +1045,7 @@ class TycQybjZzsyr(Base):
     beneficiary_name = Column(VARCHAR(300))
     shareholder_proportion = Column(VARCHAR(30))
     equity_chain = Column(VARCHAR(500))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQyfzHxtd(Base):
@@ -1019,6 +1062,7 @@ class TycQyfzHxtd(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     position = Column(VARCHAR(200))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQyfzJpxx(Base):
@@ -1039,6 +1083,7 @@ class TycQyfzJpxx(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQyfzQyyw(Base):
@@ -1055,6 +1100,7 @@ class TycQyfzQyyw(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQyfzRzl(Base):
@@ -1076,6 +1122,7 @@ class TycQyfzRzl(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     event_date = Column(VARCHAR(100))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQyfzSmjj(Base):
@@ -1095,6 +1142,7 @@ class TycQyfzSmjj(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQyfzTzjg(Base):
@@ -1112,6 +1160,7 @@ class TycQyfzTzjg(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycQyfzTzsj(Base):
@@ -1133,6 +1182,7 @@ class TycQyfzTzsj(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycSffxBzxr(Base):
@@ -1151,6 +1201,7 @@ class TycSffxBzxr(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     detail = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycSffxFls(Base):
@@ -1172,6 +1223,7 @@ class TycSffxFls(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     judgment_name = Column(VARCHAR(500))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycSffxFygg(Base):
@@ -1191,6 +1243,7 @@ class TycSffxFygg(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycSffxKtgg(Base):
@@ -1210,6 +1263,7 @@ class TycSffxKtgg(Base):
     mark = Column(NUMBER(6, 0, False), server_default=text("'0'"))
     agency_name = Column(VARCHAR(300))
     reference_num = Column(VARCHAR(100))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycSffxLaxx(Base):
@@ -1229,6 +1283,7 @@ class TycSffxLaxx(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycSffxSfxz(Base):
@@ -1248,6 +1303,7 @@ class TycSffxSfxz(Base):
     approval_num = Column(VARCHAR(150))
     status = Column(VARCHAR(100))
     detail = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycSffxSxr(Base):
@@ -1267,6 +1323,7 @@ class TycSffxSxr(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearDwtz(Base):
@@ -1275,7 +1332,7 @@ class TycYearDwtz(Base):
     mark = Column(NUMBER(6, 0, False), server_default=text("'0'"))
     add_time = Column(DateTime)
     year = Column(VARCHAR(100))
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     txt_id = Column(VARCHAR(500))
     company_name = Column(VARCHAR(1000))
     outbound_company = Column(VARCHAR(200))
@@ -1283,6 +1340,7 @@ class TycYearDwtz(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearGdczxx(Base):
@@ -1291,7 +1349,7 @@ class TycYearGdczxx(Base):
     mark = Column(NUMBER(6, 0, False), server_default=text("'0'"))
     add_time = Column(DateTime)
     year = Column(VARCHAR(100))
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     txt_id = Column(VARCHAR(500))
     company_name = Column(VARCHAR(1000))
     shareholder = Column(VARCHAR(300))
@@ -1304,6 +1362,7 @@ class TycYearGdczxx(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(200))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearGqbg(Base):
@@ -1322,6 +1381,7 @@ class TycYearGqbg(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
     year = Column(VARCHAR(60))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearJbxx(Base):
@@ -1330,7 +1390,7 @@ class TycYearJbxx(Base):
     mark = Column(NUMBER(6, 0, False), server_default=text("'0'"))
     add_time = Column(DateTime)
     year = Column(VARCHAR(100))
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     txt_id = Column(VARCHAR(500))
     company_name = Column(VARCHAR(1000))
     credit_num = Column(VARCHAR(300))
@@ -1346,6 +1406,7 @@ class TycYearJbxx(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearSbxx(Base):
@@ -1365,6 +1426,7 @@ class TycYearSbxx(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
     year = Column(VARCHAR(60))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearWzhwdxx(Base):
@@ -1373,7 +1435,7 @@ class TycYearWzhwdxx(Base):
     mark = Column(NUMBER(6, 0, False), server_default=text("'0'"))
     add_time = Column(DateTime)
     year = Column(VARCHAR(150))
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     txt_id = Column(VARCHAR(500))
     company_name = Column(VARCHAR(1000))
     website_type = Column(VARCHAR(300))
@@ -1382,6 +1444,7 @@ class TycYearWzhwdxx(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearXgsx(Base):
@@ -1400,6 +1463,7 @@ class TycYearXgsx(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
     year = Column(VARCHAR(60))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycYearZczk(Base):
@@ -1408,7 +1472,7 @@ class TycYearZczk(Base):
     mark = Column(NUMBER(6, 0, False), server_default=text("'0'"))
     add_time = Column(DateTime)
     year = Column(VARCHAR(520))
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     txt_id = Column(VARCHAR(500))
     company_name = Column(VARCHAR(1000))
     total_assets = Column(VARCHAR(300))
@@ -1422,13 +1486,14 @@ class TycYearZczk(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycZscqSbxx(Base):
     __tablename__ = 'tyc_zscq_sbxx'
 
     add_time = Column(DateTime)
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     apply_date = Column(VARCHAR(200))
     trademark = Column(VARCHAR(300))
     trademark_name = Column(VARCHAR(500))
@@ -1442,6 +1507,7 @@ class TycZscqSbxx(Base):
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
     detail = Column(Text)
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycZscqWzba(Base):
@@ -1462,6 +1528,7 @@ class TycZscqWzba(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycZscqZl(Base):
@@ -1481,13 +1548,14 @@ class TycZscqZl(Base):
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
     patent_type = Column(VARCHAR(100))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycZscqZpzzq(Base):
     __tablename__ = 'tyc_zscq_zpzzq'
 
     add_time = Column(DateTime)
-    id = Column(NUMBER(scale=0, asdecimal=False), primary_key=True)
+    id = Column(Integer, primary_key=True)
     company_name = Column(VARCHAR(1000))
     mark = Column(CHAR(1))
     txt_id = Column(VARCHAR(500))
@@ -1500,6 +1568,7 @@ class TycZscqZpzzq(Base):
     agency_num = Column(VARCHAR(300))
     agency_name = Column(VARCHAR(300))
     batch = Column(VARCHAR(150))
+    standard_version = Column(NUMBER(6, 0, False))
 
 
 class TycZscqZzq(Base):
@@ -1520,18 +1589,7 @@ class TycZscqZzq(Base):
     agency_num = Column(VARCHAR(800))
     agency_name = Column(VARCHAR(800))
     batch = Column(VARCHAR(400))
-
-def check_obj(cls_spider,cls_standard):
-    cls_spider_dict=cls_spider.__dict__
-    cls_standard_dict=cls_standard.__dict__
-    change_dict={}
-    for k,v in cls_spider_dict.items():
-        if v==cls_standard_dict[k]:
-            pass
-        else:
-            change_dict[k]=v
-    return change_dict
-
+    standard_version = Column(NUMBER(6, 0, False))
 if __name__ == '__main__':
     our_user = single_oracle_orm.query(CompanyBasicInfo).filter_by(id=334).first()
     # print(our_user.__dict__)
