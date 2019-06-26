@@ -84,6 +84,7 @@ IP地址：((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01
 
 '''
 
+
 def all_chinese(text, max_len: int, must_len: int):
     '''全中文校验 max_len不为空则校验，must_len不为空则校验
 
@@ -93,6 +94,7 @@ def all_chinese(text, max_len: int, must_len: int):
     :return:True or False
     '''
     pass
+
 
 def all_number(text, max_len: int, must_len: int):
     '''全数字校验 max_len不为空则校验，must_len不为空则校验
@@ -104,6 +106,7 @@ def all_number(text, max_len: int, must_len: int):
     '''
     pass
 
+
 def all_english(text, max_len: int, must_len: int):
     '''全英文校验 max_len不为空则校验，must_len不为空则校验
 
@@ -114,6 +117,7 @@ def all_english(text, max_len: int, must_len: int):
     '''
     pass
 
+
 def date(text, splite: str):
     '''日期校验 max_len不为空则校验，must_len不为空则校验
 
@@ -123,6 +127,7 @@ def date(text, splite: str):
     '''
     pass
 
+
 def percent(text):
     '''百分百校验
 
@@ -130,6 +135,7 @@ def percent(text):
     :return:True or False
     '''
     pass
+
 
 if __name__ == "__main__":
     pass
