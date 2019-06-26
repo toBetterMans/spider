@@ -16,6 +16,7 @@ def replace_special_chars(text: str):
     :return: 字符串
     '''
     try:
+<<<<<<< HEAD
         text = text.replace(
             r'<em>',
             '').replace(
@@ -57,6 +58,49 @@ def replace_special_chars(text: str):
             '').replace(
             r'\xa0',
             '').replace(r'\uff08', '(').replace(r'\u0029', ')').replace('（', '(').replace('）', ')')
+=======
+        text= text.replace(
+            r'<em>',
+            r'').replace(
+            r'</em>',
+            r'').replace(
+            r'\ue004',
+            r'').replace(
+            r'\ufffd',
+            r'').replace(
+            r'\u2022',
+            r'').replace(
+            r'\xb3',
+            r'').replace(
+            r'\ue005',
+            r'').replace(
+            r'\xa9',
+            '').replace(
+            r'\u003C',
+            r'').replace(
+            r'\u003E',
+            r'').replace(
+            r'\ufffd',
+            r'').replace(
+            r'\ufffd',
+            r'').replace(
+            r'\xa9',
+            r'').replace(
+            r'\u002F',
+            r'').replace(
+            r'\u003E',
+            r'').replace(
+            u"'",
+            r'"').replace(
+            r'\u003c\u0065\u006d\u003e',
+            r'').replace(
+            r'\u003c\u002f\u0065\u006d\u003e',
+            '').replace(
+            r'\xa5',
+            r'').replace(
+            r'\xa0',
+            r'').replace(r'\uff08', '(').replace(r'\u0029', ')').replace('（', '(').replace('）', ')')
+>>>>>>> e61a9a1a6497e8258888f5bcf7b7c942587a251f
     except Exception as e:
         print(e)
     return text
