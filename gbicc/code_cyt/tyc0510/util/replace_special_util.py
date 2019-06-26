@@ -1,21 +1,21 @@
-#!/usr/bin/env python  
-# -*- encoding: utf-8 -*-  
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
-""" 
-@author: niuweidong 
-@software: PyCharm 
-@file: replace_special_util.py 
-@time: 2019/06/12 16:05 
+"""
+@author: niuweidong
+@software: PyCharm
+@file: replace_special_util.py
+@time: 2019/06/12 16:05
 """
 
-def replace_special_chars(text:str):
+def replace_special_chars(text: str):
     '''
     去除字符串中的特殊字符
     :param text: 字符串
     :return: 字符串
     '''
     try:
-        text= text.replace(
+        text = text.replace(
             r'<em>',
             r'').replace(
             r'</em>',
@@ -43,7 +43,7 @@ def replace_special_chars(text:str):
             r'\xa9',
             r'').replace(
             r'\u002F',
-            r'').replace(
+            r'/').replace(
             r'\u003E',
             r'').replace(
             u"'",
@@ -59,7 +59,7 @@ def replace_special_chars(text:str):
     except Exception as e:
         print(e)
     return text
-    
+
 
 if __name__ == "__main__":
-    pass  
+    pass

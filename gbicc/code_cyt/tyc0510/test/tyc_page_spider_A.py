@@ -365,8 +365,8 @@ class PageSpider(object):
         except Exception as e:
             logger.exception("Exception Logged!{}".format(e))
         return None
-    
-    # TODO
+
+    # 抓取翻页请求
     def get_page_detail(self, company_name, table_key, page_count):
         try:
             page_list = []
@@ -380,10 +380,10 @@ class PageSpider(object):
                     table_key,
                     company_name)
             if tycText:
-                if table_key in detail_href:
+                if table_key in list(detail_href.keys()):
                     self.detail_dicts[table_key] = self.company_detail_href(BeautifulSoup(
                         tycText, 'lxml'), detail_href[table_key])
-                elif table_key in detail_onclick:
+                elif table_key in list(detail_onclick.keys()):
                     if table_key == '_container_certificate':
                         self.detail_dicts[table_key] = self.company_certificate_spider(
                             company_name, BeautifulSoup(tycText, 'lxml'))
@@ -403,7 +403,7 @@ class PageSpider(object):
             logger.exception("Exception !{}".format(e))
     
     def company_page_spider(self, ent_name, soup, url):
-        """
+        """ 判断有无分页，构造分页URL
         :param ent_name:
         :param soup:
         :param url:
@@ -419,16 +419,23 @@ class PageSpider(object):
                 try:
                     div = span.find_parent()
                     table_key = div.get('id')
+                    if not table_key:
+                        table_key = span.find_parent().find_parent().find(
+                            'div', attrs={'class': 'data-header'}).get('id')
+
+                except Exception as findE:
+                    logger.exception(findE)
+                    continue
+                try:
                     data_count = div.find_parent().find_parent().find(
                         'span', {'class': 'data-count'})
                     if data_count:
                         data_count = data_count.text
-                    if not table_key:
-                        table_key = span.find_parent().find_parent().find(
-                            'div', attrs={'class': 'data-header'}).get('id')
-                except Exception as findE:
-                    logger.exception(findE)
-                    continue
+                except Exception as e:
+                    logger.exception(e)
+                    data_count = 0
+                   
+               
                 logger.debug('table_key=={}'.format(table_key))
                 page_span = span.find('a', string=re.compile(r'...'))
                 if page_span:
@@ -440,9 +447,9 @@ class PageSpider(object):
                 total_page_count = int(s)
                 company_name = ent_name
                 page_count = []
-                total_page_count = 10 if total_page_count > 1 else total_page_count
+                total_page_count = 10 if total_page_count > 10 else total_page_count
                 # print('total_page_count===', total_page_count)
-                total_page_count = 2 if total_page_count > 10 else total_page_count
+                # total_page_count = 2 if total_page_count > 10 else total_page_count
                 try:
                     for index in range(2, total_page_count + 1):
                         keys = self.get_page_detail(
