@@ -190,7 +190,7 @@ class MongodbClient(object):
     
     def __init__(self, host=MONGODB_HOST, port=MONGODB_PORT):
         self.db = MongoClient(host=host, port=port)[MONGODB_DATABASE]
-        self.db.authenticate(MONGODB_USER, MONGODB_PASSWORD)
+        # self.db.authenticate(MONGODB_USER, MONGODB_PASSWORD)
 
     # db = client.admin
     # # 认证用户密码
