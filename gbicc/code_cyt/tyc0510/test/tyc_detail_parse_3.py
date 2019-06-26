@@ -94,16 +94,16 @@ class TycDetailParse(object):
                 if not telephone:
                     telephone = detail_basic.xpath(
                         './div[position()=1]/div[position()=1]/span[2]/text()')
-            
+
                 baseinfo.telephone = telephone[0].replace(
                     u'"', u'').replace(u'[', u'').replace(u']', u'')
                 urls = detail_basic.xpath(
                     './div[position()=2]//a[@class="company-link"][position()=1]/text()')
                 baseinfo.url = urls[0] if urls else 'NA'
-        
+
             if table_lists:
                 # string_list=table[0].xpath('/string()')
-            
+
                 trs0 = table_lists[0].xpath('./tbody/tr')
                 trs1 = table_lists[1].xpath('./tbody/tr')
                 if trs0 and trs1:
@@ -112,11 +112,11 @@ class TycDetailParse(object):
                     dicts = self.dicts
                     try:
                         registerFund = trs1[0].xpath('./td/div/@title')[0] or 'NA'
-                
+
                     except:
                         registerFund = trs1[0].xpath('./td//text()')[0]
                     baseinfo.registerFund = registerFund
-                
+
                     baseinfo.companyStatus = trs1[1].xpath(
                         './td[2]//text()')[0]
                     baseinfo.registerNum = trs1[1].xpath('./td[4]//text()')[0]
@@ -135,12 +135,12 @@ class TycDetailParse(object):
                         business_term_end = businessTerm.split('至')[1]
                         if business_term_end == '无固定期限':
                             business_term_end = '2999-12-31'
-                
+
                     registerDate = try_and_text("variable[0].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     # 新增 纳税人资质
                     taxQualificate = try_and_text("variable[5].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     baseinfo.taxQualificate = taxQualificate[0] if taxQualificate else 'NA'
-                
+
                     checkDate = try_and_text("variable[5].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     #
                     regDate = ''.join(registerDate.strip('-'))
@@ -155,26 +155,27 @@ class TycDetailParse(object):
                     baseinfo.businessTerm = businessTerm
                     baseinfo.registerDate = registerDate
                     baseinfo.checkDate = checkDate
-                
-                    baseinfo.englishName = try_and_text("variable[8].xpath('./td[4]')[0].xpath('string(.)')", trs1).replace("'", '|')
+
+                    baseinfo.englishName = try_and_text("variable[8].xpath('./td[4]')[0].xpath('string(.)')",
+                                                        trs1).replace("'", '|')
                     # 此处改为曾用名
                     baseinfo.used_name = try_and_text("variable[8].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     baseinfo.registerSite = try_and_text("variable[9].xpath('./td[2]')[0].xpath('string(.)')",
                                                          trs1).replace(
                         '附近公司', '')
                     address_1 = address_2 = address_3 = 'NA'
-                
+
                     df = transform([baseinfo.registerSite], cut=False)
                     for addr in df.index:
                         print(addr)
                         address_1 = df.loc[addr].values[0]
                         address_2 = df.loc[addr].values[1]
                         address_3 = df.loc[addr].values[2]
-                
+
                     businessScope = try_and_text("variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     baseinfo.businessScope = businessScope.replace(
                         "'", '') if businessScope else 'NA'
-                
+
                     # 人员规模
                     baseinfo.persionSize = try_and_text("variable[6].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     # 实缴资本：
@@ -190,7 +191,7 @@ class TycDetailParse(object):
                     baseinfo.agency_name = self.agency_name
                     baseinfo.batch = self.batch
                     baseinfo.industry_4 = 'NA'
-                
+
                     value_list = [
                         baseinfo.insuredPersion,
                         baseinfo.taxQualificate,
@@ -229,11 +230,11 @@ class TycDetailParse(object):
                         business_term_begin,
                         business_term_end
                     ]
-                
+
                     # logger.debug('基本信息获取到数据====', value_list)
                     value_list = ["'" + str(value) + "'" for value in value_list]
                     insert_value = '(' + ','.join(value_list) + ',sysdate' + ')'
-                
+
                     # logger.debug insert_value
                     single_oracle.oracle_insert(
                         baseinfo.table_name, baseinfo.column_name, insert_value)
@@ -348,18 +349,18 @@ class TycDetailParse(object):
     # 解析：企业背景-->对外投资
     def html_parse_investInfo(self, index):
         logger.debug("Parse detail info 对外投资 {}".format(self.search_name))
-    
+
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_invest"]/table/tbody/tr')
         # //div[@class="out-investment-container"]/table/tbody/tr
-    
+
         if trs:
             investInfo = TycQybjDwtz()
-        
+
             key = self.search_name
             for tr in trs:
                 insert_value = ""
@@ -403,7 +404,7 @@ class TycDetailParse(object):
                 column_name = "(txt_id,company_name,invest_company,invest_person,invest_fund,invest_amount,invest_ratio,invest_date,invest_status,mark,agency_num,agency_name,batch,add_time)"
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     investInfo.table_name,
                     investInfo.column_name,
@@ -412,13 +413,13 @@ class TycDetailParse(object):
     # 解析：企业背景-->变更记录
     def html_parse_alterRecord(self, index):
         logger.debug("Parse detail info 变更记录 {}".format(self.search_name))
-    
+
         if index == 1 and not isinstance(self.selector, int):
             trs = self.selector.xpath('//table[position()=1]/tbody/tr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_changeinfo"]//table/tbody/tr')
-    
+
         if trs:
             logger.debug('环境编码：{}'.format(sys.getdefaultencoding()))
             key = self.search_name
@@ -432,7 +433,7 @@ class TycDetailParse(object):
                 alterProject = try_and_text("variable[2].xpath('./text()')", tds)
                 alterRecord.alterProject = alterProject[0] if alterProject else 'NA'
                 alterBefor = try_and_text("variable[3].xpath('./div')[0].xpath('string(.)')", tds)
-            
+
                 try:
                     alterBefor = replace_special_chars(alterBefor)
                 except:
@@ -466,7 +467,7 @@ class TycDetailParse(object):
                     alterRecord.batch]
                 #
                 column_name = "(txt_id,company_name,alter_date,alter_project,alter_befor,alter_after,mark,agency_num,agency_name,batch,add_time)"
-            
+
                 # value_list = ["'" + str(value) + "'" for value in value_list]
                 # insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
                 # #
@@ -490,7 +491,7 @@ class TycDetailParse(object):
             key = self.search_name
             # root_div = root_div[0]
             # 一行是一个tr
-        
+
             flss.credit_num = try_and_text('variable[0].xpath("./td[2]/text()")[0]', trs)
             flss.ent_name = try_and_text('variable[0].xpath("./td[4]/text()")[0]', trs)
             flss.company_tel = try_and_text('variable[1].xpath("./td[2]/text()")[0]', trs)
@@ -527,10 +528,10 @@ class TycDetailParse(object):
                 flss.agency_num,
                 flss.agency_name,
                 flss.batch]
-        
+
             value_list = ["'" + str(value) + "'" for value in value_list]
             insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-        
+
             # logger.debug('year html_parse_year_jbxx................',insert_value)
             single_oracle.oracle_insert(
                 flss.table_name, flss.column_name, insert_value)
@@ -551,7 +552,7 @@ class TycDetailParse(object):
                 key = self.search_name
                 # root_div = root_div[0]
                 # trs = root_div.find("table").find("tbody").find_all("tr")
-            
+
                 for tr in trs:
                     insert_value = ""
                     tds = tr.xpath("./td")
@@ -583,15 +584,15 @@ class TycDetailParse(object):
                         website.agency_num,
                         website.agency_name,
                         website.batch]
-                
+
                     #
                     # column_name = "(website_type,web_name,web_url,year,txt_id,company_name,mark,agency_num,agency_name,batch,add_time)"
-                
+
                     value_list = [
                         "'" + str(value) + "'" for value in value_list]
                     insert_value += '(' + ','.join(value_list) + \
                                     ',sysdate' + ')'
-                
+
                     # logger.debug('year html_parse_year_wzhwdxx................', insert_value)
                     single_oracle.oracle_insert(
                         website.table_name, website.column_name, insert_value)
@@ -610,14 +611,14 @@ class TycDetailParse(object):
             key = self.search_name
             # root_div = root_div[1]
             # 一行是一个tr
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
-            
+
                 gdcz.shareholder = try_and_text("variable[0].xpath('.//text()')[0]", tds)
                 gdcz.subscirbe_contribution = try_and_text("variable[1].xpath('./text()')[0]", tds)
-            
+
                 gdcz.contribution_time = try_and_text("variable[2].xpath('./text()')[0]", tds)
                 gdcz.contribution_style = try_and_text("variable[3].xpath('./text()')[0]", tds)
                 actual_contribution = try_and_text("variable[4].xpath('./text()')", tds)
@@ -651,7 +652,7 @@ class TycDetailParse(object):
                     gdcz.batch]
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 # logger.debug('year html_parse_year_gdczxx................', insert_value)
                 single_oracle.oracle_insert(
                     gdcz.table_name, gdcz.column_name, insert_value)
@@ -673,7 +674,7 @@ class TycDetailParse(object):
             key = self.search_name
             # root_div = root_div[2]
             # 一行是一个tr
-        
+
             flss.total_assets = try_and_text("variable[0].xpath('./td[position()=2]/text()')[0]", trs)
             flss.total_income = try_and_text("variable[0].xpath('td[position()=4]/text()')[0]", trs)
             flss.total_sales = try_and_text("variable[1].xpath('td[position()=2]/text()')[0]", trs)
@@ -682,7 +683,7 @@ class TycDetailParse(object):
             flss.net_profit = try_and_text("variable[2].xpath('td[position()=4]/text()')[0]", trs)
             flss.total_tax = try_and_text("variable[3].xpath('td[position()=2]/text()')[0]", trs)
             flss.total_debt = try_and_text("variable[3].xpath('td[position()=4]/text()')[0]", trs)
-        
+
             flss.year = year
             flss.txt_id = self.txtId
             flss.company_name = key
@@ -709,10 +710,10 @@ class TycDetailParse(object):
                 flss.txt_id]
             #
             column_name = "(batch,agency_name,agency_num,mark,total_debt,net_profit,total_profit,total_income,total_tax,operation_income,total_sales,total_assets,year,company_name,txt_id,add_time)"
-        
+
             value_list = ["'" + str(value) + "'" for value in value_list]
             insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-        
+
             single_oracle.oracle_insert(
                 flss.table_name, flss.column_name, insert_value)
 
@@ -726,7 +727,7 @@ class TycDetailParse(object):
             # trs = year_selector.xpath('//div[contains(text(),"year_outbound_company")')
             trs = year_selector.xpath(
                 '//div[text()="year_outbound_company"]/parent::*//table/tbody/tr')
-        
+
             if trs:
                 # trs = trs[0].xpath('.//table/tbody/tr')
                 dwtz = TycYearDwtz()
@@ -734,13 +735,13 @@ class TycDetailParse(object):
                 # root_div = root_div[3]
                 # 一行是一个tr
                 # trs = root_div.xpath("")
-            
+
                 for tr in trs:
                     insert_value = ""
                     tds = tr.xpath("./td")
                     dwtz.credit_num = try_and_text("variable[0].xpath('string(.)')", tds)
                     dwtz.outbound_company = try_and_text("variable[1].xpath('string(.)')", tds)
-                
+
                     dwtz.year = year
                     dwtz.txt_id = self.txtId
                     dwtz.company_name = key
@@ -759,13 +760,13 @@ class TycDetailParse(object):
                         dwtz.agency_num,
                         dwtz.agency_name,
                         dwtz.batch]
-                
+
                     #
                     value_list = [
                         "'" + str(value) + "'" for value in value_list]
                     insert_value += '(' + ','.join(value_list) + \
                                     ',sysdate' + ')'
-                
+
                     single_oracle.oracle_insert(
                         dwtz.table_name, dwtz.column_name, insert_value)
 
@@ -784,18 +785,18 @@ class TycDetailParse(object):
             # 一行是一个tr
             root_div = root_div[0]
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
                 ent_name = try_and_text("variable[1].xpath('.//td/a/text()')", tds)
                 flss.ent_name = ent_name[0] if ent_name else self.search_name
-            
+
                 flss.registered_date = try_and_text("variable[3].xpath('.//text()')[0]", tds)
                 flss.status = 'NA'
-            
+
                 flss.status = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-            
+
                 legal_representative = try_and_text("variable[2].xpath('./div/div[2]/a/text()')", tds)
                 logger.debug(
                     '负责人={} type={}'.format(
@@ -823,13 +824,13 @@ class TycDetailParse(object):
                     flss.agency_num,
                     flss.agency_name,
                     flss.batch]
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 #
                 column_name = "(txt_id,company_name,ent_name,legal_representative,status,register_date,mark,agency_num,agency_name,batch,add_time)"
-            
+
                 single_oracle.oracle_insert(
                     flss.table_name, flss.column_name, insert_value)
 
@@ -837,17 +838,17 @@ class TycDetailParse(object):
     # 解析：司法风险-->开庭公告
     def html_parse_ktgg(self, index):
         logger.debug("Parse detail info 开庭公告 {}".format(self.search_name))
-    
+
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_announcementcourt"]/table/tbody/tr')
-    
+
         if trs:
             ktggInfo = TycSffxKtgg()
-        
+
             key = self.search_name
             for tr in trs:
                 insert_value = ""
@@ -869,7 +870,7 @@ class TycDetailParse(object):
                 except Exception as e:
                     logger.debug(e)
                 # 详情 \u003C\u002Fa\u003E
-            
+
                 detail = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
                 ktggInfo.detail = replace_special_chars(detail)
             
@@ -880,7 +881,7 @@ class TycDetailParse(object):
                 ktggInfo.agency_num = self.agency_num
                 ktggInfo.agency_name = self.agency_name
                 ktggInfo.batch = self.batch
-            
+
                 value_list = [
                     ktggInfo.detail,
                     ktggInfo.defendant,
@@ -913,7 +914,7 @@ class TycDetailParse(object):
             # 一行是一个tr
             # root_div = root_div[0]
             # trs = root_div.xpath(".")
-        
+
             law_count = 0
             for tr in root_div:
                 insert_value = ""
@@ -921,7 +922,7 @@ class TycDetailParse(object):
                 if tds:
                     flss.judgment_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
                     flss.judgment_document = try_and_text("variable[2].xpath('./a/text()')[0]", tds)
-                
+
                     tds_href = try_and_text("variable[2].xpath('./a/@href')[0]", tds)
                     flss.judgment_name = try_and_text("variable[2].xpath('./a//text()')[0]", tds)
                     name = try_and_text("variable[2].xpath('./a/text()')[0]", tds)
@@ -934,7 +935,7 @@ class TycDetailParse(object):
                     case_number = try_and_text("variable[5].xpath('./span/text()')", tds)
                     flss.case_number = case_number[0] if case_number else 'NA'
                     flss.txt_id = self.txtId
-                
+
                     flss.company_name = key
                     flss.add_time = 'sysdate'
                     flss.mark = 0
@@ -982,14 +983,14 @@ class TycDetailParse(object):
             # 获得法院公告大标签
             root_div = self.selector.xpath(
                 '//div[@id="_container_court"]/table')
-    
+
         if root_div:
             flss = TycSffxFygg()
             key = self.search_name
             # 一行是一个tr
             root_div = root_div[0]
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -999,7 +1000,7 @@ class TycDetailParse(object):
                     flss.plaintiff = plaintiff
                 defendant = try_and_text("variable[3].xpath('string(.)')", tds)
                 flss.defendant = defendant if defendant else 'NA'
-            
+
                 flss.announcement_type = try_and_text("variable[4].xpath('string(.)')", tds)
                 flss.court = try_and_text("variable[5].xpath('string(.)')", tds)
                 text_info = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
@@ -1043,10 +1044,10 @@ class TycDetailParse(object):
             flss = TycSffxSxr()
             key = self.search_name
             # 一行是一个tr
-        
+
             root_div = root_div[0]
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -1055,7 +1056,7 @@ class TycDetailParse(object):
                 execution_court = try_and_text("variable[3].xpath('.//text()')", tds)
                 performance_state = try_and_text("variable[4].xpath('.//text()')", tds)
                 execute_number = try_and_text("variable[5].xpath('.//text()')", tds)
-            
+
                 flss.case_date = case_date[0] if case_date else 'NA'
                 flss.case_number = case_number[0] if case_number else 'NA'
                 flss.execution_court = execution_court[0] if execution_court else 'NA'
@@ -1071,7 +1072,7 @@ class TycDetailParse(object):
                 except BaseException:
                     pass
                 flss.detail_info = text_info
-            
+
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -1092,7 +1093,7 @@ class TycDetailParse(object):
                     flss.agency_num,
                     flss.agency_name,
                     flss.batch]
-            
+
                 insert_sql = create_insert_sql(
                     flss.table_name, flss.column_name, len(
                         flss.column_name.split(',')))
@@ -1118,7 +1119,7 @@ class TycDetailParse(object):
             root_div = root_div[0]
             # 一行是一个tr
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -1136,7 +1137,7 @@ class TycDetailParse(object):
                 except BaseException:
                     pass
                 flss.detail = text_info
-            
+
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -1156,7 +1157,7 @@ class TycDetailParse(object):
                     flss.court,
                     flss.mark,
                     flss.detail]
-            
+
                 insert_sql = create_insert_sql(
                     flss.table_name, flss.column_name, len(
                         flss.column_name.split(',')))
@@ -1166,16 +1167,16 @@ class TycDetailParse(object):
     def html_parse_sfxz(self, index):
         logger.debug("Parse detail info 司法协助 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_judicialAid"]/table/tbody/tr')
         if trs:
             sfxzInfo = TycSffxSfxz()
-        
+
             key = self.search_name
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
@@ -1206,7 +1207,7 @@ class TycDetailParse(object):
                 sfxzInfo.agency_num = self.agency_num
                 sfxzInfo.agency_name = self.agency_name
                 sfxzInfo.batch = self.batch
-            
+
                 value_list = [
                     sfxzInfo.txtId,
                     sfxzInfo.company_name,
@@ -1220,7 +1221,7 @@ class TycDetailParse(object):
                     sfxzInfo.approvalNum,
                     sfxzInfo.status,
                     sfxzInfo.detail]
-            
+
                 insert_sql = create_insert_sql(
                     sfxzInfo.table_name, sfxzInfo.column_name, len(
                         sfxzInfo.column_name.split(',')))
@@ -1242,7 +1243,7 @@ class TycDetailParse(object):
             # 一行是一个tr
             # root_div = root_div[0]
             # trs = root_div.xpath(".")
-        
+
             for tr in root_div:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -1258,7 +1259,7 @@ class TycDetailParse(object):
                 insert_department = 'NA'
                 insert_department = try_and_text("variable[3].xpath('.//text()')[0]", tds)
                 flss.insert_department = insert_department
-            
+
                 flss.out_date = CURRENT_VERSION_NULL
                 flss.out_cause = CURRENT_VERSION_NULL
                 flss.out_department = CURRENT_VERSION_NULL
@@ -1274,7 +1275,7 @@ class TycDetailParse(object):
                     flss.out_department = out_department if out_department else 'NA'
                 except BaseException:
                     pass
-            
+
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -1282,7 +1283,7 @@ class TycDetailParse(object):
                 flss.agency_num = self.agency_num
                 flss.agency_name = self.agency_name
                 flss.batch = self.batch
-            
+
                 value_list = [
                     flss.txt_id,
                     flss.company_name,
@@ -1298,7 +1299,7 @@ class TycDetailParse(object):
                     flss.out_department]
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     flss.table_name, flss.column_name, insert_value)
 
@@ -1317,7 +1318,7 @@ class TycDetailParse(object):
             # 一行是一个tr
             root_div = root_div[0]
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -1347,7 +1348,7 @@ class TycDetailParse(object):
                     flss.company_name = key
                 except:
                     flss.company_name = key
-            
+
                 flss.add_time = 'sysdate'
                 flss.mark = 0
                 flss.agency_num = self.agency_num
@@ -1368,7 +1369,7 @@ class TycDetailParse(object):
                     flss.agency_num,
                     flss.agency_name,
                     flss.batch]
-            
+
                 insert_sql = create_insert_sql(
                     flss.table_name, flss.column_name, len(
                         flss.column_name.split(',')))
@@ -1381,11 +1382,11 @@ class TycDetailParse(object):
     # 解析：经营风险--严重违法
     def html_parse_illegalSerious(self):
         logger.debug("Parse detail info 严重违法 {}".format(self.search_name))
-    
+
         trs = self.selector.xpath(
             '//div[@id="_container_illegal"]/table/tbody/tr')
         if trs:
-        
+    
             key = self.search_name
             for tr in trs:
                 insert_value = ""
@@ -1413,7 +1414,7 @@ class TycDetailParse(object):
                     illegalSerious.out_department = out_department[0] if out_department else 'NA'
                 except BaseException:
                     pass
-            
+
                 illegalSerious.txtId = self.txtId
                 illegalSerious.company_name = key
                 illegalSerious.mark = 0
@@ -1436,7 +1437,7 @@ class TycDetailParse(object):
                     illegalSerious.batch]
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     illegalSerious.table_name,
                     illegalSerious.column_name,
@@ -1461,14 +1462,14 @@ class TycDetailParse(object):
             # 一行是一个tr
             # root_div = root_div[0]
             # trs = root_div.xpath(".")
-        
+
             for tr in root_div:
                 insert_value = ""
                 tds = tr.xpath("./td")
                 # #logger.debug(tds.xpath('text()'))
                 flss.announcement_date = try_and_text("variable[1].xpath('.//text()')[0]", tds)
                 flss.registration_number = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-            
+
                 flss.pledgor = try_and_text("variable[3].xpath('.//text()')[0]", tds)
                 flss.pledgee = try_and_text("variable[4].xpath('.//text()')[0]", tds)
                 flss.status = try_and_text("variable[5].xpath('.//text()')[0]", tds)
@@ -1498,10 +1499,10 @@ class TycDetailParse(object):
                     flss.agency_num,
                     flss.agency_name,
                     flss.batch]
-            
+
                 # value_list = ["'" + str(value) + "'" for value in value_list]
                 # insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 # single_oracle.oracle_insert(flss.table_name, flss.column_name, insert_value)
                 insert_sql = create_insert_sql(
                     flss.table_name, flss.column_name, len(
@@ -1521,10 +1522,10 @@ class TycDetailParse(object):
             logger.debug(
                 'cccc有动产抵押。。。。。。。。。。。。。。。。。{}'.format(
                     self.search_name))
-        
+
             key = self.search_name
             # 一行是一个tr
-        
+
             for tr in root_div:
                 flss = tycJyfxDcdy()
                 insert_value = ""
@@ -1535,7 +1536,7 @@ class TycDetailParse(object):
                 flss.guarantee_type = try_and_text("variable[3].xpath('./text()')[0]", tds)
                 flss.registration_department = try_and_text("variable[5].xpath('./text()')[0]", tds)
                 flss.status = try_and_text("variable[6].xpath('./text()')[0]", tds)
-            
+
                 detail_info = try_and_text("variable[7].xpath('.//script/text()')[0]", tds)
                 # tds[7].text.replace("详情 》", "").strip().replace("'", '\\"')
                 flss.detail_info = replace_special_chars(detail_info)
@@ -1560,7 +1561,7 @@ class TycDetailParse(object):
                     flss.agency_num,
                     flss.agency_name,
                     flss.batch]
-            
+
                 print('tycJyfxDcdy==============', value_list)
                 insert_sql = create_insert_sql(
                     flss.table_name, flss.column_name, len(
@@ -1577,7 +1578,7 @@ class TycDetailParse(object):
             trs = self.selector.xpath(
                 '//div[@id="_container_towntax"][position()=1]//table[position()=1]/tbody/tr')
         if trs:
-        
+    
             key = self.search_name
             taxesNotice = TycJyfxQsgg()
             for tr in trs:
@@ -1591,7 +1592,7 @@ class TycDetailParse(object):
                 taxesNotice.taxesOffice = try_and_text("variable[6].xpath('text()')[0]", tds)
                 # 新增 详情
                 taxesNotice.detail = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
-            
+
                 taxesNotice.txtId = self.txtId
                 taxesNotice.company_name = key
                 taxesNotice.mark = 0
@@ -1599,7 +1600,7 @@ class TycDetailParse(object):
                 taxesNotice.agency_num = self.agency_num
                 taxesNotice.agency_name = self.agency_name
                 taxesNotice.batch = self.batch
-            
+
                 value_list = [
                     taxesNotice.detail,
                     taxesNotice.batch,
@@ -1614,10 +1615,10 @@ class TycDetailParse(object):
                     taxesNotice.taxesDate,
                     taxesNotice.company_name,
                     taxesNotice.txtId]
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     taxesNotice.table_name,
                     taxesNotice.column_name,
@@ -1627,16 +1628,16 @@ class TycDetailParse(object):
     def html_parse_sfpm(self, index):
         logger.debug("Parse detail info 司法拍卖 {}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_judicialSale"]/table/tbody/tr')
         if trs:
             sfpaInfo = TycJyfxSfpm()
-        
+
             key = self.search_name
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
@@ -1658,7 +1659,7 @@ class TycDetailParse(object):
                 sfpaInfo.auction_detail = replace_special_chars(text_info)
             
                 # sfpaInfo.auction_detail = '详情'
-            
+
                 sfpaInfo.txtId = self.txtId
                 sfpaInfo.company_name = key
                 sfpaInfo.mark = 0
@@ -1680,7 +1681,7 @@ class TycDetailParse(object):
                     sfpaInfo.batch]
                 # value_list = ["'" + str(value) + "'" for value in value_list]
                 # insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 insert_sql = create_insert_sql(
                     sfpaInfo.table_name, sfpaInfo.column_name, len(
                         sfpaInfo.column_name.split(',')))
@@ -1689,9 +1690,9 @@ class TycDetailParse(object):
     # 解析：经营风险-->清算信息
     def html_parse_qsxx(self, index):
         logger.debug("Parse detail info 清算信息 {}".format(self.search_name))
-    
+
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
         else:
             trs = self.selector.xpath(
@@ -1700,17 +1701,17 @@ class TycDetailParse(object):
             qsxxInfo = TycJyfxQsxx()
             insert_value = ""
             key = self.search_name
-        
+
             tds1 = trs[0].xpath('./td')
             tds2 = trs[1].xpath('./td')
             # 清算组负责人
             principal = try_and_text("variable[1].xpath('./text()')", tds1)
             qsxxInfo.principal = principal[0] if principal else 'NA'
-        
+
             # 清算组成员
             member = try_and_text("variable[1].xpath('./text()')", tds2)
             qsxxInfo.member = member[0] if member else 'NA'
-        
+
             qsxxInfo.txtId = self.txtId
             qsxxInfo.company_name = key
             qsxxInfo.mark = 0
@@ -1718,7 +1719,7 @@ class TycDetailParse(object):
             qsxxInfo.agency_num = self.agency_num
             qsxxInfo.agency_name = self.agency_name
             qsxxInfo.batch = self.batch
-        
+
             value_list = [
                 qsxxInfo.member,
                 qsxxInfo.principal,
@@ -1730,7 +1731,7 @@ class TycDetailParse(object):
                 qsxxInfo.txtId]
             value_list = ["'" + str(value) + "'" for value in value_list]
             insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-        
+
             single_oracle.oracle_insert(
                 qsxxInfo.table_name,
                 qsxxInfo.column_name,
@@ -1739,15 +1740,15 @@ class TycDetailParse(object):
     # 解析：经营风险-->公示催告
     def html_parse_gscg(self):
         logger.debug("Parse detail info 公示催告 {}".format(self.search_name))
-    
+
         trs = self.selector.xpath(
             '//div[@id="_container_publicnoticeItem"]/table/tbody/tr')
-    
+
         if trs:
             gscgInfo = TycJyfxGscg()
-        
+
             key = self.search_name
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
@@ -1765,7 +1766,7 @@ class TycDetailParse(object):
                 text_info = try_and_text("variable[6].xpath('.//text()')[0]", tds)
                 text_info = replace_special_chars(text_info)
                 gscgInfo.detail = text_info
-            
+
                 gscgInfo.txtId = self.txtId
                 gscgInfo.company_name = key
                 gscgInfo.mark = 0
@@ -1773,7 +1774,7 @@ class TycDetailParse(object):
                 gscgInfo.agency_num = self.agency_num
                 gscgInfo.agency_name = self.agency_name
                 gscgInfo.batch = self.batch
-            
+
                 value_list = [
                     gscgInfo.txtId,
                     gscgInfo.company_name,
@@ -1855,9 +1856,9 @@ class TycDetailParse(object):
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_teamMember"]/div/table/tbody/tr')
-    
+
         if trs:
-        
+    
             coreTeam = TycQyfzHxtd()
             key = self.search_name
             # divs = divs[0]
@@ -1870,10 +1871,10 @@ class TycDetailParse(object):
                 else:
                     personName = tds[1].xpath('.//span/text()')[1]
                 coreTeam.personName = personName
-            
+
                 coreTeam.position = try_and_text("variable[2].xpath('.//text()')[0]", tds)
                 personInfo = try_and_text("variable[3].xpath('./div/div/text()')[0]", tds)
-            
+
                 coreTeam.personInfo = ''.join(personInfo)
                 coreTeam.txtId = self.txtId
                 coreTeam.company_name = key
@@ -1894,7 +1895,7 @@ class TycDetailParse(object):
                     coreTeam.batch]
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     coreTeam.table_name, coreTeam.column_name, insert_value)
 
@@ -1906,10 +1907,10 @@ class TycDetailParse(object):
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_firmProduct"]/table/tbody/tr')
-    
+
         if trs:
             entBusiness = TycQyfzQyyw()
-        
+
             key = self.search_name
             # divs = divs[0]
             for tr in trs:
@@ -1937,9 +1938,9 @@ class TycDetailParse(object):
                     entBusiness.txtId]
                 #
                 value_list = ["'" + str(value) + "'" for value in value_list]
-            
+
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     entBusiness.table_name,
                     entBusiness.column_name,
@@ -1953,12 +1954,12 @@ class TycDetailParse(object):
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_touzi"]/table/tbody/tr')
-    
+
         if trs:
             investEvent = TycQyfzTzsj()
-        
+
             key = self.search_name
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
@@ -1994,10 +1995,10 @@ class TycDetailParse(object):
                     investEvent.batch]
                 #
                 column_name = "(txt_id,company_name,touzi_date,touzi_round,touzi_money,touzi_ent,touzi_product,touzi_area,touzi_industry,touzi_business,mark,agency_num,agency_name,batch,add_time)"
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     investEvent.table_name,
                     investEvent.column_name,
@@ -2012,7 +2013,7 @@ class TycDetailParse(object):
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_jingpin"]/div/table/tbody/tr')
-    
+
         if trs:
             jpInfo = TycQyfzJpxx()
             key = self.search_name
@@ -2047,17 +2048,17 @@ class TycDetailParse(object):
                     jpInfo.agency_num,
                     jpInfo.agency_name,
                     jpInfo.batch]
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate'')'
-            
+
                 single_oracle.oracle_insert(
                     jpInfo.table_name, jpInfo.column_name, insert_value)
 
     # 招聘
     def html_parse_recruitment(self, index):
         logger.debug("Parse detail info 招聘 {}".format(self.search_name))
-    
+
         # 判断分页
         if index == 1 and not isinstance(self.selector, int):
             # 获得招聘大标签
@@ -2068,7 +2069,7 @@ class TycDetailParse(object):
             if not root_div:
                 root_div = self.selector.xpath(
                     '//div[@id="_container_baipin"]/table/tbody/tr')
-    
+
         if root_div:
             # 一行是一个
             flss = TycJyzkZp()
@@ -2084,12 +2085,12 @@ class TycDetailParse(object):
                 education = try_and_text("variable[4].xpath('.//text()')[0]", tds)
                 work_year = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 flss.work_city = try_and_text("variable[6].xpath('.//text()')[0]", tds)
-            
+
                 flss.work_year = work_year
                 flss.recruitment_numbers = '无明确人数'
                 flss.education = education
                 href = tr_hrefs
-            
+
                 # 新增 详情 brand
                 text_info = 'NA'
                 try:
@@ -2132,15 +2133,15 @@ class TycDetailParse(object):
     # 解析：经营状况-->行政许可【工商局】
     def html_parse_gsj(self, index):
         logger.debug("Parse detail info 工商局 {}".format(self.search_name))
-    
+
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
-        
+    
             gsjInfo = TycJyzkGsj()
-        
+    
             key = self.search_name
-        
+    
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
@@ -2149,25 +2150,25 @@ class TycDetailParse(object):
                 # 许可文件名称
                 gsjInfo.licenseDocName = try_and_text("variable[2].xpath('./text()')[0]", tds)
                 # 有效期自
-            
+
                 gsjInfo.validityBegin = try_and_text("variable[3].xpath('./text()')[0]", tds)
                 # 有效期至
-            
+
                 gsjInfo.validityEnd = try_and_text("variable[4].xpath('./text()')[0]", tds)
                 # 许可机关
-            
+
                 gsjInfo.licenseAuthority = try_and_text("variable[5].xpath('./text()')[0]", tds)
                 # 许可内容
                 gsjInfo.licenseContent = try_and_text("variable[6].xpath('./text()')[0]", tds)
-    
+
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_licensing"]/table/tbody/tr')
             if trs:
                 gsjInfo = TycJyzkGsj()
-            
+
                 key = self.search_name
-            
+
                 for tr in trs:
                     insert_value = ""
                     tds = tr.xpath('./td')
@@ -2176,17 +2177,17 @@ class TycDetailParse(object):
                     # 许可文件名称
                     gsjInfo.licenseDocName = try_and_text("variable[2].xpath('./text()')[0]", tds)
                     # 有效期自
-                
+
                     gsjInfo.validityBegin = try_and_text("variable[3].xpath('./text()')[0]", tds)
                     # 有效期至
-                
+
                     gsjInfo.validityEnd = try_and_text("variable[4].xpath('./text()')[0]", tds)
                     # 许可机关
-                
+
                     gsjInfo.licenseAuthority = try_and_text("variable[5].xpath('./text()')[0]", tds)
                     # 许可内容
                     gsjInfo.licenseContent = try_and_text("variable[6].xpath('./text()')[0]", tds)
-            
+
                 gsjInfo.txtId = self.txtId
                 gsjInfo.company_name = key
                 gsjInfo.mark = 0
@@ -2194,7 +2195,7 @@ class TycDetailParse(object):
                 gsjInfo.agency_num = self.agency_num
                 gsjInfo.agency_name = self.agency_name
                 gsjInfo.batch = self.batch
-            
+
                 value_list = [
                     gsjInfo.batch,
                     gsjInfo.agency_name,
@@ -2208,31 +2209,31 @@ class TycDetailParse(object):
                     gsjInfo.licenseDocNum,
                     gsjInfo.company_name,
                     gsjInfo.txtId]
-            
+
                 #
                 column_name = "(batch,agency_name,agency_num,mark,license_content,license_authority,validity_end,validity_begin,license_document_name,license_documet_num,company_name,txt_id,add_time)"
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     gsjInfo.table_name, gsjInfo.column_name, insert_value)
 
     # 解析：经营状况-->行政许可【信用中国】
     def html_parse_xyzg(self, index):
         logger.debug("Parse detail info 信用中国 {}".format(self.search_name))
-    
+
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_licensingXyzg"]//table/tbody/tr')
         if trs:
             dxxkInfo = TycJyzkXyzg()
-        
+
             key = self.search_name
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
@@ -2246,7 +2247,7 @@ class TycDetailParse(object):
                 text_info = try_and_text("variable[4].xpath('.//script/text()')[0]", tds)
                 text_info = replace_special_chars(text_info)
                 dxxkInfo.detail = text_info
-            
+
                 dxxkInfo.txtId = self.txtId
                 dxxkInfo.company_name = key
                 dxxkInfo.mark = 0
@@ -2254,7 +2255,7 @@ class TycDetailParse(object):
                 dxxkInfo.agency_num = self.agency_num
                 dxxkInfo.agency_name = self.agency_name
                 dxxkInfo.batch = self.batch
-            
+
                 value_list = [
                     dxxkInfo.txtId,
                     dxxkInfo.company_name,
@@ -2268,7 +2269,7 @@ class TycDetailParse(object):
                     dxxkInfo.batch]
                 #
                 # column_name = "(txt_id,company_name,license_documet_num,license_authority,license_date,detail,mark,agency_num,agency_name,batch,add_time)"
-            
+
                 insert_sql = create_insert_sql(
                     dxxkInfo.table_name, dxxkInfo.column_name, len(
                         dxxkInfo.column_name.split(',')))
@@ -2293,7 +2294,7 @@ class TycDetailParse(object):
             root_div = root_div[0]
             # 一行是一个tr
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("td")
@@ -2321,10 +2322,10 @@ class TycDetailParse(object):
                     flss.agency_num,
                     flss.agency_name,
                     flss.batch]
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     flss.table_name, flss.column_name, insert_value)
 
@@ -2370,10 +2371,10 @@ class TycDetailParse(object):
                     flss.agency_name,
                     flss.batch]
                 # column_name = "(check_date, type, result, check_department, txt_id, company_name, mark ,agency_num,agency_name,batch,add_time)"
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(flss.table_name, flss.column_name, insert_value)
 
     # 解析：经营状况--资质证书
@@ -2385,7 +2386,7 @@ class TycDetailParse(object):
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_certificate"][position()=1]//table[position()=1]/tbody/tr')
-    
+
         if trs:
             certificateInfo = TycJyzkZzzs()
             for tr in trs:
@@ -2426,10 +2427,10 @@ class TycDetailParse(object):
                     certificateInfo.agency_num,
                     certificateInfo.agency_name,
                     certificateInfo.batch]
-            
+
                 #
                 # column_name = "(detail,txt_id,company_name,certificate_num,certificate_type,send_date,off_date,mark,agency_num,agency_name,batch,add_time)"
-            
+
                 # value_list = ["'" + str(value) + "'" for value in value_list]
                 # insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
                 #
@@ -2458,7 +2459,7 @@ class TycDetailParse(object):
             # 一行是一个tr
             root_div = root_div[0]
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -2484,10 +2485,10 @@ class TycDetailParse(object):
                     flss.agency_num,
                     flss.agency_name,
                     flss.batch]
-            
+
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     flss.table_name, flss.column_name, insert_value)
     
@@ -2558,10 +2559,10 @@ class TycDetailParse(object):
             trs = self.selector.xpath('//div[@class="wechat"][position()=1]')
         else:
             trs = self.selector.xpath('//div[@id="_container_wechat"]/table/tbody/tr')
-    
+
         if trs:
             entWeChat = TycJyzkWxgzh()
-        
+
             key = self.search_name
             for tr in trs:
                 insert_value = ""
@@ -2569,7 +2570,7 @@ class TycDetailParse(object):
                 entWeChat.mp_number = try_and_text("variable.xpath('./td')[2].xpath('./span/text()')[0]", tr)
                 entWeChat.mp_info = try_and_text("variable.xpath('./td')[4].xpath('./div/div/text()')[0]", tr)
                 entWeChat.detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
-            
+
                 entWeChat.txtId = self.txtId
                 entWeChat.company_name = key
                 entWeChat.mark = 0
@@ -2588,19 +2589,19 @@ class TycDetailParse(object):
                     entWeChat.agency_num,
                     entWeChat.agency_name,
                     entWeChat.batch]
-            
+
                 # value_list = ["'" + str(value) + "'" for value in value_list]
                 # insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
                 #
                 # single_oracle.oracle_insert(
                 #     entWeChat.table_name, entWeChat.column_name, insert_value)
                 column_name = "(txt_id,company_name,mp_name,mp_number,mp_info,mark,detail,agency_num,agency_name,batch,add_time)"
-            
+
                 insert_sql = create_insert_sql(entWeChat.table_name, entWeChat.column_name, len(
                     entWeChat.column_name.split(','))
                                                )
                 single_oracle.oracle_insert_sql_param(insert_sql, value_list)
-            
+
                 # 进出口信用
 
     def html_parse_outputxy(self):
@@ -2612,7 +2613,7 @@ class TycDetailParse(object):
             flss = TycJyzkJckxy()
             key = self.search_name
             # 一行是一个tr
-    
+
             for tr in root_div:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -2726,14 +2727,14 @@ class TycDetailParse(object):
             trs = self.selector.xpath("//table[position()=1]/tbody/tr")
         else:
             trs = self.selector.xpath('//div[@id="_container_purchaselandV2"]/table/tbody/tr')
-    
+
         if trs:
             key = self.search_name
             for tr in trs:
                 insert_value = ""
                 buyInfo = TycJyzkGdxx()
                 tds = tr.xpath('./td')
-            
+
                 # 签订日期
                 buyInfo.gdSignDate = try_and_text("variable[6].xpath('./text()')[0]", tds)
                 # 土地坐落
@@ -2751,7 +2752,7 @@ class TycDetailParse(object):
                 buyInfo.gdArea = str(gd_area) + '公顷'
                 buyInfo.gdRegion = gd_region
                 buyInfo.gdOperate = CURRENT_VERSION_NULL
-            
+
                 # 新增 土地坐落
                 buyInfo.located = where
                 # 新增 土地用途
@@ -2781,31 +2782,31 @@ class TycDetailParse(object):
                     buyInfo.agency_num,
                     buyInfo.agency_name,
                     buyInfo.batch]
-            
+
                 # column_name = "(txt_id,company_name,gd_sign_date,gd_area,located,land_use,supply_method,mark,agency_num,agency_name,batch,add_time)"
                 # "(txt_id,company_name,gd_sign_date,gd_area,gd_region,located,land_use,supply_method,mark,agency_num,agency_name,batch,add_time)"
                 
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
-            
+
                 single_oracle.oracle_insert(
                     buyInfo.table_name, buyInfo.column_name, insert_value)
 
     # 解析：经营状况-->电信许可
     def html_parse_dxxk(self, index):
         logger.debug("Parse detail info 电信许可 {}".format(self.search_name))
-    
+
         if index == 1 and not isinstance(self.selector, int):
-        
+    
             trs = self.selector.xpath('//table/tbody/tr')
         else:
             trs = self.selector.xpath(
                 '//div[@id="_container_permission"]/table/tbody/tr')
         if trs:
             dxxkInfo = TycJyzkDxxk()
-        
+
             key = self.search_name
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
@@ -2819,7 +2820,7 @@ class TycDetailParse(object):
                 text_info = try_and_text("variable[4].xpath('./script/text()')[0]", tds)
                 text_info = replace_special_chars(text_info)
                 dxxkInfo.detailInfo = text_info
-            
+
                 dxxkInfo.txtId = self.txtId
                 dxxkInfo.company_name = key
                 dxxkInfo.mark = 0
@@ -2827,7 +2828,7 @@ class TycDetailParse(object):
                 dxxkInfo.agency_num = self.agency_num
                 dxxkInfo.agency_name = self.agency_name
                 dxxkInfo.batch = self.batch
-            
+
                 value_list = [
                     dxxkInfo.txtId,
                     dxxkInfo.company_name,
@@ -2841,7 +2842,7 @@ class TycDetailParse(object):
                     dxxkInfo.batch]
                 #
                 column_name = "(txt_id,company_name,mark,license_key,business_sphere,available,detail_info,agency_num,agency_name,batch,add_time)"
-            
+
                 insert_sql = create_insert_sql(
                     dxxkInfo.table_name, dxxkInfo.column_name, len(
                         dxxkInfo.column_name.split(',')))
@@ -2865,10 +2866,10 @@ class TycDetailParse(object):
             flss = TycZscqSbxx()
             key = self.search_name
             # 一行是一个tr
-    
+
             root_div = root_div[0]
             trs = root_div.xpath("./tbody/tr")
-    
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -2888,9 +2889,9 @@ class TycDetailParse(object):
                         text_info = replace_special_chars(text_info)
                     except BaseException:
                         pass
-    
+
                     flss.detail = text_info
-    
+
                     flss.txt_id = self.txtId
                     flss.company_name = key
                     flss.add_time = 'sysdate'
@@ -2912,7 +2913,7 @@ class TycDetailParse(object):
                         flss.agency_num,
                         flss.agency_name,
                         flss.batch]
-    
+
                     #
                     # column_name = "(detail,txt_id,company_name,apply_date,trademark,trademark_name,registration_number,type,status,mark,agency_num,agency_name,batch,add_time)"
                     single_oracle.oracle_insert_sql_param(
@@ -2993,7 +2994,7 @@ class TycDetailParse(object):
                     flss.table_name, flss.column_name, len(
                         flss.column_name.split(',')))
                 single_oracle.oracle_insert_sql_param(insert_sql, value_list)
-        
+
             # column_name = "(apply_publish_date,patent_name,apply_number,apply_publish_number,detail_info,txt_id,company_name,mark,agency_num,agency_name,batch,patent_type,add_time)"
 
     # 软件著作权
@@ -3011,7 +3012,7 @@ class TycDetailParse(object):
             # 一行是一个tr
             root_div = root_div[0]
             trs = root_div.xpath("./tbody/tr")
-        
+
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
@@ -3024,7 +3025,7 @@ class TycDetailParse(object):
                 text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
                 text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
-            
+
                 flss.txt_id = self.txtId
                 flss.company_name = key
                 flss.add_time = 'sysdate'
@@ -3048,7 +3049,7 @@ class TycDetailParse(object):
                     flss.registration_number]
                 #
                 # column_name = "(batch,agency_num,mark,detail_info,version_number,type_number,software_referred,software_name,company_name,txt_id,approval_date,agency_name,registration_number,add_time)"
-            
+
                 insert_sql = create_insert_sql(
                     flss.table_name, flss.column_name, len(
                         flss.column_name.split(',')))
@@ -3058,14 +3059,14 @@ class TycDetailParse(object):
     # 作品著作权
     def html_parse_copyzzq(self, index):
         logger.debug("Parse detail info 作品著作权 {}".format(self.search_name))
-    
+
         # 获得作品著作权大标签
         if index == 1 and not isinstance(self.selector, int):
             root_div = self.selector.xpath("//table/table/tbody/tr")
         else:
             root_div = self.selector.xpath(
                 '//div[@id="_container_copyrightWorks"]/table/tbody/tr')
-    
+
         if root_div:
             flss = TycZscqZpzzq()
             key = self.search_name
