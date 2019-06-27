@@ -29,41 +29,96 @@ logger = logging.getLogger("loggerText")
 
 CURRENT_VERSION_NULL = '此版本无此信息'
 
-NEXT_PAGE_DICT = {'北京百度网讯科技有限公司': {'tyc_zscq_wzba': '网站备案', 'tyc_qybj_dwtz': '对外投资', 'tyc_jyfx_xzcf': '行政处罚 工商局',
-                                   'tyc_qybj_bgjl': '变更记录', 'tyc_sffx_ktgg': '开庭公告', 'tyc_sffx_flss': '法律诉讼',
-                                   'tyc_sffx_fygg': '法院公告',
-                                   'tyc_jyfx_gqcz': '股权出质', 'tyc_qyfz_hxtd': '核心团队', 'tyc_qyfz_qyyw': '企业业务',
-                                   'tyc_qyfz_tzsj': '投资事件',
-                                   'tyc_qyfz_jpxx': '竞品信息', 'tyc_jyzk_zp': '招聘信息', 'tyc_jyzk_gsj': '行政许可 工商局',
-                                   'tyc_jyzk_ccjc': '抽查检查',
-                                   'tyc_jyzk_zzzs': '资质证书', 'tyc_jyzk_ztb': '招投标', 'tyc_jyzk_cpxx': '产品信息',
-                                   'tyc_jyzk_wxgzh': '微信公众号',
-                                   'tyc_zscq_sbxx': '商标信息', 'tyc_zscq_zl': '专利', 'tyc_zscq_zzq': '软件著作权',
-                                   'tyc_zscq_zpzzq': '作品著作权'},
-                  '中国移动通信集团广东有限公司': {'tyc_zscq_wzba': '网站备案', 'tyc_qybj_bgjl': '变更记录', 'tyc_qybj_fzjg': '分支机构',
-                                     'tyc_sffx_ktgg': '开庭公告', 'tyc_sffx_flss': '法律诉讼', 'tyc_sffx_fygg': '法院公告',
-                                     'tyc_jyzk_gsj': '行政许可 工商局',
-                                     'tyc_jyzk_ztb': '招投标', 'tyc_jyzk_wxgzh': '微信公众号', 'tyc_jyzk_gdxx': '购地信息',
-                                     'tyc_zscq_sbxx': '商标信息', 'tyc_zscq_zl': '专利', 'tyc_zscq_zzq': '软件著作权'},
-                  '佐源集团有限公司': {'tyc_sffx_sxr': '失信人', 'tyc_sffx_bzxr': '被执行人', 'tyc_sffx_sfxz': '司法协助',
-                               'tyc_qybj_bgjl': '变更记录', 'tyc_sffx_ktgg': '开庭公告', 'tyc_sffx_flss': '法律诉讼',
-                               'tyc_sffx_fygg': '法院公告',
-                               'tyc_jyfx_qsgg': '欠税公告', 'tyc_zscq_sbxx': '商标信息', 'tyc_zscq_zl': '专利'},
-                  '乐视控股（北京）有限公司': {'tyc_qybj_dwtz': '对外投资', 'tyc_sffx_sxr': '失信人', 'tyc_sffx_bzxr': '被执行人',
-                                   'tyc_qybj_bgjl': '变更记录', 'tyc_sffx_ktgg': '开庭公告', 'tyc_sffx_flss': '法律诉讼',
-                                   'tyc_sffx_fygg': '法院公告', 'tyc_sffx_sfxz': '司法协助', 'tyc_jyfx_gqcz': '股权出质',
-                                   'tyc_qyfz_jpxx': '竞品信息'},
-                  '北京京东世纪贸易有限公司': {'tyc_qybj_dwtz': '对外投资', 'tyc_jyzk_ccjc': '抽查检查', 'tyc_jyzk_xyzg': '行政许可 信用中国',
-                                   'tyc_qybj_bgjl': '变更记录', 'tyc_sffx_ktgg': '开庭公告', 'tyc_sffx_flss': '法律诉讼',
-                                   'tyc_sffx_fygg': '法院公告',
-                                   'tyc_jyfx_xzcf': '行政处罚 工商局', 'tyc_jyfx_sfpm': '司法拍卖', 'tyc_qyfz_tzsj': '投资事件',
-                                   'tyc_qyfz_jpxx': '竞品信息', 'tyc_jyzk_zp': '招聘信息', 'tyc_jyzk_zzzs': '资质证书',
-                                   'tyc_jyzk_ztb': '招投标', 'tyc_jyzk_wxgzh': '微信公众号', 'tyc_zscq_sbxx': '商标信息',
-                                   'tyc_zscq_zl': '专利', 'tyc_zscq_zzq': '软件著作权', 'tyc_zscq_zpzzq': '作品著作权'},
-                  '武汉品口科技有限责任公司': {},
-                  '浙江海正动物保健品有限公司': {'tyc_jyzk_gsj': '行政许可 工商局', 'tyc_zscq_zl': '专利'},
-                  '河南丰利环保科技有限公司': {'tyc_qybj_bgjl': '变更记录', 'tyc_sffx_fygg': '法院公告', 'tyc_zscq_sbxx': '商标信息', }
-                  }
+NEXT_PAGE_DICT = {
+    '北京百度网讯科技有限公司': {
+        'tyc_zscq_wzba': '网站备案',
+        'tyc_qybj_dwtz': '对外投资',
+        'tyc_jyfx_xzcf': '行政处罚 工商局',
+        'tyc_qybj_bgjl': '变更记录',
+        'tyc_sffx_ktgg': '开庭公告',
+        'tyc_sffx_flss': '法律诉讼',
+        'tyc_sffx_fygg': '法院公告',
+        'tyc_jyfx_gqcz': '股权出质',
+        'tyc_qyfz_hxtd': '核心团队',
+        'tyc_qyfz_qyyw': '企业业务',
+        'tyc_qyfz_tzsj': '投资事件',
+        'tyc_qyfz_jpxx': '竞品信息',
+        'tyc_jyzk_zp': '招聘信息',
+        'tyc_jyzk_gsj': '行政许可 工商局',
+        'tyc_jyzk_ccjc': '抽查检查',
+        'tyc_jyzk_zzzs': '资质证书',
+        'tyc_jyzk_ztb': '招投标',
+        'tyc_jyzk_cpxx': '产品信息',
+        'tyc_jyzk_wxgzh': '微信公众号',
+        'tyc_zscq_sbxx': '商标信息',
+        'tyc_zscq_zl': '专利',
+        'tyc_zscq_zzq': '软件著作权',
+        'tyc_zscq_zpzzq': '作品著作权'},
+    '中国移动通信集团广东有限公司': {
+        'tyc_zscq_wzba': '网站备案',
+        'tyc_qybj_bgjl': '变更记录',
+        'tyc_qybj_fzjg': '分支机构',
+        'tyc_sffx_ktgg': '开庭公告',
+        'tyc_sffx_flss': '法律诉讼',
+        'tyc_sffx_fygg': '法院公告',
+        'tyc_jyzk_gsj': '行政许可 工商局',
+        'tyc_jyzk_ztb': '招投标',
+        'tyc_jyzk_wxgzh': '微信公众号',
+        'tyc_jyzk_gdxx': '购地信息',
+        'tyc_zscq_sbxx': '商标信息',
+        'tyc_zscq_zl': '专利',
+        'tyc_zscq_zzq': '软件著作权'},
+    '佐源集团有限公司': {
+        'tyc_sffx_sxr': '失信人',
+        'tyc_sffx_bzxr': '被执行人',
+        'tyc_sffx_sfxz': '司法协助',
+        'tyc_qybj_bgjl': '变更记录',
+        'tyc_sffx_ktgg': '开庭公告',
+        'tyc_sffx_flss': '法律诉讼',
+        'tyc_sffx_fygg': '法院公告',
+        'tyc_jyfx_qsgg': '欠税公告',
+        'tyc_zscq_sbxx': '商标信息',
+        'tyc_zscq_zl': '专利'},
+    '乐视控股（北京）有限公司': {
+        'tyc_qybj_dwtz': '对外投资',
+        'tyc_sffx_sxr': '失信人',
+        'tyc_sffx_bzxr': '被执行人',
+        'tyc_qybj_bgjl': '变更记录',
+        'tyc_sffx_ktgg': '开庭公告',
+        'tyc_sffx_flss': '法律诉讼',
+        'tyc_sffx_fygg': '法院公告',
+        'tyc_sffx_sfxz': '司法协助',
+        'tyc_jyfx_gqcz': '股权出质',
+        'tyc_qyfz_jpxx': '竞品信息'},
+    '北京京东世纪贸易有限公司': {
+        'tyc_qybj_dwtz': '对外投资',
+        'tyc_jyzk_ccjc': '抽查检查',
+        'tyc_jyzk_xyzg': '行政许可 信用中国',
+        'tyc_qybj_bgjl': '变更记录',
+        'tyc_sffx_ktgg': '开庭公告',
+        'tyc_sffx_flss': '法律诉讼',
+        'tyc_sffx_fygg': '法院公告',
+        'tyc_jyfx_xzcf': '行政处罚 工商局',
+        'tyc_jyfx_sfpm': '司法拍卖',
+        'tyc_qyfz_tzsj': '投资事件',
+        'tyc_qyfz_jpxx': '竞品信息',
+        'tyc_jyzk_zp': '招聘信息',
+        'tyc_jyzk_zzzs': '资质证书',
+        'tyc_jyzk_ztb': '招投标',
+                        'tyc_jyzk_wxgzh': '微信公众号',
+                        'tyc_zscq_sbxx': '商标信息',
+                        'tyc_zscq_zl': '专利',
+                        'tyc_zscq_zzq': '软件著作权',
+                        'tyc_zscq_zpzzq': '作品著作权'},
+    '武汉品口科技有限责任公司': {},
+    '浙江海正动物保健品有限公司': {
+        'tyc_jyzk_gsj': '行政许可 工商局',
+        'tyc_zscq_zl': '专利'},
+    '河南丰利环保科技有限公司': {
+        'tyc_qybj_bgjl': '变更记录',
+        'tyc_sffx_fygg': '法院公告',
+        'tyc_zscq_sbxx': '商标信息',
+    }}
 
 
 def check_next_page(company_name, table_name):
@@ -74,12 +129,14 @@ def check_next_page(company_name, table_name):
     '''
     global NEXT_PAGE_DICT
     try:
-        if table_name in NEXT_PAGE_DICT[company_name] and NEXT_PAGE_DICT[company_name].get(table_name):
+        if table_name in NEXT_PAGE_DICT[company_name] and NEXT_PAGE_DICT[company_name].get(
+                table_name):
             del NEXT_PAGE_DICT[company_name][table_name]
     except Exception as e:
         print('check next page errot:{}'.format(e))
 
-def check_company_next_page(NEXT_PAGE_DICT,search_name):
+
+def check_company_next_page(NEXT_PAGE_DICT, search_name):
     '''
     汇总结算当前公司所有翻页模块是否正常解析，把未正常翻页的模块对应表名入库check_result
     :param NEXT_PAGE_DICT: 标杆企业有分页的表格键值对
@@ -89,13 +146,14 @@ def check_company_next_page(NEXT_PAGE_DICT,search_name):
     # global NEXT_PAGE_DICT
     if NEXT_PAGE_DICT[search_name]:
         # 记录未成功解析的企业和对应的模块，并入库记录
-        not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].values()))[1:-1].replace('\'',
-                                                                                              '')  # 得出未解析的模块名称拼接字符串
+        not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].values()))[
+            1:-1].replace('\'', '')  # 得出未解析的模块名称拼接字符串
         next_page_parse = CheckResult()
         next_page_parse.company_name = search_name
         next_page_parse.add_time = func.now()
         next_page_parse.different_reason = '分页未解析模块:' + not_parse_table_names
-        next_page_parse.table_name = str(list(NEXT_PAGE_DICT[search_name].keys()))[1:-1].replace('\'', '')
+        next_page_parse.table_name = str(list(NEXT_PAGE_DICT[search_name].keys()))[
+            1:-1].replace('\'', '')
         next_page_parse.table_field = '-'
         next_page_parse.standard_value = '-'
         next_page_parse.current_value = '-'
@@ -107,7 +165,8 @@ def check_company_next_page(NEXT_PAGE_DICT,search_name):
             single_oracle_orm.commit()
         except Exception as e:
             single_oracle_orm.rollback()
-            print('分页未解析模块提交异常：{}'.format(e), '\n', next_page_parse.different_reason)
+            print('分页未解析模块提交异常：{}'.format(e), '\n',
+                  next_page_parse.different_reason)
 
 
 def check_parse(flss, add_result, unique_field):
@@ -119,7 +178,10 @@ def check_parse(flss, add_result, unique_field):
     :param flss:当前模块对象
     :return:
     '''
-    print('开始核对字段解析是否有误:{}==={}'.format(flss.company_name,add_result.table_name))
+    print(
+        '开始核对字段解析是否有误:{}==={}'.format(
+            flss.company_name,
+            add_result.table_name))
     flss_dict = flss.__dict__
     if flss_dict:
         #print('check_parse flss_dict=============', flss_dict)
@@ -156,8 +218,10 @@ def qurey_import_and_standard(add_result, unique_field):
         add_result.risk_level = 2
         print('CheckImportField not found === {}'.format(e))
     try:
-        query_sql = "select " + table_field + " from " + current_table + " WHERE " + unique_field_name + " = '" + unique_field_value + "'"
-        add_result.standard_value = orc_conn.execute(query_sql).fetchone()[0]  # 查询当前字段的唯一标准值
+        query_sql = "select " + table_field + " from " + current_table + \
+            " WHERE " + unique_field_name + " = '" + unique_field_value + "'"
+        add_result.standard_value = orc_conn.execute(
+            query_sql).fetchone()[0]  # 查询当前字段的唯一标准值
         print('查询的标准值：', add_result.standard_value)
     except Exception as e:
         print('CheckImportField search error === {}'.format(e))
@@ -178,12 +242,24 @@ def check_obj(cls_spider, cls_standard):
     cls_spider_dict = cls_spider.__dict__
     cls_standard_dict = cls_standard.__dict__
     change_dict = {}
-    pass_k = ['detail', 'txt_id', 'batch', 'id', 'agency_name', 'agency_num', '_sa_instance_state', 'add_time',
-              'judgment_document', 'standard_version', 'detail_status', 'mark', 'detail_info']
+    pass_k = [
+        'detail',
+        'txt_id',
+        'batch',
+        'id',
+        'agency_name',
+        'agency_num',
+        '_sa_instance_state',
+        'add_time',
+        'judgment_document',
+        'standard_version',
+        'detail_status',
+        'mark',
+        'detail_info']
     for k, v in cls_spider_dict.items():
         if 'detail' in k:
-            if not v:        #判断detail字段是否不为空
-                return 1     #如果detail为空则，返回True，认为该行数据不是全字段匹配
+            if not v:  # 判断detail字段是否不为空
+                return 1  # 如果detail为空则，返回True，认为该行数据不是全字段匹配
         if k in pass_k:
             continue
         if v == cls_standard_dict[k]:
@@ -200,10 +276,14 @@ def check_all_data(add_result, cls_spider, current_class):
     :param cls_standard: 表中库对象
     :return:有无匹配到数据：1 匹配到，None 未匹配
     '''
-    print('开始核对首页全字段数据：{}==={}'.format(cls_spider.company_name,add_result.table_name))
+    print(
+        '开始核对首页全字段数据：{}==={}'.format(
+            cls_spider.company_name,
+            add_result.table_name))
     change_flag = 0
     company_name = cls_spider.company_name
-    standard_datas = single_oracle_orm.query(current_class).filter_by(company_name=company_name).all()
+    standard_datas = single_oracle_orm.query(
+        current_class).filter_by(company_name=company_name).all()
 
     for cls_standard in standard_datas:
 
@@ -236,19 +316,22 @@ def check_thead(table, thead_list):
     if ths:
         # 列数增加
         if len(ths) > len(thead_list):
-            mesg = '表头信息增加的列为：{}'.format(list(set(ths).difference(set(thead_list))))
+            mesg = '表头信息增加的列为：{}'.format(
+                list(set(ths).difference(set(thead_list))))
             result_dict['res'] = 'False'
             result_dict['mesg'] = mesg
         # 列数减少
         elif len(ths) < len(thead_list):
-            mesg = '表头信息减少的列为：{}'.format(list(set(thead_list).difference(set(ths))))
+            mesg = '表头信息减少的列为：{}'.format(
+                list(set(thead_list).difference(set(ths))))
             result_dict['res'] = 'False'
             result_dict['mesg'] = mesg
         elif len(ths) == len(thead_list):
             for i in range(len(ths)):
                 # 表头信息改动
                 if ths[i] not in thead_list:
-                    mesg = '有变动的表头信息为：{}'.format(list(set(thead_list).difference(set(ths))))
+                    mesg = '有变动的表头信息为：{}'.format(
+                        list(set(thead_list).difference(set(ths))))
                     result_dict['res'] = 'False'
                     result_dict['mesg'] = mesg
                 # 表头信息次序变动
@@ -261,7 +344,6 @@ def check_thead(table, thead_list):
         return result_dict
 
 
-
 def insert_result(company_name, table_name, result_dict):
     '''
     将表头信息核对结果插入到check_result表中
@@ -269,7 +351,7 @@ def insert_result(company_name, table_name, result_dict):
     :param message:  携带有表头核对结果信息的字典
     :return:
     '''
-    if result_dict == True:
+    if result_dict:
         pass
     else:
         checkResult = CheckResult()
@@ -315,8 +397,6 @@ def create_insert_sql(table_name, table_column, column_count):
     return insert_sql
 
 
-
-
 class TycDetailParse(object):
     txt_id = ''
     entName = ''
@@ -355,9 +435,12 @@ class TycDetailParse(object):
                 if not email:
                     email = top.xpath('.//span[@class="email"]/text()')
                 email = email[0]
-            except:
+            except BaseException:
                 email = 'NA'
-            baseinfo.email = email.replace(u'"', u'').replace(u'[', u'').replace(u']', u'')
+            baseinfo.email = email.replace(
+                u'"', u'').replace(
+                u'[', u'').replace(
+                u']', u'')
             # print(baseinfo.email)
             detail_basic = top.xpath(
                 './/div[@class="box -company-box "]/div[@class="content"]/div[contains(@class,"detail")]')
@@ -386,9 +469,10 @@ class TycDetailParse(object):
                     logger.debug('Traceback: lenth()={}'.format(len(trs1)))
                     dicts = self.dicts
                     try:
-                        registerFund = trs1[0].xpath('./td/div/@title')[0] or 'NA'
+                        registerFund = trs1[0].xpath(
+                            './td/div/@title')[0] or 'NA'
 
-                    except:
+                    except BaseException:
                         registerFund = trs1[0].xpath('./td//text()')[0]
                     baseinfo.register_fund = registerFund
 
@@ -399,10 +483,14 @@ class TycDetailParse(object):
                         './td[position()=4]/text()')[0]
                     baseinfo.credit_num = trs1[2].xpath(
                         './td[position()=2]/text()')[0]
-                    baseinfo.company_type = trs1[3].xpath('./td[4]')[0].xpath('string(.)')
-                    baseinfo.taxpayer_num = trs1[3].xpath('./td[2]')[0].xpath('string(.)')
-                    baseinfo.industry = trs1[4].xpath('./td[4]')[0].xpath('string(.)')
-                    businessTerm = trs1[4].xpath('./td[2]')[0].xpath('string(.)')
+                    baseinfo.company_type = trs1[3].xpath(
+                        './td[4]')[0].xpath('string(.)')
+                    baseinfo.taxpayer_num = trs1[3].xpath(
+                        './td[2]')[0].xpath('string(.)')
+                    baseinfo.industry = trs1[4].xpath(
+                        './td[4]')[0].xpath('string(.)')
+                    businessTerm = trs1[4].xpath(
+                        './td[2]')[0].xpath('string(.)')
                     if businessTerm == '-' or businessTerm == '未公开':
                         business_term_begin = business_term_end = '-'
                     else:
@@ -413,12 +501,15 @@ class TycDetailParse(object):
                     baseinfo.business_term_begin = business_term_begin
                     baseinfo.business_term_end = business_term_end
 
-                    registerDate = try_and_text("variable[0].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    registerDate = try_and_text(
+                        "variable[0].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     # 新增 纳税人资质
-                    taxQualificate = try_and_text("variable[5].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    taxQualificate = try_and_text(
+                        "variable[5].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     baseinfo.taxpayer_qualificate = taxQualificate[0] if taxQualificate else 'NA'
 
-                    checkDate = try_and_text("variable[5].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    checkDate = try_and_text(
+                        "variable[5].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     #
                     regDate = ''.join(registerDate.strip('-'))
                     checDate = ''.join(checkDate.strip('-'))
@@ -433,12 +524,19 @@ class TycDetailParse(object):
                     baseinfo.register_date = registerDate
                     baseinfo.check_date = checkDate
 
-                    baseinfo.english_name = try_and_text("variable[8].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    baseinfo.english_name = try_and_text(
+                        "variable[8].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     # 此处改为曾用名
-                    baseinfo.used_name = try_and_text("variable[8].xpath('./td[2]')[0].xpath('string(.)')",
-                                                      trs1).replace('查看更多', '')
-                    baseinfo.register_site = try_and_text("variable[9].xpath('./td[2]')[0].xpath('string(.)')",
-                                                          trs1).replace('附近公司', '')
+                    baseinfo.used_name = try_and_text(
+                        "variable[8].xpath('./td[2]')[0].xpath('string(.)')",
+                        trs1).replace(
+                        '查看更多',
+                        '')
+                    baseinfo.register_site = try_and_text(
+                        "variable[9].xpath('./td[2]')[0].xpath('string(.)')",
+                        trs1).replace(
+                        '附近公司',
+                        '')
                     address_1 = address_2 = address_3 = 'NA'
 
                     df = transform([baseinfo.register_site], cut=False)
@@ -448,20 +546,22 @@ class TycDetailParse(object):
                         baseinfo.address_2 = df.loc[addr].values[1]
                         baseinfo.address_3 = df.loc[addr].values[2]
 
-                    businessScope = replace_special_chars(
-                        try_and_text("variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1))
+                    businessScope = replace_special_chars(try_and_text(
+                        "variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1))
                     baseinfo.business_scope = businessScope.replace(
                         "'", '') if businessScope else 'NA'
 
                     # 人员规模
-                    baseinfo.person_size = try_and_text("variable[6].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    baseinfo.person_size = try_and_text(
+                        "variable[6].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     # 实缴资本：
-                    baseinfo.paid_capital = try_and_text("variable[6].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    baseinfo.paid_capital = try_and_text(
+                        "variable[6].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     # 参保人数：
-                    baseinfo.insured_person = try_and_text("variable[7].xpath('./td[2]')[0].xpath('string(.)')",
-                                                           trs1)
-                    baseinfo.register_office = try_and_text("variable[7].xpath('./td[4]')[0].xpath('string(.)')",
-                                                            trs1)
+                    baseinfo.insured_person = try_and_text(
+                        "variable[7].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    baseinfo.register_office = try_and_text(
+                        "variable[7].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     baseinfo.txt_id = self.txt_id or 'NA'
                     baseinfo.company_name = key
                     baseinfo.mark = 0
@@ -472,7 +572,8 @@ class TycDetailParse(object):
                     baseinfo.industry_4 = 'NA'
 
                     print('正在核实的公司是{}'.format(key))
-                    standard_data = single_oracle_orm.query(TycQybjJbxx).filter_by(company_name=key).first()
+                    standard_data = single_oracle_orm.query(
+                        TycQybjJbxx).filter_by(company_name=key).first()
                     try:
                         change_dict = check_obj(baseinfo, standard_data)
                         print('核对结果为：', change_dict)
@@ -486,8 +587,10 @@ class TycDetailParse(object):
                             checkResult.current_value = v
                             checkResult.table_name = baseinfo.__tablename__
                             checkResult.table_field = k
-                            checkResult.standard_value = standard_data.__dict__[k]
-                            checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(key, k)
+                            checkResult.standard_value = standard_data.__dict__[
+                                k]
+                            checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(
+                                key, k)
                             import_field = single_oracle.oracle_find_by_param_all(
                                 "select column_name from check_import_field where table_name = '{}'".format(
                                     checkResult.table_name))
@@ -504,8 +607,6 @@ class TycDetailParse(object):
                         # check_obj(baseinfo,standard_data)
                         # print('核对结果为：',change_dict)
 
-
-
     # 解析：企业背景-->主要人员
     def html_parse_mainPerson(self):
 
@@ -520,7 +621,7 @@ class TycDetailParse(object):
             result_dict = check_thead(table, thead_list)
             table_name = mainPerson.__tablename__
             print('表头核对结果为.....：', result_dict)
-            if result_dict == True:
+            if result_dict:
                 trs = table[0].xpath('./tbody/tr')
 
                 # print(trs)
@@ -554,7 +655,7 @@ class TycDetailParse(object):
                             mainPerson.person_name = name[0].replace(
                                 '\n', '').replace(
                                 "'", '') if name else 'NA'
-                        except:
+                        except BaseException:
                             mainPerson.person_name = 'ERROR'
                         mainPerson.txt_id = self.txt_id
                         mainPerson.company_name = key
@@ -564,11 +665,13 @@ class TycDetailParse(object):
                         mainPerson.agency_name = self.agency_name
                         mainPerson.batch = self.batch
 
-                        unique_field = ['company_name', mainPerson.company_name]  # 该模块中唯一值字段名和值
+                        unique_field = [
+                            'company_name', mainPerson.company_name]  # 该模块中唯一值字段名和值
                         check_parse(mainPerson, add_result, unique_field)
 
                         # 验证首页解析
-                        check_result = check_all_data(add_result, mainPerson, current_class)
+                        check_result = check_all_data(
+                            add_result, mainPerson, current_class)
                         if not first_parse_data:
                             first_parse_data = mainPerson  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -582,11 +685,11 @@ class TycDetailParse(object):
                         # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                         print('首页没有匹配到数据》》》》》》》》》')
                         try:
-    
+
                             add_result.table_field = 'position'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.position  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().position
                             add_result.standard_value = standard_value
@@ -596,11 +699,13 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
             else:
                 insert_result(self.search_name, table_name, result_dict)
 
@@ -619,15 +724,15 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 print('表头核对结果为.....：', result_dict)
                 table_name = shareholderInfo.__tablename__
-                if result_dict == True:
-    
+                if result_dict:
+
                     # print(table_name)
                     # insert_result(self.search_name, table_name, result_dict)
                     trs = table[0].xpath('./tbody/tr')
-    
+
                     # trs = (self.selector.xpath(
                     #     '//div[@id="_container_holder"]/table/tbody/tr'))
-    
+
                     if trs:
                         # shareholderInfo = TycQybjGdxx()
                         key = self.search_name
@@ -645,9 +750,12 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath('./td')
-                            shareholderInfo.shareholder = try_and_text("variable[1].xpath('.//a/text()')[0]", tds)
-                            shareholderInfo.fund_ratio = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                            shareholderInfo.fund_subcribe = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+                            shareholderInfo.shareholder = try_and_text(
+                                "variable[1].xpath('.//a/text()')[0]", tds)
+                            shareholderInfo.fund_ratio = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
+                            shareholderInfo.fund_subcribe = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
                             shareholderInfo.txt_id = self.txt_id
                             shareholderInfo.company_name = key
                             shareholderInfo.mark = 0
@@ -657,15 +765,19 @@ class TycDetailParse(object):
                             shareholderInfo.batch = self.batch
 
                             # 增加 出资时间
-                            fundTime = try_and_text("variable[4].xpath('.//text()')", tds)
+                            fundTime = try_and_text(
+                                "variable[4].xpath('.//text()')", tds)
                             shareholderInfo.fund_time = fundTime[0] if fundTime else 'NA'
                             #
 
-                            unique_field = ['company_name', shareholderInfo.company_name]  # 该模块中唯一值字段名和值
-                            check_parse(shareholderInfo, add_result, unique_field)
+                            unique_field = [
+                                'company_name', shareholderInfo.company_name]  # 该模块中唯一值字段名和值
+                            check_parse(
+                                shareholderInfo, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, shareholderInfo, current_class)
+                            check_result = check_all_data(
+                                add_result, shareholderInfo, current_class)
                             if not first_parse_data:
                                 first_parse_data = shareholderInfo  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -680,11 +792,11 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'shareholder'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.shareholder  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().shareholder
                                 add_result.standard_value = standard_value
@@ -694,11 +806,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -713,16 +827,23 @@ class TycDetailParse(object):
         else:
             table = self.selector.xpath('//div[@id="_container_invest"]/table')
             if table:
-                thead_list = ['序号', '被投资企业名称', '被投资法定代表人', '投资占比', '注册资本', '成立日期', '经营状态']
+                thead_list = [
+                    '序号',
+                    '被投资企业名称',
+                    '被投资法定代表人',
+                    '投资占比',
+                    '注册资本',
+                    '成立日期',
+                    '经营状态']
                 result_dict = check_thead(table, thead_list)
                 table_name = investInfo.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-    
+                if result_dict:
+
                     # print(table_name)
                     # insert_result(self.search_name, table_name, result_dict)
                     trs = table[0].xpath('./tbody/tr')
-    
+
                     # trs = self.selector.xpath(
                     #     '//div[@id="_container_invest"]/table/tbody/tr')
             # //div[@class="out-investment-container"]/table/tbody/tr
@@ -743,19 +864,25 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             try:
-                                investInfo.invest_company = try_and_text("variable[1].xpath('.//text()')[-1]", tds)
-                            except:
+                                investInfo.invest_company = try_and_text(
+                                    "variable[1].xpath('.//text()')[-1]", tds)
+                            except BaseException:
                                 investInfo.invest_company = 'ERROR'
                             try:
-                                investInfo.invest_person = try_and_text("variable[2].xpath('.//a')[0].xpath('./text()')[0]", tds)
-                            except:
+                                investInfo.invest_person = try_and_text(
+                                    "variable[2].xpath('.//a')[0].xpath('./text()')[0]", tds)
+                            except BaseException:
                                 investInfo.invest_person = 'ERROR'
-                            investInfo.invest_ratio = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+                            investInfo.invest_ratio = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
                             # investInfo.investAmount = tds[4].xpath('string(.)')
                             investInfo.invest_amount = CURRENT_VERSION_NULL
-                            investInfo.invest_fund = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                            investInfo.invest_date = try_and_text("variable[5].xpath('.//text()')[0]", tds)
-                            investInfo.invest_status = try_and_text("variable[6].xpath('.//text()')[0]", tds)
+                            investInfo.invest_fund = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
+                            investInfo.invest_date = try_and_text(
+                                "variable[5].xpath('.//text()')[0]", tds)
+                            investInfo.invest_status = try_and_text(
+                                "variable[6].xpath('.//text()')[0]", tds)
                             investInfo.txt_id = self.txt_id
                             investInfo.company_name = key
                             investInfo.mark = 0
@@ -764,10 +891,12 @@ class TycDetailParse(object):
                             investInfo.agency_name = self.agency_name
                             investInfo.batch = self.batch
 
-                            unique_field = ['company_name', investInfo.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', investInfo.company_name]  # 该模块中唯一值字段名和值
                             check_parse(investInfo, add_result, unique_field)
                             # 验证首页解析
-                            check_result = check_all_data(add_result, investInfo, current_class)
+                            check_result = check_all_data(
+                                add_result, investInfo, current_class)
                             if not first_parse_data:
                                 first_parse_data = investInfo  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -782,11 +911,11 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'invest_company'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.invest_company  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().invest_company
                                 add_result.standard_value = standard_value
@@ -796,11 +925,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                             # value_list = [
                             #     investInfo.txt_id,
@@ -820,7 +951,6 @@ class TycDetailParse(object):
                 else:
                     insert_result(self.search_name, table_name, result_dict)
 
-
     # 解析：企业背景-->变更记录
     def html_parse_alterRecord(self, index):
         logger.debug("Parse detail info 变更记录 {}".format(self.search_name))
@@ -829,23 +959,26 @@ class TycDetailParse(object):
             # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
             check_next_page(self.search_name, 'tyc_qybj_bgjl')
         else:
-            table = self.selector.xpath('//div[@id="_container_changeinfo"]/table')
+            table = self.selector.xpath(
+                '//div[@id="_container_changeinfo"]/table')
             if table:
                 thead_list = ['序号', '变更日期', '变更项目', '变更前', '变更后']
                 result_dict = check_thead(table, thead_list)
                 print('核对结果为....', result_dict)
                 table_name = alterRecord.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-    
+                if result_dict:
+
                     # print(table_name)
                     # insert_result(self.search_name, table_name, result_dict)
                     trs = table[0].xpath('./tbody/tr')
                     # trs = self.selector.xpath(
                     #     '//div[@id="_container_changeinfo"]//table/tbody/tr')
-    
+
                     if trs:
-                        logger.debug('环境编码：{}'.format(sys.getdefaultencoding()))
+                        logger.debug(
+                            '环境编码：{}'.format(
+                                sys.getdefaultencoding()))
                         key = self.search_name
                         # 创建新增对象 TODO: 测试核对第一条数据
                         add_result = CheckResult()
@@ -863,22 +996,26 @@ class TycDetailParse(object):
                             # alterRecord = TycQybjBgjl()
                             tds = tr.xpath('./td')
                             tds_len = len(tds)
-                            alterDate = try_and_text("variable[1].xpath('./text()')", tds)
+                            alterDate = try_and_text(
+                                "variable[1].xpath('./text()')", tds)
                             alterRecord.alter_date = alterDate[0] if alterDate else 'NA'
-                            alterProject = try_and_text("variable[2].xpath('./text()')", tds)
+                            alterProject = try_and_text(
+                                "variable[2].xpath('./text()')", tds)
                             alterRecord.alter_project = alterProject[0] if alterProject else 'NA'
-                            alterBefor = try_and_text("variable[3].xpath('./div')[0].xpath('string(.)')", tds)
+                            alterBefor = try_and_text(
+                                "variable[3].xpath('./div')[0].xpath('string(.)')", tds)
 
                             try:
                                 alterBefor = replace_special_chars(alterBefor)
-                            except:
+                            except BaseException:
                                 alterBefor = replace_special_chars(alterBefor)
                             alterRecord.alter_befor = alterBefor
-                            alterAfter = try_and_text("variable[4].xpath('./div')[0].xpath('string(.)')", tds)
+                            alterAfter = try_and_text(
+                                "variable[4].xpath('./div')[0].xpath('string(.)')", tds)
                             # alterAfter = replace_special_chars(alterAfter)
 
                             alterAfter = replace_special_chars(alterAfter)
-    
+
                             alterRecord.alter_after = alterAfter
                             # <em><font color="#EF5644">长</font></em>
                             alterRecord.txt_id = self.txt_id
@@ -890,10 +1027,12 @@ class TycDetailParse(object):
                             alterRecord.agency_name = self.agency_name
                             alterRecord.batch = self.batch
 
-                            unique_field = ['company_name', alterRecord.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', alterRecord.company_name]  # 该模块中唯一值字段名和值
                             check_parse(alterRecord, add_result, unique_field)
                             # 验证首页解析
-                            check_result = check_all_data(add_result, alterRecord, current_class)
+                            check_result = check_all_data(
+                                add_result, alterRecord, current_class)
                             if not first_parse_data:
                                 first_parse_data = alterRecord  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -908,11 +1047,11 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'alter_date'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.alter_date  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().alter_date
                                 add_result.standard_value = standard_value
@@ -922,15 +1061,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 年报 企业基本信息 第一个table
     def html_parse_year_jbxx(self, year_selector, year):
@@ -939,7 +1079,8 @@ class TycDetailParse(object):
         if year_selector:
             year_selector = year_selector.replace(u'企业基本信息', 'year_basic_info')
             year_selector = etree.HTML(year_selector)
-        trs = year_selector.xpath('// div[text()="year_basic_info"]/parent::*/div/table/tr')
+        trs = year_selector.xpath(
+            '// div[text()="year_basic_info"]/parent::*/div/table/tr')
         insert_value = ""
         if trs:
             flss = TycYearJbxx()
@@ -948,16 +1089,26 @@ class TycDetailParse(object):
             # root_div = root_div[0]
             # 一行是一个tr
 
-            flss.credit_num = try_and_text('variable[0].xpath("./td[2]/text()")[0]', trs)
-            flss.ent_name = try_and_text('variable[0].xpath("./td[4]/text()")[0]', trs)
-            flss.company_tel = try_and_text('variable[1].xpath("./td[2]/text()")[0]', trs)
-            flss.postal_code = try_and_text('variable[1].xpath("./td[4]/text()")[0]', trs)
-            flss.manager_state = try_and_text('variable[2].xpath("./td[2]/text()")[0]', trs)
-            flss.people_count = try_and_text('variable[2].xpath("./td[4]/text()")[0]', trs)
-            flss.email = try_and_text('variable[3].xpath("./td[2]/text()")[0]', trs)
-            flss.website = try_and_text('variable[3].xpath("./td[4]/text()")[0]', trs)
-            flss.company_address = try_and_text('variable[4].xpath("./td[2]/text()")[0]', trs)
-            flss.buy_equity = try_and_text('variable[4].xpath("./td[4]/text()")[0]', trs)
+            flss.credit_num = try_and_text(
+                'variable[0].xpath("./td[2]/text()")[0]', trs)
+            flss.ent_name = try_and_text(
+                'variable[0].xpath("./td[4]/text()")[0]', trs)
+            flss.company_tel = try_and_text(
+                'variable[1].xpath("./td[2]/text()")[0]', trs)
+            flss.postal_code = try_and_text(
+                'variable[1].xpath("./td[4]/text()")[0]', trs)
+            flss.manager_state = try_and_text(
+                'variable[2].xpath("./td[2]/text()")[0]', trs)
+            flss.people_count = try_and_text(
+                'variable[2].xpath("./td[4]/text()")[0]', trs)
+            flss.email = try_and_text(
+                'variable[3].xpath("./td[2]/text()")[0]', trs)
+            flss.website = try_and_text(
+                'variable[3].xpath("./td[4]/text()")[0]', trs)
+            flss.company_address = try_and_text(
+                'variable[4].xpath("./td[2]/text()")[0]', trs)
+            flss.buy_equity = try_and_text(
+                'variable[4].xpath("./td[4]/text()")[0]', trs)
             flss.year = year
             flss.txt_id = self.txt_id
             flss.company_name = key
@@ -974,7 +1125,8 @@ class TycDetailParse(object):
             # y2017 = single_oracle_orm.query(TycYearJbxx).filter_by(year=2017,company_name='佐源集团有限公司').first()
             # single_oracle_orm.delete()
             # single_oracle_orm.commit()
-            standard_data = single_oracle_orm.query(TycYearJbxx).filter_by(company_name=key).first()
+            standard_data = single_oracle_orm.query(
+                TycYearJbxx).filter_by(company_name=key).first()
 
             try:
                 change_dict = check_obj(flss, standard_data)
@@ -989,9 +1141,11 @@ class TycDetailParse(object):
                     checkResult.table_field = k
                     checkResult.table_name = 'tyc_year_jbxx'
                     checkResult.standard_value = standard_data.__dict__[k]
-                    checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(key, k)
+                    checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(
+                        key, k)
                     import_field = single_oracle.oracle_find_by_param_all(
-                        "select column_name from check_import_field where table_name = '{}'".format(flss.__tablename__))
+                        "select column_name from check_import_field where table_name = '{}'".format(
+                            flss.__tablename__))
 
                     for col_name in import_field:
                         if k == col_name[0]:
@@ -1022,12 +1176,12 @@ class TycDetailParse(object):
                 print(result_dict)
                 table_name = website.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-    
+                if result_dict:
+
                     # table_name = website.__tablename__
                     # print(table_name)
                     # insert_result(self.search_name, table_name, result_dict)
-    
+
                     # trs = year_selector.xpath(
                     #     '//div[text()="year_wangzhan"]/parent::*//table/tbody/tr')
                     trs = root_div[0].xpath('./tbody/tr')
@@ -1053,9 +1207,12 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath("./td")
-                            website.website_type = try_and_text('variable[0].xpath(".//text()")[0]', tds)
-                            website.web_name = try_and_text('variable[1].xpath(".//text()")[0]', tds)
-                            web_url = try_and_text('variable[2].xpath(".//text()")', tds)
+                            website.website_type = try_and_text(
+                                'variable[0].xpath(".//text()")[0]', tds)
+                            website.web_name = try_and_text(
+                                'variable[1].xpath(".//text()")[0]', tds)
+                            web_url = try_and_text(
+                                'variable[2].xpath(".//text()")', tds)
                             logger.debug(
                                 'web_url={} {}'.format(
                                     web_url, type(web_url)))
@@ -1071,11 +1228,13 @@ class TycDetailParse(object):
                             website.agency_name = self.agency_name
                             website.batch = self.batch
 
-                            unique_field = ['company_name', website.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', website.company_name]  # 该模块中唯一值字段名和值
                             check_parse(website, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, website, current_class)
+                            check_result = check_all_data(
+                                add_result, website, current_class)
                             if not first_parse_data:
                                 first_parse_data = website  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -1090,11 +1249,11 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'website_type'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.website_type  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().website_type
                                 add_result.standard_value = standard_value
@@ -1105,11 +1264,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
                 else:
                     insert_result(self.search_name, table_name, result_dict)
 
@@ -1124,18 +1285,26 @@ class TycDetailParse(object):
 
         print('正在进行的表格为：{}'.format(gdcz.__tablename__))
         # 表头信息
-        root_div = year_selector.xpath('//div[text()="year_gudongchuzi"]/parent::*//table')
+        root_div = year_selector.xpath(
+            '//div[text()="year_gudongchuzi"]/parent::*//table')
         if root_div:
-            thead_list = ['股东', '认缴出资额(万元)', '认缴出资时间', '认缴出资方式', '实缴出资额(万元)', '实缴出资时间', '实缴出资方式']
+            thead_list = [
+                '股东',
+                '认缴出资额(万元)',
+                '认缴出资时间',
+                '认缴出资方式',
+                '实缴出资额(万元)',
+                '实缴出资时间',
+                '实缴出资方式']
             result_dict = check_thead(root_div, thead_list)
             print(result_dict)
             table_name = gdcz.__tablename__
             print('表头核对结果为.....：', result_dict)
-            if result_dict == True:
+            if result_dict:
                 # print(table_name)
 
                 # trs = year_selector.xpath(
-            #     '//div[text()="year_gudongchuzi"]/parent::*//table/tbody/tr')
+                #     '//div[text()="year_gudongchuzi"]/parent::*//table/tbody/tr')
                 trs = root_div[0].xpath('./tbody/tr')
                 if trs:
                     # gdcz = TycYearGdczxx()
@@ -1155,17 +1324,24 @@ class TycDetailParse(object):
                         insert_value = ""
                         tds = tr.xpath("./td")
 
-                        gdcz.shareholder = try_and_text("variable[0].xpath('.//text()')[0]", tds)
-                        gdcz.subscirbe_contribution = try_and_text("variable[1].xpath('./text()')[0]", tds)
+                        gdcz.shareholder = try_and_text(
+                            "variable[0].xpath('.//text()')[0]", tds)
+                        gdcz.subscirbe_contribution = try_and_text(
+                            "variable[1].xpath('./text()')[0]", tds)
 
-                        gdcz.contribution_time = try_and_text("variable[2].xpath('./text()')[0]", tds)
-                        gdcz.contribution_style = try_and_text("variable[3].xpath('./text()')[0]", tds)
-                        actual_contribution = try_and_text("variable[4].xpath('./text()')", tds)
+                        gdcz.contribution_time = try_and_text(
+                            "variable[2].xpath('./text()')[0]", tds)
+                        gdcz.contribution_style = try_and_text(
+                            "variable[3].xpath('./text()')[0]", tds)
+                        actual_contribution = try_and_text(
+                            "variable[4].xpath('./text()')", tds)
                         gdcz.actual_contribution = 'NA'
                         if actual_contribution:
                             gdcz.actual_contribution = actual_contribution[0]
-                        gdcz.actual_time = try_and_text("variable[5].xpath('./text()')[0]", tds)
-                        gdcz.actual_style = try_and_text("variable[6].xpath('./text()')[0]", tds)
+                        gdcz.actual_time = try_and_text(
+                            "variable[5].xpath('./text()')[0]", tds)
+                        gdcz.actual_style = try_and_text(
+                            "variable[6].xpath('./text()')[0]", tds)
                         gdcz.year = year
                         gdcz.txt_id = self.txt_id
                         gdcz.company_name = key
@@ -1175,11 +1351,13 @@ class TycDetailParse(object):
                         gdcz.agency_name = self.agency_name
                         gdcz.batch = self.batch
 
-                        unique_field = ['company_name', gdcz.company_name]  # 该模块中唯一值字段名和值
+                        unique_field = [
+                            'company_name', gdcz.company_name]  # 该模块中唯一值字段名和值
                         check_parse(gdcz, add_result, unique_field)
 
                         # 验证首页解析
-                        check_result = check_all_data(add_result, gdcz, current_class)
+                        check_result = check_all_data(
+                            add_result, gdcz, current_class)
                         if not first_parse_data:
                             first_parse_data = gdcz  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -1194,11 +1372,11 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-    
+
                             add_result.table_field = 'shareholder'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.shareholder  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().shareholder
                             add_result.standard_value = standard_value
@@ -1208,15 +1386,16 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
-
 
     # 年报 企业资产状况信息
     def html_parse_year_zczk(self, year_selector, year):
@@ -1236,14 +1415,22 @@ class TycDetailParse(object):
             # root_div = root_div[2]
             # 一行是一个tr
 
-            flss.total_assets = try_and_text("variable[0].xpath('./td[position()=2]/text()')[0]", trs)
-            flss.total_income = try_and_text("variable[0].xpath('td[position()=4]/text()')[0]", trs)
-            flss.total_sales = try_and_text("variable[1].xpath('td[position()=2]/text()')[0]", trs)
-            flss.total_profit = try_and_text("variable[1].xpath('td[position()=4]/text()')[0]", trs)
-            flss.operation_income = try_and_text("variable[2].xpath('td[position()=2]/text()')[0]", trs)
-            flss.net_profit = try_and_text("variable[2].xpath('td[position()=4]/text()')[0]", trs)
-            flss.total_tax = try_and_text("variable[3].xpath('td[position()=2]/text()')[0]", trs)
-            flss.total_debt = try_and_text("variable[3].xpath('td[position()=4]/text()')[0]", trs)
+            flss.total_assets = try_and_text(
+                "variable[0].xpath('./td[position()=2]/text()')[0]", trs)
+            flss.total_income = try_and_text(
+                "variable[0].xpath('td[position()=4]/text()')[0]", trs)
+            flss.total_sales = try_and_text(
+                "variable[1].xpath('td[position()=2]/text()')[0]", trs)
+            flss.total_profit = try_and_text(
+                "variable[1].xpath('td[position()=4]/text()')[0]", trs)
+            flss.operation_income = try_and_text(
+                "variable[2].xpath('td[position()=2]/text()')[0]", trs)
+            flss.net_profit = try_and_text(
+                "variable[2].xpath('td[position()=4]/text()')[0]", trs)
+            flss.total_tax = try_and_text(
+                "variable[3].xpath('td[position()=2]/text()')[0]", trs)
+            flss.total_debt = try_and_text(
+                "variable[3].xpath('td[position()=4]/text()')[0]", trs)
 
             flss.year = year
             flss.txt_id = self.txt_id
@@ -1261,7 +1448,8 @@ class TycDetailParse(object):
             # y2017 = single_oracle_orm.query(TycYearJbxx).filter_by(year=2017, company_name='佐源集团有限公司').first()
             # single_oracle_orm.delete()
             # single_oracle_orm.commit()
-            standard_data = single_oracle_orm.query(TycQybjJbxx).filter_by(company_name=key).first()
+            standard_data = single_oracle_orm.query(
+                TycQybjJbxx).filter_by(company_name=key).first()
 
             try:
                 change_dict = check_obj(flss, standard_data)
@@ -1277,7 +1465,8 @@ class TycDetailParse(object):
                     checkResult.table_name = flss.__tablename__
                     checkResult.table_field = k
                     checkResult.standard_value = standard_data.__dict__[k]
-                    checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(key, k)
+                    checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(
+                        key, k)
                     import_field = single_oracle.oracle_find_by_param_all(
                         "select column_name from check_import_field where table_name = {}".format(
                             checkResult.table_name))
@@ -1290,8 +1479,6 @@ class TycDetailParse(object):
                     single_oracle_orm.commit()
             except Exception as e:
                 print(e)
-
-
 
     # 年报 对外投资
     def html_parse_year_dwtz(self, year_selector, year):
@@ -1306,14 +1493,15 @@ class TycDetailParse(object):
             # trs = year_selector.xpath('//div[contains(text(),"year_outbound_company")')
 
         # 表头信息
-        root_div = year_selector.xpath('//div[text()="year_outbound_company"]/parent::*//table')
+        root_div = year_selector.xpath(
+            '//div[text()="year_outbound_company"]/parent::*//table')
         if root_div:
             thead_list = ['注册号/统一社会信用代码', '对外投资企业名称']
             result_dict = check_thead(root_div, thead_list)
             print(result_dict)
             table_name = dwtz.__tablename__
             print('表头核对结果为.....：', result_dict)
-            if result_dict == True:
+            if result_dict:
 
                 # print(table_name)
                 # trs = year_selector.xpath(
@@ -1338,8 +1526,10 @@ class TycDetailParse(object):
                     for tr in trs:
                         insert_value = ""
                         tds = tr.xpath("./td")
-                        dwtz.credit_num = try_and_text("variable[0].xpath('string(.)')", tds)
-                        dwtz.outbound_company = try_and_text("variable[1].xpath('string(.)')", tds)
+                        dwtz.credit_num = try_and_text(
+                            "variable[0].xpath('string(.)')", tds)
+                        dwtz.outbound_company = try_and_text(
+                            "variable[1].xpath('string(.)')", tds)
 
                         dwtz.year = year
                         dwtz.txt_id = self.txt_id
@@ -1350,11 +1540,13 @@ class TycDetailParse(object):
                         dwtz.agency_name = self.agency_name
                         dwtz.batch = self.batch
 
-                        unique_field = ['company_name', dwtz.company_name]  # 该模块中唯一值字段名和值
+                        unique_field = [
+                            'company_name', dwtz.company_name]  # 该模块中唯一值字段名和值
                         check_parse(dwtz, add_result, unique_field)
 
                         # 验证首页解析
-                        check_result = check_all_data(add_result, dwtz, current_class)
+                        check_result = check_all_data(
+                            add_result, dwtz, current_class)
                         if not first_parse_data:
                             first_parse_data = dwtz  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -1369,11 +1561,11 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-    
+
                             add_result.table_field = 'credit_num'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.credit_num  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().credit_num
                             add_result.standard_value = standard_value
@@ -1383,15 +1575,16 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
-
 
     # 分支机构
     def html_parse_branch(self, index):
@@ -1414,14 +1607,14 @@ class TycDetailParse(object):
                 result_dict = check_thead(root_div, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-    
+                if result_dict:
+
                     # print(table_name)
-    
+
                     # 一行是一个tr
                     root_div = root_div[0]
                     trs = root_div.xpath("./tbody/tr")
-    
+
                     # 创建新增对象 TODO: 测试核对第一条数据
                     add_result = CheckResult()
                     add_result.company_name = key
@@ -1432,20 +1625,24 @@ class TycDetailParse(object):
                     first_parse_data = None
                     check_flag = 0  # 检测首页是否有匹配到的一行数据
                     check_first = 0  # 检测首页是否有匹配到的第一行数据
-    
+
                     for tr in trs:
-        
+
                         insert_value = ""
                         tds = tr.xpath("./td")
-                        ent_name = try_and_text("variable[1].xpath('.//td/a/text()')", tds)
+                        ent_name = try_and_text(
+                            "variable[1].xpath('.//td/a/text()')", tds)
                         flss.ent_name = ent_name[0] if ent_name else self.search_name
-        
-                        flss.registere_date = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+
+                        flss.registere_date = try_and_text(
+                            "variable[3].xpath('.//text()')[0]", tds)
                         flss.status = 'NA'
-        
-                        flss.status = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-        
-                        legal_representative = try_and_text("variable[2].xpath('./div/div[2]/a/text()')", tds)
+
+                        flss.status = try_and_text(
+                            "variable[4].xpath('.//text()')[0]", tds)
+
+                        legal_representative = try_and_text(
+                            "variable[2].xpath('./div/div[2]/a/text()')", tds)
                         logger.debug(
                             '负责人={} type={}'.format(
                                 legal_representative,
@@ -1461,12 +1658,14 @@ class TycDetailParse(object):
                         flss.agency_num = self.agency_num
                         flss.agency_name = self.agency_name
                         flss.batch = self.batch
-        
-                        unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+
+                        unique_field = [
+                            'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                         check_parse(flss, add_result, unique_field)
-        
+
                         # 验证首页解析
-                        check_result = check_all_data(add_result, flss, current_class)
+                        check_result = check_all_data(
+                            add_result, flss, current_class)
                         if not first_parse_data:
                             first_parse_data = flss  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -1481,11 +1680,11 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-    
+
                             add_result.table_field = 'ent_name'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.ent_name  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().ent_name
                             add_result.standard_value = standard_value
@@ -1495,15 +1694,16 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 司法风险
     # 解析：司法风险-->开庭公告
@@ -1516,19 +1716,27 @@ class TycDetailParse(object):
             check_next_page(self.search_name, 'tyc_sffx_ktgg')
         else:
             # 表头信息
-            table = self.selector.xpath('//div[@id="_container_announcementcourt"]/table')
+            table = self.selector.xpath(
+                '//div[@id="_container_announcementcourt"]/table')
             if table:
-                thead_list = ['序号', '开庭日期', '案号', '案由', '公诉人/原告/上诉人/申请人', '被告人/被告/被上诉人/被申请人', '操作']
+                thead_list = [
+                    '序号',
+                    '开庭日期',
+                    '案号',
+                    '案由',
+                    '公诉人/原告/上诉人/申请人',
+                    '被告人/被告/被上诉人/被申请人',
+                    '操作']
                 result_dict = check_thead(table, thead_list)
                 table_name = ktggInfo.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-    
+                if result_dict:
+
                     # print(table_name)
-    
+
                     trs = self.selector.xpath(
                         '//div[@id="_container_announcementcourt"]/table/tbody/tr')
-    
+
                     if trs:
                         # ktggInfo = TycSffxKtgg()
 
@@ -1550,13 +1758,17 @@ class TycDetailParse(object):
                             tds = tr.xpath('./td')
 
                             # 开庭日期
-                            ktggInfo.trial_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
+                            ktggInfo.trial_date = try_and_text(
+                                "variable[1].xpath('./text()')[0]", tds)
                             # 案号
-                            ktggInfo.reference_num = try_and_text("variable[2].xpath('.//text()')[0]", tds)
+                            ktggInfo.reference_num = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
                             # 案由
-                            ktggInfo.cause_action = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+                            ktggInfo.cause_action = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
                             # 原告/上诉人
-                            plaintiff = try_and_text("variable[4].xpath('string(.)')", tds)
+                            plaintiff = try_and_text(
+                                "variable[4].xpath('string(.)')", tds)
                             ktggInfo.plaintiff = plaintiff if plaintiff else 'NA'
                             # 被告/被上诉人
                             ktggInfo.defendant = 'NA'
@@ -1567,9 +1779,10 @@ class TycDetailParse(object):
                                 logger.debug(e)
                             # 详情 \u003C\u002Fa\u003E
 
-                            detail = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
+                            detail = try_and_text(
+                                "variable[6].xpath('./script/text()')[0]", tds)
                             ktggInfo.detail = replace_special_chars(detail)
-    
+
                             ktggInfo.txt_id = self.txt_id
                             ktggInfo.company_name = key
                             ktggInfo.mark = 0
@@ -1578,11 +1791,13 @@ class TycDetailParse(object):
                             ktggInfo.agency_name = self.agency_name
                             ktggInfo.batch = self.batch
 
-                            unique_field = ['company_name', ktggInfo.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', ktggInfo.company_name]  # 该模块中唯一值字段名和值
                             check_parse(ktggInfo, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, ktggInfo, current_class)
+                            check_result = check_all_data(
+                                add_result, ktggInfo, current_class)
                             if not first_parse_data:
                                 first_parse_data = ktggInfo  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -1597,11 +1812,11 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'trial_date'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.trialDate  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().trial_date
                                 add_result.standard_value = standard_value
@@ -1611,15 +1826,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 法律诉讼
     def html_parse_lawsuit(self, index):
@@ -1629,13 +1845,14 @@ class TycDetailParse(object):
             # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
             check_next_page(self.search_name, 'tyc_sffx_flss')
         else:
-            table = self.selector.xpath('//div[@id="_container_lawsuit"]/table')
+            table = self.selector.xpath(
+                '//div[@id="_container_lawsuit"]/table')
             if table:
                 thead_list = ['序号', '日期', '案件名称', '案由', '案件身份', '案号']
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
+                if result_dict:
 
                     # print(table_name)
 
@@ -1663,21 +1880,28 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath("./td")
                             if tds:
-                                flss.judgment_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
+                                flss.judgment_date = try_and_text(
+                                    "variable[1].xpath('./span/text()')[0]", tds)
                                 # flss.judgment_document = try_and_text("variable[2].xpath('./a/text()')[0]", tds)
 
-                                tds_href = try_and_text("variable[2].xpath('./a/@href')[0]", tds)
-                                flss.judgment_name = try_and_text("variable[2].xpath('./a//text()')[0]", tds)
-                                name = try_and_text("variable[2].xpath('./a/text()')[0]", tds)
+                                tds_href = try_and_text(
+                                    "variable[2].xpath('./a/@href')[0]", tds)
+                                flss.judgment_name = try_and_text(
+                                    "variable[2].xpath('./a//text()')[0]", tds)
+                                name = try_and_text(
+                                    "variable[2].xpath('./a/text()')[0]", tds)
                                 flss.document_url = tds_href if tds_href else 'NA'
-                                case_type = try_and_text("variable[3].xpath('./span/text()')", tds)
+                                case_type = try_and_text(
+                                    "variable[3].xpath('./span/text()')", tds)
                                 flss.case_type = case_type[0] if case_type else 'NA'
                                 # case_identity = try_and_text("variable[4].xpath('.//text()')", tds)
                                 # flss.case_identity = ','.join(
                                 #     case_identity) if case_identity else 'NA'
                                 s1 = s2 = ''
-                                plaintiff = try_and_text("variable[4].xpath('./div[position()=1]//text()')", tds)
-                                defendant = try_and_text("variable[4].xpath('./div[position()=2]//text()')", tds)
+                                plaintiff = try_and_text(
+                                    "variable[4].xpath('./div[position()=1]//text()')", tds)
+                                defendant = try_and_text(
+                                    "variable[4].xpath('./div[position()=2]//text()')", tds)
                                 if len(plaintiff) != 0:
                                     for i in plaintiff:
                                         s1 += i
@@ -1686,7 +1910,8 @@ class TycDetailParse(object):
                                         s2 += j
                                 flss.case_identity = s1 + ';' + s2
 
-                                case_number = try_and_text("variable[5].xpath('./span/text()')", tds)
+                                case_number = try_and_text(
+                                    "variable[5].xpath('./span/text()')", tds)
                                 flss.case_number = case_number[0] if case_number else 'NA'
                                 flss.txt_id = self.txt_id
 
@@ -1704,33 +1929,38 @@ class TycDetailParse(object):
                                 except BaseException:
                                     pass
 
-                                flss.judgment_document = replace_special_chars(text_info)
-    
-                                unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+                                flss.judgment_document = replace_special_chars(
+                                    text_info)
+
+                                unique_field = [
+                                    'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                                 check_parse(flss, add_result, unique_field)
 
                                 # 验证首页解析
-                                check_result = check_all_data(add_result, flss, current_class)
+                                check_result = check_all_data(
+                                    add_result, flss, current_class)
                                 if not first_parse_data:
                                     first_parse_data = flss  # 保存第一条解析的数据
-                                print('check_result+++++++++======法律诉讼:', check_result)
+                                print(
+                                    'check_result+++++++++======法律诉讼:', check_result)
                                 check_first += 1
                                 if check_result:
                                     check_flag = 1  # 匹配到数据
                                     break
                                 else:
                                     check_flag = 0  # 没有匹配到
-                        print('法律诉讼：check_flag：{}-----check_first:{}'.format(check_flag,check_first))
+                        print(
+                            '法律诉讼：check_flag：{}-----check_first:{}'.format(check_flag, check_first))
                         if not check_flag:
                             # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'judgment_date'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.judgment_date  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().judgment_date
                                 add_result.standard_value = standard_value
@@ -1740,15 +1970,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 法院公告
     def html_parse_announcement(self, index):
@@ -1759,13 +1990,14 @@ class TycDetailParse(object):
             check_next_page(self.search_name, 'tyc_sffx_fygg')
         else:
             # 获得法院公告大标签
-            root_div = self.selector.xpath('//div[@id="_container_court"]/table')
+            root_div = self.selector.xpath(
+                '//div[@id="_container_court"]/table')
             thead_list = ['序号', '刊登日期', '上诉方', '被诉方', '公告类型', '法院', '操作']
             result_dict = check_thead(root_div, thead_list)
             print(result_dict)
             table_name = flss.__tablename__
             print('表头核对结果为.....：', result_dict)
-            if result_dict == True:
+            if result_dict:
 
                 # print(table_name)
 
@@ -1790,16 +2022,22 @@ class TycDetailParse(object):
                     for tr in trs:
                         insert_value = ""
                         tds = tr.xpath("./td")
-                        flss.announcement_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                        plaintiff = try_and_text("variable[2].xpath('string(.)')", tds)
+                        flss.announcement_date = try_and_text(
+                            "variable[1].xpath('./text()')[0]", tds)
+                        plaintiff = try_and_text(
+                            "variable[2].xpath('string(.)')", tds)
                         if plaintiff:
                             flss.plaintiff = plaintiff
-                        defendant = try_and_text("variable[3].xpath('string(.)')", tds)
+                        defendant = try_and_text(
+                            "variable[3].xpath('string(.)')", tds)
                         flss.defendant = defendant if defendant else 'NA'
 
-                        flss.announcement_type = try_and_text("variable[4].xpath('string(.)')", tds)
-                        flss.court = try_and_text("variable[5].xpath('string(.)')", tds)
-                        text_info = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
+                        flss.announcement_type = try_and_text(
+                            "variable[4].xpath('string(.)')", tds)
+                        flss.court = try_and_text(
+                            "variable[5].xpath('string(.)')", tds)
+                        text_info = try_and_text(
+                            "variable[6].xpath('./script/text()')[0]", tds)
                         text_info = replace_special_chars(text_info)
                         flss.detail_info = text_info
                         flss.txt_id = self.txt_id
@@ -1810,11 +2048,13 @@ class TycDetailParse(object):
                         flss.agency_name = self.agency_name
                         flss.batch = self.batch
 
-                        unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+                        unique_field = [
+                            'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                         check_parse(flss, add_result, unique_field)
 
                         # 验证首页解析
-                        check_result = check_all_data(add_result, flss, current_class)
+                        check_result = check_all_data(
+                            add_result, flss, current_class)
                         if not first_parse_data:
                             first_parse_data = flss  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -1829,11 +2069,11 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-    
+
                             add_result.table_field = 'announcement_date'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.announcement_date  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().announcement_date
                             add_result.standard_value = standard_value
@@ -1843,15 +2083,16 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
-
 
     # 失信人
     def html_parse_shixinren(self, index):
@@ -1868,11 +2109,18 @@ class TycDetailParse(object):
                 flss = TycSffxSxr()
                 key = self.search_name
                 # 表头信息
-                thead_list = ['序号', '立案日期', '案号', '执行法院', '履行状态', '执行依据文号', '操作']
+                thead_list = [
+                    '序号',
+                    '立案日期',
+                    '案号',
+                    '执行法院',
+                    '履行状态',
+                    '执行依据文号',
+                    '操作']
                 result_dict = check_thead(root_div, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
+                if result_dict:
 
                     # print(table_name)
 
@@ -1895,18 +2143,24 @@ class TycDetailParse(object):
                     for tr in trs:
                         insert_value = ""
                         tds = tr.xpath("./td")
-                        case_date = try_and_text("variable[1].xpath('.//text()')", tds)
-                        case_number = try_and_text("variable[2].xpath('.//text()')", tds)
-                        execution_court = try_and_text("variable[3].xpath('.//text()')", tds)
-                        performance_state = try_and_text("variable[4].xpath('.//text()')", tds)
-                        execute_number = try_and_text("variable[5].xpath('.//text()')", tds)
+                        case_date = try_and_text(
+                            "variable[1].xpath('.//text()')", tds)
+                        case_number = try_and_text(
+                            "variable[2].xpath('.//text()')", tds)
+                        execution_court = try_and_text(
+                            "variable[3].xpath('.//text()')", tds)
+                        performance_state = try_and_text(
+                            "variable[4].xpath('.//text()')", tds)
+                        execute_number = try_and_text(
+                            "variable[5].xpath('.//text()')", tds)
 
                         flss.case_date = case_date[0] if case_date else 'NA'
                         flss.case_number = case_number[0] if case_number else 'NA'
                         flss.execution_court = execution_court[0] if execution_court else 'NA'
                         flss.performance_state = performance_state[0] if performance_state else 'NA'
                         flss.execute_number = execute_number[0] if execute_number else 'NA'
-                        href = try_and_text("variable[6].xpath('./span/@onclick')[0]", tds)
+                        href = try_and_text(
+                            "variable[6].xpath('./span/@onclick')[0]", tds)
                         res = re.search(r'"(.*?)"', href).groups(1)
                         href = res[0]
                         text_info = 'NA'
@@ -1925,11 +2179,13 @@ class TycDetailParse(object):
                         flss.agency_name = self.agency_name
                         flss.batch = self.batch
 
-                        unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+                        unique_field = [
+                            'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                         check_parse(flss, add_result, unique_field)
 
                         # 验证首页解析
-                        check_result = check_all_data(add_result, flss, current_class)
+                        check_result = check_all_data(
+                            add_result, flss, current_class)
                         if not first_parse_data:
                             first_parse_data = flss  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -1944,11 +2200,11 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-    
+
                             add_result.table_field = 'case_date'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.case_date  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().case_date
                             add_result.standard_value = standard_value
@@ -1958,16 +2214,16 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
-
 
     # 被执行人
     def html_parse_executed(self, index):
@@ -1987,16 +2243,16 @@ class TycDetailParse(object):
                 result_dict = check_thead(root_div, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-    
+                if result_dict:
+
                     # print(table_name)
-    
+
                     root_div = root_div[0]
                     # 一行是一个tr
                     trs = root_div.xpath("./tbody/tr")
-    
+
                     for tr in trs:
-        
+
                         # 创建新增对象 TODO: 测试核对第一条数据
                         add_result = CheckResult()
                         add_result.company_name = key
@@ -2007,14 +2263,19 @@ class TycDetailParse(object):
                         first_parse_data = None
                         check_flag = 0  # 检测首页是否有匹配到的一行数据
                         check_first = 0  # 检测首页是否有匹配到的第一行数据
-        
+
                         insert_value = ""
                         tds = tr.xpath("./td")
-                        flss.record_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                        flss.execute_underlying = try_and_text("variable[2].xpath('./text()')[0]", tds)
-                        flss.case_number = try_and_text("variable[3].xpath('./text()')[0]", tds)
-                        flss.court = try_and_text("variable[4].xpath('./text()')[0]", tds)
-                        href = try_and_text("variable[5].xpath('./span/@onclick')[0]", tds)
+                        flss.record_date = try_and_text(
+                            "variable[1].xpath('./text()')[0]", tds)
+                        flss.execute_underlying = try_and_text(
+                            "variable[2].xpath('./text()')[0]", tds)
+                        flss.case_number = try_and_text(
+                            "variable[3].xpath('./text()')[0]", tds)
+                        flss.court = try_and_text(
+                            "variable[4].xpath('./text()')[0]", tds)
+                        href = try_and_text(
+                            "variable[5].xpath('./span/@onclick')[0]", tds)
                         res = re.search(r'"(.*?)"', href).groups(1)
                         href = res[0]
                         text_info = 'NA'
@@ -2024,7 +2285,7 @@ class TycDetailParse(object):
                         except BaseException:
                             pass
                         flss.detail = text_info
-        
+
                         flss.txt_id = self.txt_id
                         flss.company_name = key
                         flss.add_time = func.now()
@@ -2032,12 +2293,14 @@ class TycDetailParse(object):
                         flss.agency_num = self.agency_num
                         flss.agency_name = self.agency_name
                         flss.batch = self.batch
-        
-                        unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+
+                        unique_field = [
+                            'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                         check_parse(flss, add_result, unique_field)
-        
+
                         # 验证首页解析
-                        check_result = check_all_data(add_result, flss, current_class)
+                        check_result = check_all_data(
+                            add_result, flss, current_class)
                         if not first_parse_data:
                             first_parse_data = flss  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -2052,11 +2315,11 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-    
+
                             add_result.table_field = 'record_date'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.record_date  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().record_date
                             add_result.standard_value = standard_value
@@ -2067,11 +2330,13 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
                 else:
                     insert_result(self.search_name, table_name, result_dict)
 
@@ -2088,15 +2353,22 @@ class TycDetailParse(object):
                 '//div[@id="_container_judicialAid"]/table')
 
             # 表头信息
-            thead_list = ['序号', '被执行人', '股权数额', '执行法院', '执行通知书文号', '类型|状态', '操作']
+            thead_list = [
+                '序号',
+                '被执行人',
+                '股权数额',
+                '执行法院',
+                '执行通知书文号',
+                '类型|状态',
+                '操作']
             if root_div:
                 result_dict = check_thead(root_div, thead_list)
                 table_name = sfxzInfo.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-    
+                if result_dict:
+
                     # print(table_name)
-    
+
                     trs = self.selector.xpath(
                         '//div[@id="_container_judicialAid"]/table/tbody/tr')
                     if trs:
@@ -2118,17 +2390,23 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             # 被执行人
-                            sfxzInfo.enforcement_person = try_and_text("variable[1].xpath('./text()')[0]", tds)
+                            sfxzInfo.enforcement_person = try_and_text(
+                                "variable[1].xpath('./text()')[0]", tds)
                             # 股权数额
-                            sfxzInfo.equity_amount = try_and_text("variable[2].xpath('./text()')[0]", tds)
+                            sfxzInfo.equity_amount = try_and_text(
+                                "variable[2].xpath('./text()')[0]", tds)
                             # 执行法院
-                            sfxzInfo.executive_court = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                            sfxzInfo.executive_court = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
                             # sfxzInfo.executive_court = '解析有误'
                             # 执行通知文号
-                            sfxzInfo.approval_num = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                            sfxzInfo.approval_num = try_and_text(
+                                "variable[4].xpath('./text()')[0]", tds)
                             # 类型|状态
-                            sfxzInfo.status = try_and_text("variable[5].xpath('./text()')[0]", tds)
-                            href = try_and_text("variable[6].xpath('./span/@onclick')[0]", tds)
+                            sfxzInfo.status = try_and_text(
+                                "variable[5].xpath('./text()')[0]", tds)
+                            href = try_and_text(
+                                "variable[6].xpath('./span/@onclick')[0]", tds)
                             res = re.search(r'"(.*?)"', href).groups(1)
                             href = res[0]
                             text_info = 'NA'
@@ -2146,11 +2424,13 @@ class TycDetailParse(object):
                             sfxzInfo.agency_name = self.agency_name
                             sfxzInfo.batch = self.batch
 
-                            unique_field = ['company_name', sfxzInfo.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', sfxzInfo.company_name]  # 该模块中唯一值字段名和值
                             check_parse(sfxzInfo, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, sfxzInfo, current_class)
+                            check_result = check_all_data(
+                                add_result, sfxzInfo, current_class)
                             if not first_parse_data:
                                 first_parse_data = sfxzInfo  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -2165,11 +2445,11 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'enforcement_person'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.enforcementPerson  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().enforcement_person
                                 single_oracle_orm.add(add_result)
@@ -2178,16 +2458,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
-
 
     # 经营风险
     # 经营异常
@@ -2207,14 +2487,13 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
+                if result_dict:
 
                     # print(table_name)
 
-
-                # 获得经营异常大标签
-                # root_div = self.selector.xpath(
-                # '//div[@id= "_container_abnormal"]/table/tbody/tr')
+                    # 获得经营异常大标签
+                    # root_div = self.selector.xpath(
+                    # '//div[@id= "_container_abnormal"]/table/tbody/tr')
                     root_div = table[0].xpath('./tbody/tr')
                     if root_div:
                         # flss = TycJyfxJyyc()
@@ -2234,16 +2513,19 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath("./td")
                             # 加入
-                            insert_date = try_and_text("variable[1].xpath('.//text()')[0]", tds)
+                            insert_date = try_and_text(
+                                "variable[1].xpath('.//text()')[0]", tds)
                             flss.insert_date = insert_date
-                            insert_cause = try_and_text("variable[2].xpath('.//text()')[0]", tds)
+                            insert_cause = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
                             logger.debug(
                                 '列入原因={} type={}'.format(
                                     insert_cause,
                                     type(insert_cause)))
                             flss.insert_cause = insert_cause
                             insert_department = 'NA'
-                            insert_department = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+                            insert_department = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
                             flss.insert_department = insert_department
 
                             flss.out_date = CURRENT_VERSION_NULL
@@ -2251,13 +2533,16 @@ class TycDetailParse(object):
                             flss.out_department = CURRENT_VERSION_NULL
                             # 新增 移除日期
                             try:
-                                out_date = try_and_text("variable[4].xpath('.//text()')[0]", tds)
+                                out_date = try_and_text(
+                                    "variable[4].xpath('.//text()')[0]", tds)
                                 flss.out_date = out_date if out_date else 'NA'
                                 # 新增  移除原因
-                                out_cause = try_and_text("variable[5].xpath('.//text()')[0]", tds)
+                                out_cause = try_and_text(
+                                    "variable[5].xpath('.//text()')[0]", tds)
                                 flss.out_cause = out_cause if out_cause else 'NA'
                                 # 新增 移除机关
-                                out_department = try_and_text("variable[6].xpath('.//text()')[0]", tds)
+                                out_department = try_and_text(
+                                    "variable[6].xpath('.//text()')[0]", tds)
                                 flss.out_department = out_department if out_department else 'NA'
                             except BaseException:
                                 pass
@@ -2270,11 +2555,13 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
 
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                             check_parse(flss, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
                                 first_parse_data = flss  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -2289,11 +2576,11 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-    
+
                                 add_result.table_field = 'insert_date'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.insert_date  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().insert_date
                                 add_result.standard_value = standard_value
@@ -2303,11 +2590,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -2334,16 +2623,16 @@ class TycDetailParse(object):
             result_dict = check_thead(root_div, thead_list)
             table_name = flss.__tablename__
             print('表头核对结果为.....：', result_dict)
-            if result_dict == True:
-    
+            if result_dict:
+
                 # print(table_name)
-    
+
                 # 一行是一个tr
                 root_div = root_div[0]
                 trs = root_div.xpath("./tbody/tr")
-    
+
                 for tr in trs:
-        
+
                     add_result = CheckResult()
                     add_result.company_name = key
                     add_result.add_time = func.now()
@@ -2353,48 +2642,57 @@ class TycDetailParse(object):
                     first_parse_data = None
                     check_flag = 0  # 检测首页是否有匹配到的一行数据
                     check_first = 0  # 检测首页是否有匹配到的第一行数据
-        
+
                     insert_value = ""
                     tds = tr.xpath("./td")
-        
+
                     try:
                         flss.punishment_name = CURRENT_VERSION_NULL
                         flss.punishment_area = CURRENT_VERSION_NULL
-                        flss.decision_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                        flss.decision_number = try_and_text("variable[2].xpath('./text()')[0]", tds)
-                        flss.punishment_contents = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                        flss.decision_date = try_and_text(
+                            "variable[1].xpath('./text()')[0]", tds)
+                        flss.decision_number = try_and_text(
+                            "variable[2].xpath('./text()')[0]", tds)
+                        flss.punishment_contents = try_and_text(
+                            "variable[3].xpath('./text()')[0]", tds)
                         # flss.type = try_and_text("variable[4].xpath('./text()')[0]",tds)
                         flss.type = CURRENT_VERSION_NULL
-                        flss.decision_department = try_and_text("variable[4].xpath('./text()')[0]",
-                                                                tds)
-                        flss.detail_info = try_and_text("variable[5].xpath('./script/text()')[0]", tds)
+                        flss.decision_department = try_and_text(
+                            "variable[4].xpath('./text()')[0]", tds)
+                        flss.detail_info = try_and_text(
+                            "variable[5].xpath('./script/text()')[0]", tds)
                         # tds[5].text.replace("详情 》", "").strip().replace("'", '\\"')
                     except BaseException:
                         flss.decision_date = ""
                         flss.decision_number = ""
                         flss.type = ""
                         flss.decision_department = ""
-                        flss.punishment_name = try_and_text("variable[1].xpath('text()')[0]", tds)
-                        flss.punishment_area = try_and_text("variable[2].xpath('text()')[0]", tds)
-                        flss.detail_info = try_and_text("variable[3].xpath('./script/text()')[0]", tds)
+                        flss.punishment_name = try_and_text(
+                            "variable[1].xpath('text()')[0]", tds)
+                        flss.punishment_area = try_and_text(
+                            "variable[2].xpath('text()')[0]", tds)
+                        flss.detail_info = try_and_text(
+                            "variable[3].xpath('./script/text()')[0]", tds)
                         # tds[3].text.replace("详情 》", "").strip().replace("'", '\\"')
                     flss.txt_id = self.txt_id
                     try:
                         flss.company_name = key
-                    except:
+                    except BaseException:
                         flss.company_name = key
-        
+
                     flss.add_time = func.now()
                     flss.mark = 0
                     flss.agency_num = self.agency_num
                     flss.agency_name = self.agency_name
                     flss.batch = self.batch
-        
-                    unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+
+                    unique_field = [
+                        'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                     check_parse(flss, add_result, unique_field)
-        
+
                     # 验证首页解析
-                    check_result = check_all_data(add_result, flss, current_class)
+                    check_result = check_all_data(
+                        add_result, flss, current_class)
                     if not first_parse_data:
                         first_parse_data = flss  # 保存第一条解析的数据
                     print('check_result+++++++++======:', check_result)
@@ -2409,11 +2707,11 @@ class TycDetailParse(object):
                     print('首页没有匹配到数据》》》》》》》》》')
 
                     try:
-    
+
                         add_result.table_field = 'decision_date'  # 保存第一各异常字段名   各模块手动添加
                         add_result.current_value = first_parse_data.decision_date  # 保存第一各异常字段值   各模块手动添加
                         add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                        add_result.risk_level, add_result.standard_version = 1,1
+                        add_result.risk_level, add_result.standard_version = 1, 1
                         standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                             company_name=first_parse_data.company_name).first().decision_date
                         add_result.standard_value = standard_value
@@ -2423,7 +2721,8 @@ class TycDetailParse(object):
                         print('check all datas error===={}'.format(e))
                 elif check_first > 1 and check_flag:
                     # 匹配到但不是第一条，更新页面第一条到标准库
-                    unique_line = single_oracle_orm.query(current_class).first()
+                    unique_line = single_oracle_orm.query(
+                        current_class).first()
                     single_oracle_orm.delete(unique_line)
                     single_oracle_orm.add(first_parse_data)
                     single_oracle_orm.commit()
@@ -2431,7 +2730,6 @@ class TycDetailParse(object):
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
-
 
     # 解析：经营风险--严重违法
     def html_parse_illegalSerious(self):
@@ -2445,15 +2743,15 @@ class TycDetailParse(object):
             result_dict = check_thead(root_div, thead_list)
             table_name = illegalSerious.__tablename__
             print('表头核对结果为.....：', result_dict)
-            if result_dict == True:
-    
+            if result_dict:
+
                 # trs = self.selector.xpath(
                 #     '//div[@id="_container_illegal"]/table/tbody/tr')
                 trs = root_div[0].xpath('./tbody/tr')
                 if trs:
-    
+
                     key = self.search_name
-    
+
                     add_result = CheckResult()
                     add_result.company_name = key
                     add_result.add_time = func.now()
@@ -2463,7 +2761,7 @@ class TycDetailParse(object):
                     first_parse_data = None
                     check_flag = 0  # 检测首页是否有匹配到的一行数据
                     check_first = 0  # 检测首页是否有匹配到的第一行数据
-    
+
                     for tr in trs:
                         insert_value = ""
                         # illegalSerious = TycJyfxYzwf()
@@ -2480,18 +2778,19 @@ class TycDetailParse(object):
                             out_date = tds[4].xpath('./text()')[0]
                             illegalSerious.out_date = out_date[0] if out_date else 'NA'
                             # 移出原因
-                            out_reason = try_and_text("variable[5].xpath('./text()')[0]", tds)
+                            out_reason = try_and_text(
+                                "variable[5].xpath('./text()')[0]", tds)
                             illegalSerious.out_reason = out_reason[0] if out_reason else 'NA'
                             # 移出决定机关
-                            out_department = try_and_text("variable[6].xpath('./text()')[0]", tds)
+                            out_department = try_and_text(
+                                "variable[6].xpath('./text()')[0]", tds)
                             illegalSerious.out_department = out_department[0] if out_department else 'NA'
                         except BaseException:
                             # 新增移出
                             illegalSerious.out_date = CURRENT_VERSION_NULL
                             illegalSerious.out_reason = CURRENT_VERSION_NULL
                             illegalSerious.out_department = CURRENT_VERSION_NULL
-    
-    
+
                         illegalSerious.txt_id = self.txt_id
                         illegalSerious.company_name = key
                         illegalSerious.mark = 0
@@ -2500,11 +2799,13 @@ class TycDetailParse(object):
                         illegalSerious.agency_name = self.agency_name
                         illegalSerious.batch = self.batch
 
-                        unique_field = ['company_name', illegalSerious.company_name]  # 该模块中唯一值字段名和值
+                        unique_field = [
+                            'company_name', illegalSerious.company_name]  # 该模块中唯一值字段名和值
                         check_parse(illegalSerious, add_result, unique_field)
 
                         # 验证首页解析
-                        check_result = check_all_data(add_result, illegalSerious, current_class)
+                        check_result = check_all_data(
+                            add_result, illegalSerious, current_class)
                         if not first_parse_data:
                             first_parse_data = illegalSerious  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
@@ -2519,11 +2820,11 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-    
+
                             add_result.table_field = 'illegal_date'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.illegal_date  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().illegal_date
                             add_result.standard_value = standard_value
@@ -2533,16 +2834,16 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
-
-
 
     # 股权出质
     def html_parse_pledge(self, index):
@@ -2556,14 +2857,22 @@ class TycDetailParse(object):
         elif index == 0:
             # 获得股权出质大标签  nav-main-equityCount
             table = self.selector.xpath('//div[@id="_container_equity"]/table')
-            thead_list = ['序号', '公示日期', '登记编号', '出质人', '质权人', '状态', '出质股权数额', '操作']
+            thead_list = [
+                '序号',
+                '公示日期',
+                '登记编号',
+                '出质人',
+                '质权人',
+                '状态',
+                '出质股权数额',
+                '操作']
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
+                if result_dict:
 
-                # print(table_name)
+                    # print(table_name)
                     insert_result(self.search_name, table_name, result_dict)
                 else:
 
@@ -2592,14 +2901,21 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath("./td")
                             # #logger.debug(tds.xpath('text()'))
-                            flss.announcement_date = try_and_text("variable[1].xpath('.//text()')[0]", tds)
-                            flss.registration_number = try_and_text("variable[2].xpath('.//text()')[0]", tds)
+                            flss.announcement_date = try_and_text(
+                                "variable[1].xpath('.//text()')[0]", tds)
+                            flss.registration_number = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
 
-                            flss.pledgor = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                            flss.pledgee = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                            flss.status = try_and_text("variable[5].xpath('.//text()')[0]", tds)
-                            flss.pledged_amount = try_and_text("variable[6].xpath('.//text()')[0]", tds)
-                            text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
+                            flss.pledgor = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
+                            flss.pledgee = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
+                            flss.status = try_and_text(
+                                "variable[5].xpath('.//text()')[0]", tds)
+                            flss.pledged_amount = try_and_text(
+                                "variable[6].xpath('.//text()')[0]", tds)
+                            text_info = try_and_text(
+                                "variable[7].xpath('./script/text()')[0]", tds)
                             text_info = replace_special_chars(text_info)
                             flss.detail_info = text_info
                             # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
@@ -2612,11 +2928,13 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # TODO:
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                             check_parse(flss, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
                                 first_parse_data = flss  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -2635,7 +2953,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'announcement_date'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.announcement_date  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().announcement_date
                                 add_result.standard_value = standard_value
@@ -2645,12 +2963,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
-
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
     # 动产抵押
     def html_parse_dongchandiya(self, index):
@@ -2661,16 +2980,24 @@ class TycDetailParse(object):
             # # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
             # check_next_page(self.search_name, 'tyc_qybj_dwtz')
         else:
-            table = self.selector.xpath('//div[@id="_container_mortgage"]/table')
-            thead_list = ['序号', '登记日期', '登记号', '被担保债权类型', '被担保债权数额', '登记机关', '状态', '操作']
+            table = self.selector.xpath(
+                '//div[@id="_container_mortgage"]/table')
+            thead_list = [
+                '序号',
+                '登记日期',
+                '登记号',
+                '被担保债权类型',
+                '被担保债权数额',
+                '登记机关',
+                '状态',
+                '操作']
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
+                if result_dict:
 
-                # print(table_name)
-
+                    # print(table_name)
 
                     # 获得动产抵押大标签
                     # root_div = self.selector.xpath(
@@ -2698,16 +3025,24 @@ class TycDetailParse(object):
                             # flss = tycJyfxDcdy()
                             insert_value = ""
                             tds = tr.xpath('./td')
-                            flss.registration_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                            flss.registration_number = try_and_text("variable[2].xpath('./text()')[0]", tds)
-                            flss.guarantee_amount = try_and_text("variable[4].xpath('./text()')[0]", tds)
-                            flss.guarantee_type = try_and_text("variable[3].xpath('./text()')[0]", tds)
-                            flss.registration_department = try_and_text("variable[5].xpath('./text()')[0]", tds)
-                            flss.status = try_and_text("variable[6].xpath('./text()')[0]", tds)
+                            flss.registration_date = try_and_text(
+                                "variable[1].xpath('./text()')[0]", tds)
+                            flss.registration_number = try_and_text(
+                                "variable[2].xpath('./text()')[0]", tds)
+                            flss.guarantee_amount = try_and_text(
+                                "variable[4].xpath('./text()')[0]", tds)
+                            flss.guarantee_type = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
+                            flss.registration_department = try_and_text(
+                                "variable[5].xpath('./text()')[0]", tds)
+                            flss.status = try_and_text(
+                                "variable[6].xpath('./text()')[0]", tds)
 
-                            detail_info = try_and_text("variable[7].xpath('.//script/text()')[0]", tds)
+                            detail_info = try_and_text(
+                                "variable[7].xpath('.//script/text()')[0]", tds)
                             # tds[7].text.replace("详情 》", "").strip().replace("'", '\\"')
-                            flss.detail_info = replace_special_chars(detail_info)
+                            flss.detail_info = replace_special_chars(
+                                detail_info)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.add_time = func.now()
@@ -2717,11 +3052,13 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # TODO:
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值
                             check_parse(flss, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
                                 first_parse_data = flss  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -2740,7 +3077,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'registration_date'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.registration_date  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().registration_date
                                 add_result.standard_value = standard_value
@@ -2750,16 +3087,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
-
 
     # 解析：经营风险--欠税公告
     def html_parse_taxesNotice(self, index):
@@ -2771,15 +3108,23 @@ class TycDetailParse(object):
             # print('经营风险--欠税公告来了。。。。。。：{}'.format(self.search_name))
         else:
             # 表头信息
-            root_div = self.selector.xpath('//div[@id="_container_towntax"][position()=1]//table')
-            thead_list = ['序号', '发布日期', '纳税人识别号', '欠税税种', '当前新发生的欠税余额', '欠税余额', '税务机关', '操作']
+            root_div = self.selector.xpath(
+                '//div[@id="_container_towntax"][position()=1]//table')
+            thead_list = [
+                '序号',
+                '发布日期',
+                '纳税人识别号',
+                '欠税税种',
+                '当前新发生的欠税余额',
+                '欠税余额',
+                '税务机关',
+                '操作']
             if root_div:
                 result_dict = check_thead(root_div, thead_list)
                 table_name = taxesNotice.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
-
+                if result_dict:
+                    # print(table_name)
 
                     # trs = self.selector.xpath(
                     #     '//div[@id="_container_towntax"][position()=1]//table[position()=1]/tbody/tr')
@@ -2803,14 +3148,21 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath('./td')
-                            taxesNotice.taxes_date = try_and_text("variable[1].xpath('text()')[0]", tds)
-                            taxesNotice.taxes_num = try_and_text("variable[2].xpath('text()')[0]", tds)
-                            taxesNotice.taxes_type = try_and_text("variable[3].xpath('text()')[0]", tds)
-                            taxesNotice.taxes_money = try_and_text("variable[4].xpath('text()')[0]", tds)
-                            taxesNotice.taxes_balance = try_and_text("variable[5].xpath('text()')[0]", tds)
-                            taxesNotice.taxes_office = try_and_text("variable[6].xpath('text()')[0]", tds)
+                            taxesNotice.taxes_date = try_and_text(
+                                "variable[1].xpath('text()')[0]", tds)
+                            taxesNotice.taxes_num = try_and_text(
+                                "variable[2].xpath('text()')[0]", tds)
+                            taxesNotice.taxes_type = try_and_text(
+                                "variable[3].xpath('text()')[0]", tds)
+                            taxesNotice.taxes_money = try_and_text(
+                                "variable[4].xpath('text()')[0]", tds)
+                            taxesNotice.taxes_balance = try_and_text(
+                                "variable[5].xpath('text()')[0]", tds)
+                            taxesNotice.taxes_office = try_and_text(
+                                "variable[6].xpath('text()')[0]", tds)
                             # 新增 详情
-                            taxesNotice.detail = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
+                            taxesNotice.detail = try_and_text(
+                                "variable[7].xpath('./script/text()')[0]", tds)
 
                             taxesNotice.txt_id = self.txt_id
                             taxesNotice.company_name = key
@@ -2821,11 +3173,13 @@ class TycDetailParse(object):
                             taxesNotice.batch = self.batch
 
                             # TODO:
-                            unique_field = ['company_name', taxesNotice.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', taxesNotice.company_name]  # 该模块中唯一值字段名和值
                             check_parse(taxesNotice, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, taxesNotice, current_class)
+                            check_result = check_all_data(
+                                add_result, taxesNotice, current_class)
                             if not first_parse_data:
                                 first_parse_data = taxesNotice  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -2844,7 +3198,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'taxes_date'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.taxesDate  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().taxes_date
                                 add_result.standard_value = standard_value
@@ -2854,15 +3208,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 解析：经营风险-->司法拍卖
     def html_parse_sfpm(self, index):
@@ -2873,15 +3228,15 @@ class TycDetailParse(object):
             check_next_page(self.search_name, 'tyc_jyfx_sfpm')
         else:
             # 表头信息
-            root_div = self.selector.xpath('//div[@id="_container_judicialSale"]/table')
+            root_div = self.selector.xpath(
+                '//div[@id="_container_judicialSale"]/table')
             thead_list = ['序号', '拍卖公告', '公告日期', '执行法院', '拍卖标的']
             if root_div:
                 result_dict = check_thead(root_div, thead_list)
                 table_name = sfpaInfo.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
-
+                if result_dict:
+                    # print(table_name)
 
                     # trs = self.selector.xpath(
                     #     '//div[@id="_container_judicialSale"]/table/tbody/tr')
@@ -2906,21 +3261,28 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             # 拍卖公告
-                            sfpaInfo.auction_notice = try_and_text("variable[1].xpath('./a/text()')[0]", tds)
+                            sfpaInfo.auction_notice = try_and_text(
+                                "variable[1].xpath('./a/text()')[0]", tds)
                             # 公告日期
-                            sfpaInfo.auction_date = try_and_text("variable[2].xpath('./text()')[0]", tds)
+                            sfpaInfo.auction_date = try_and_text(
+                                "variable[2].xpath('./text()')[0]", tds)
                             # 执行法院
-                            sfpaInfo.execute_court = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                            sfpaInfo.execute_court = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
                             # 拍卖标的
-                            sfpaInfo.auction_target = try_and_text("variable[4].xpath('string(.)')", tds)
+                            sfpaInfo.auction_target = try_and_text(
+                                "variable[4].xpath('string(.)')", tds)
                             text_info = 'NA'
-                            href = try_and_text("variable[1].xpath('./a/@href')[0]", tds)
+                            href = try_and_text(
+                                "variable[1].xpath('./a/@href')[0]", tds)
                             # 新增 详情 brand  TODO:详情
                             try:
-                                text_info = self.detail_info["_container_judicialSale"][href.split('/')[-1].replace('.', '_')]
+                                text_info = self.detail_info["_container_judicialSale"][href.split(
+                                    '/')[-1].replace('.', '_')]
                             except BaseException:
                                 pass
-                            sfpaInfo.auction_detail = replace_special_chars(text_info)
+                            sfpaInfo.auction_detail = replace_special_chars(
+                                text_info)
 
                             # sfpaInfo.auction_detail = '详情'
 
@@ -2933,11 +3295,13 @@ class TycDetailParse(object):
                             sfpaInfo.batch = self.batch
 
                             # TODO:
-                            unique_field = ['company_name', sfpaInfo.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', sfpaInfo.company_name]  # 该模块中唯一值字段名和值
                             check_parse(sfpaInfo, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, sfpaInfo, current_class)
+                            check_result = check_all_data(
+                                add_result, sfpaInfo, current_class)
                             if not first_parse_data:
                                 first_parse_data = sfpaInfo  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -2956,7 +3320,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'auction_notice'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.auctionNotice  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().auction_notice
                                 add_result.standard_value = standard_value
@@ -2966,15 +3330,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 解析：经营风险-->清算信息
     def html_parse_qsxx(self, index):
@@ -3012,15 +3377,14 @@ class TycDetailParse(object):
                 qsxxInfo.agency_name = self.agency_name
                 qsxxInfo.batch = self.batch
 
-
-
                 print('正在核实的公司是{}'.format(key))
                 # single_oracle_orm.add(qsxxInfo)
                 # print('清算信息：============', qsxxInfo.__dict__)
                 # y2017 = single_oracle_orm.query(TycYearJbxx).filter_by(year=2017, company_name='佐源集团有限公司').first()
                 # single_oracle_orm.delete()
                 # single_oracle_orm.commit()
-                standard_data = single_oracle_orm.query(TycJyfxQsxx).filter_by(company_name=key).first()
+                standard_data = single_oracle_orm.query(
+                    TycJyfxQsxx).filter_by(company_name=key).first()
 
                 try:
                     change_dict = check_obj(qsxxInfo, standard_data)
@@ -3035,7 +3399,8 @@ class TycDetailParse(object):
                         checkResult.current_value = v
                         checkResult.table_field = k
                         checkResult.standard_value = standard_data.__dict__[k]
-                        checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(key, k)
+                        checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(
+                            key, k)
                         import_field = single_oracle.oracle_find_by_param_all(
                             "select column_name from check_import_field where table_name = {}".format(
                                 checkResult.table_name))
@@ -3055,16 +3420,16 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 公示催告 {}".format(self.search_name))
         gscgInfo = TycJyfxGscg()
         # 表头信息
-        root_div = self.selector.xpath('//div[@id="_container_publicnoticeItem"]/table')
+        root_div = self.selector.xpath(
+            '//div[@id="_container_publicnoticeItem"]/table')
         if root_div:
             thead_list = ['序号', '票据号', '票据类型', '票面金额', '发布机构', '公告日期', '操作']
             if root_div:
                 result_dict = check_thead(root_div, thead_list)
                 table_name = gscgInfo.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
-
+                if result_dict:
+                    # print(table_name)
 
                     # trs = self.selector.xpath(
                     #     '//div[@id="_container_publicnoticeItem"]/table/tbody/tr')
@@ -3088,17 +3453,23 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             # 票据号
-                            gscgInfo.bill_number = try_and_text("variable[1].xpath('.//text()')[0]", tds)
+                            gscgInfo.bill_number = try_and_text(
+                                "variable[1].xpath('.//text()')[0]", tds)
                             # 票据类型
-                            gscgInfo.bill_type = try_and_text("variable[2].xpath('.//text()')[0]", tds)
+                            gscgInfo.bill_type = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
                             # 票面金额
-                            gscgInfo.denomination = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+                            gscgInfo.denomination = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
                             # 发布机构
-                            gscgInfo.publish_authority = try_and_text("variable[4].xpath('.//text()')[0]", tds)
+                            gscgInfo.publish_authority = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
                             # 公告日期
-                            gscgInfo.announcement_date = try_and_text("variable[5].xpath('.//text()')[0]", tds)
+                            gscgInfo.announcement_date = try_and_text(
+                                "variable[5].xpath('.//text()')[0]", tds)
                             # 详情
-                            text_info = try_and_text("variable[6].xpath('.//text()')[0]", tds)
+                            text_info = try_and_text(
+                                "variable[6].xpath('.//text()')[0]", tds)
                             text_info = replace_special_chars(text_info)
                             gscgInfo.detail = text_info
 
@@ -3111,11 +3482,13 @@ class TycDetailParse(object):
                             gscgInfo.batch = self.batch
 
                             # TODO:
-                            unique_field = ['company_name', gscgInfo.company_name]  # 该模块中唯一值字段名和值
+                            unique_field = [
+                                'company_name', gscgInfo.company_name]  # 该模块中唯一值字段名和值
                             check_parse(gscgInfo, add_result, unique_field)
 
                             # 验证首页解析
-                            check_result = check_all_data(add_result, gscgInfo, current_class)
+                            check_result = check_all_data(
+                                add_result, gscgInfo, current_class)
                             if not first_parse_data:
                                 first_parse_data = gscgInfo  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
@@ -3134,7 +3507,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'bill_number'  # 保存第一各异常字段名   各模块手动添加
                                 add_result.current_value = first_parse_data.billNumber  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().bill_number
                                 add_result.standard_value = standard_value
@@ -3144,30 +3517,40 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
 
-
     # 解析：企业发展-->融资历史
     def html_parse_financeHistory(self):
-    
+
         logger.debug("Parse detail info 融资历史 {}".format(self.search_name))
         table = (self.selector.xpath(
             '//div[@id="_container_rongzi"]/table'))
         flss = TycQyfzRzl()
-        thead_list = ['序号', '披露日期', '事件日期', '交易金额', '融资轮次', '估值', '比例', '投资方', '新闻来源']
+        thead_list = [
+            '序号',
+            '披露日期',
+            '事件日期',
+            '交易金额',
+            '融资轮次',
+            '估值',
+            '比例',
+            '投资方',
+            '新闻来源']
         if table:
             result_dict = check_thead(table, thead_list)
             table_name = flss.__tablename__
             print('表头核对结果为.....：', result_dict)
-            if result_dict == True:
-            # print(table_name)
+            if result_dict:
+                # print(table_name)
 
                 trs = table.xpath('./tbody/tr')
                 if trs:
@@ -3186,14 +3569,22 @@ class TycDetailParse(object):
                     for tr in trs:
                         insert_value = ""
                         tds = tr.xpath('./td')
-                        flss.finance_date = try_and_text("variable[1].xpath('string(.)')", tds)
-                        flss.event_date = try_and_text("variable[2].xpath('string(.)')", tds)
-                        flss.finance_round = try_and_text("variable[4].xpath('string(.)')", tds)
-                        flss.finance_value = try_and_text("variable[5].xpath('string(.)')", tds)
-                        flss.finance_money = try_and_text("variable[3].xpath('string(.)')", tds)
-                        flss.finance_ratio = try_and_text("variable[6].xpath('string(.)')", tds)
-                        flss.finance_investor = try_and_text("','.join(variable[7].xpath('.//text()'))", tds)
-                        source = try_and_text("variable[8].xpath('.//text()')[0]", tds)
+                        flss.finance_date = try_and_text(
+                            "variable[1].xpath('string(.)')", tds)
+                        flss.event_date = try_and_text(
+                            "variable[2].xpath('string(.)')", tds)
+                        flss.finance_round = try_and_text(
+                            "variable[4].xpath('string(.)')", tds)
+                        flss.finance_value = try_and_text(
+                            "variable[5].xpath('string(.)')", tds)
+                        flss.finance_money = try_and_text(
+                            "variable[3].xpath('string(.)')", tds)
+                        flss.finance_ratio = try_and_text(
+                            "variable[6].xpath('string(.)')", tds)
+                        flss.finance_investor = try_and_text(
+                            "','.join(variable[7].xpath('.//text()'))", tds)
+                        source = try_and_text(
+                            "variable[8].xpath('.//text()')[0]", tds)
                         flss.finance_source = source
                         flss.txt_id = self.txt_id
                         flss.company_name = key
@@ -3203,13 +3594,16 @@ class TycDetailParse(object):
                         flss.agency_name = self.agency_name
                         flss.batch = self.batch
                         # 解析判断
-                        unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                        unique_field = [
+                            'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
                         check_parse(flss, add_result, unique_field)  # 解析有误判断
 
                         # 验证首页解析，匹配到数据返回True
-                        check_result = check_all_data(add_result, flss, current_class)
+                        check_result = check_all_data(
+                            add_result, flss, current_class)
                         if not first_parse_data:
-                            first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                            first_parse_data = copy.deepcopy(
+                                flss)  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
                         check_first += 1
                         if check_result:
@@ -3225,7 +3619,7 @@ class TycDetailParse(object):
                             add_result.table_field = 'financeDate'  # 保存第一各异常字段名       各表不同
                             add_result.current_value = first_parse_data.financeDate  # 保存第一各异常字段值   各表不同
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().financeDate
                             add_result.standard_value = standard_value
@@ -3236,11 +3630,13 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
@@ -3261,7 +3657,7 @@ class TycDetailParse(object):
                 print('核对结果为....{}'.format(result_dict))
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
+                if result_dict:
 
                     trs = table[0].xpath('./tbody/tr')
 
@@ -3289,8 +3685,10 @@ class TycDetailParse(object):
                                 personName = tds[1].xpath('.//span/text()')[1]
                             flss.personName = personName
 
-                            flss.position = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                            personInfo = try_and_text("variable[3].xpath('./div/div/text()')[0]", tds)
+                            flss.position = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
+                            personInfo = try_and_text(
+                                "variable[3].xpath('./div/div/text()')[0]", tds)
 
                             flss.personInfo = ''.join(personInfo)
                             flss.txt_id = self.txt_id
@@ -3301,13 +3699,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -3322,7 +3724,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'personName'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.personName  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().personName
                                 add_result.standard_value = standard_value
@@ -3333,15 +3735,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 解析：企业背景--企业业务
     def html_parse_entBusiness(self, index):
@@ -3358,9 +3761,8 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
-
+                if result_dict:
+                    # print(table_name)
 
                     trs = table.xpath('./tbody/tr')
                     if trs:
@@ -3380,9 +3782,12 @@ class TycDetailParse(object):
                         for tr in trs:
                             tds = tr.xpath('./td')
                             insert_value = ""
-                            flss.business_name = try_and_text("variable[1].xpath('.//td//text()')[-1]", tds)
-                            flss.business_quale = try_and_text("variable[2].xpath('.//text()')[-1]", tds)
-                            flss.business_info = try_and_text("variable[3].xpath('./div/div//text()')[0]", tds)
+                            flss.business_name = try_and_text(
+                                "variable[1].xpath('.//td//text()')[-1]", tds)
+                            flss.business_quale = try_and_text(
+                                "variable[2].xpath('.//text()')[-1]", tds)
+                            flss.business_info = try_and_text(
+                                "variable[3].xpath('./div/div//text()')[0]", tds)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.mark = 0
@@ -3391,13 +3796,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -3412,7 +3821,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'businessName'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.businessName  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(TycQyfzQyyw).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().businessName
                                 add_result.standard_value = standard_value
@@ -3423,11 +3832,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -3442,13 +3853,22 @@ class TycDetailParse(object):
         else:
             table = self.selector.xpath(
                 '//div[@id="_container_touzi"]/table')
-            thead_list = ['序号', '时间', '轮次', '金额', '投资方', '产品', '地区', '行业', '业务']
+            thead_list = [
+                '序号',
+                '时间',
+                '轮次',
+                '金额',
+                '投资方',
+                '产品',
+                '地区',
+                '行业',
+                '业务']
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
+                if result_dict:
+                    # print(table_name)
 
                     trs = table[0].xpath('./tbody/tr')
                     if trs:
@@ -3467,14 +3887,22 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath('./td')
-                            flss.touzi_date = try_and_text("variable[1].xpath('string(.)')", tds)
-                            flss.touzi_round = try_and_text("variable[2].xpath('string(.)')", tds)
-                            flss.touzi_money = try_and_text("variable[3].xpath('string(.)')", tds)
-                            flss.touzi_ent = try_and_text("variable[4].xpath('string(.)')", tds)
-                            flss.touzi_product = try_and_text("(variable[5].xpath('.//a/text()'))[0]", tds)
-                            flss.touzi_area = try_and_text("variable[6].xpath('string(.)')", tds)
-                            flss.touzi_industry = try_and_text("variable[7].xpath('string(.)')", tds)
-                            flss.touzi_business = try_and_text("variable[8].xpath('string(.)')", tds)
+                            flss.touzi_date = try_and_text(
+                                "variable[1].xpath('string(.)')", tds)
+                            flss.touzi_round = try_and_text(
+                                "variable[2].xpath('string(.)')", tds)
+                            flss.touzi_money = try_and_text(
+                                "variable[3].xpath('string(.)')", tds)
+                            flss.touzi_ent = try_and_text(
+                                "variable[4].xpath('string(.)')", tds)
+                            flss.touzi_product = try_and_text(
+                                "(variable[5].xpath('.//a/text()'))[0]", tds)
+                            flss.touzi_area = try_and_text(
+                                "variable[6].xpath('string(.)')", tds)
+                            flss.touzi_industry = try_and_text(
+                                "variable[7].xpath('string(.)')", tds)
+                            flss.touzi_business = try_and_text(
+                                "variable[8].xpath('string(.)')", tds)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.mark = 0
@@ -3483,13 +3911,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -3504,7 +3936,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'touziDate'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.touziDate  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().touziDate
                                 add_result.standard_value = standard_value
@@ -3515,18 +3947,20 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
 
     # 解析：企业背景--竞品信息   docker cp /etc/localtime: 2 /etc/localtime
     def html_parse_jpInfo(self, index):
-    
+
         logger.debug("Parse detail info 竞品信息 {}".format(self.search_name))
         flss = TycQyfzJpxx()
         if index == 1 and not isinstance(self.selector, int):
@@ -3540,8 +3974,8 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
+                if result_dict:
+                    # print(table_name)
 
                     trs = table[0].xpath('./tbody/tr')
 
@@ -3561,13 +3995,20 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath('./td')
-                            flss.jp_product = try_and_text("variable[1].xpath('.//a/text()')[0]", tds)
-                            flss.jp_area = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                            flss.jp_round = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                            flss.jp_industry = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                            flss.jp_business = try_and_text("variable[5].xpath('.//text()')[0]", tds)
-                            flss.jp_date = try_and_text("variable[6].xpath('.//text()')[0]", tds)
-                            flss.jp_value = try_and_text("variable[7].xpath('.//text()')[0]", tds)
+                            flss.jp_product = try_and_text(
+                                "variable[1].xpath('.//a/text()')[0]", tds)
+                            flss.jp_area = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
+                            flss.jp_round = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
+                            flss.jp_industry = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
+                            flss.jp_business = try_and_text(
+                                "variable[5].xpath('.//text()')[0]", tds)
+                            flss.jp_date = try_and_text(
+                                "variable[6].xpath('.//text()')[0]", tds)
+                            flss.jp_value = try_and_text(
+                                "variable[7].xpath('.//text()')[0]", tds)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.mark = 0
@@ -3576,13 +4017,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -3597,7 +4042,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'jpProduct'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.jpProduct  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().jpProduct
                                 add_result.standard_value = standard_value
@@ -3608,11 +4053,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -3634,21 +4081,30 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
+                if result_dict:
+                    # print(table_name)
                     insert_result(self.search_name, table_name, result_dict)
                 root_div = table
             if not root_div:
                 table = self.selector.xpath(
                     '//div[@id="_container_baipin"]/table')
-                thead_list = ['序号', '发布日期', '招聘职位', '月薪', '学历', '工作经验', '地区', '操作']
+                thead_list = [
+                    '序号',
+                    '发布日期',
+                    '招聘职位',
+                    '月薪',
+                    '学历',
+                    '工作经验',
+                    '地区',
+                    '操作']
                 if table:
                     result_dict = check_thead(table, thead_list)
                     table_name = flss.__tablename__
                     print('表头核对结果为.....：', result_dict)
-                    if result_dict == True:
-                    # print(table_name)
-                        insert_result(self.search_name, table_name, result_dict)
+                    if result_dict:
+                        # print(table_name)
+                        insert_result(
+                            self.search_name, table_name, result_dict)
                     root_div = table[0].xpath('./tbody/tr')
 
             if root_div:
@@ -3668,14 +4124,21 @@ class TycDetailParse(object):
                 # root_div = root_div[0]
                 for tr in root_div:  # bodys
                     tds = tr.xpath('./td')
-                    tr_hrefs = try_and_text('variable[7].xpath(".//a/@href")[0]', tds)
+                    tr_hrefs = try_and_text(
+                        'variable[7].xpath(".//a/@href")[0]', tds)
                     insert_value = ""
-                    flss.publish_date = try_and_text("variable[1].xpath('.//text()')[0]", tds)
-                    flss.recruitment_job = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                    flss.salary = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                    education = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                    work_year = try_and_text("variable[5].xpath('.//text()')[0]", tds)
-                    flss.work_city = try_and_text("variable[6].xpath('.//text()')[0]", tds)
+                    flss.publish_date = try_and_text(
+                        "variable[1].xpath('.//text()')[0]", tds)
+                    flss.recruitment_job = try_and_text(
+                        "variable[2].xpath('.//text()')[0]", tds)
+                    flss.salary = try_and_text(
+                        "variable[3].xpath('.//text()')[0]", tds)
+                    education = try_and_text(
+                        "variable[4].xpath('.//text()')[0]", tds)
+                    work_year = try_and_text(
+                        "variable[5].xpath('.//text()')[0]", tds)
+                    flss.work_city = try_and_text(
+                        "variable[6].xpath('.//text()')[0]", tds)
 
                     flss.work_year = work_year
                     flss.recruitment_numbers = '无明确人数'
@@ -3698,11 +4161,14 @@ class TycDetailParse(object):
                     flss.agency_name = self.agency_name
                     flss.batch = self.batch
                     # 解析判断
-                    unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                    unique_field = [
+                        'company_name',
+                        flss.company_name]  # 该模块中唯一值字段名和值  各表不同
                     check_parse(flss, add_result, unique_field)  # 解析有误判断
 
                     # 验证首页解析，匹配到数据返回True
-                    check_result = check_all_data(add_result, flss, current_class)
+                    check_result = check_all_data(
+                        add_result, flss, current_class)
                     if not first_parse_data:
                         first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
                     print('check_result+++++++++======:', check_result)
@@ -3720,7 +4186,7 @@ class TycDetailParse(object):
                         add_result.table_field = 'recruitment_job'  # 保存第一各异常字段名       各表不同
                         add_result.current_value = first_parse_data.recruitment_job  # 保存第一各异常字段值   各表不同
                         add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                        add_result.risk_level, add_result.standard_version = 1,1
+                        add_result.risk_level, add_result.standard_version = 1, 1
                         standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                             company_name=first_parse_data.company_name).first().recruitment_job
                         add_result.standard_value = standard_value
@@ -3731,7 +4197,8 @@ class TycDetailParse(object):
                         print('check all datas error===={}'.format(e))
                 elif check_first > 1 and check_flag:
                     # 匹配到但不是第一条，更新页面第一条到标准库
-                    unique_line = single_oracle_orm.query(current_class).first()
+                    unique_line = single_oracle_orm.query(
+                        current_class).first()
                     single_oracle_orm.delete(unique_line)
                     single_oracle_orm.add(first_parse_data)
                     single_oracle_orm.commit()
@@ -3747,13 +4214,20 @@ class TycDetailParse(object):
         else:
             table = self.selector.xpath(
                 '//div[@id="_container_licensing"]/table')
-            thead_list = ['序号', '许可文书编号', '许可文件名称', '有效期自', '有效期至', '许可机关', '许可内容']
+            thead_list = [
+                '序号',
+                '许可文书编号',
+                '许可文件名称',
+                '有效期自',
+                '有效期至',
+                '许可机关',
+                '许可内容']
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
+                if result_dict:
+                    # print(table_name)
 
                     trs = table[0].xpath('./tbody/tr')
                     if trs:
@@ -3773,17 +4247,23 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             # 许可书文编号
-                            flss.license_documet_num = try_and_text("variable[1].xpath('./text()')[0]", tds)
+                            flss.license_documet_num = try_and_text(
+                                "variable[1].xpath('./text()')[0]", tds)
                             # 许可文件名称
-                            flss.license_document_name = try_and_text("variable[2].xpath('./text()')[0]", tds)
+                            flss.license_document_name = try_and_text(
+                                "variable[2].xpath('./text()')[0]", tds)
                             # 有效期自
-                            flss.validity_begin = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                            flss.validity_begin = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
                             # 有效期至
-                            flss.validity_end = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                            flss.validity_end = try_and_text(
+                                "variable[4].xpath('./text()')[0]", tds)
                             # 许可机关
-                            flss.license_authority = try_and_text("variable[5].xpath('./text()')[0]", tds)
+                            flss.license_authority = try_and_text(
+                                "variable[5].xpath('./text()')[0]", tds)
                             # 许可内容
-                            flss.license_content = try_and_text("variable[6].xpath('./text()')[0]", tds)
+                            flss.license_content = try_and_text(
+                                "variable[6].xpath('./text()')[0]", tds)
 
                             flss.txt_id = self.txt_id
                             flss.company_name = key
@@ -3793,13 +4273,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -3814,7 +4298,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'licenseDocNum'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.licenseDocNum  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().licenseDocNum
                                 add_result.standard_value = standard_value
@@ -3825,11 +4309,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -3849,8 +4335,8 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
+                if result_dict:
+                    # print(table_name)
 
                     trs = table[0].xpath('./tbody/tr')
                     if trs:
@@ -3870,13 +4356,17 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             # 行政许可文书号
-                            flss.license_documet_num = try_and_text("variable[1].xpath('.//text()')[0]", tds)
+                            flss.license_documet_num = try_and_text(
+                                "variable[1].xpath('.//text()')[0]", tds)
                             # 许可决定机关
-                            flss.license_authority = try_and_text("variable[2].xpath('.//text()')[0]", tds)
+                            flss.license_authority = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
                             # 许可决定日期
-                            flss.license_date = try_and_text("variable[3].xpath( './/text()')[0]", tds)
+                            flss.license_date = try_and_text(
+                                "variable[3].xpath( './/text()')[0]", tds)
                             # 详情
-                            text_info = try_and_text("variable[4].xpath('.//script/text()')[0]", tds)
+                            text_info = try_and_text(
+                                "variable[4].xpath('.//script/text()')[0]", tds)
                             text_info = replace_special_chars(text_info)
                             flss.detail = text_info
 
@@ -3889,13 +4379,17 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -3911,7 +4405,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'licenseDocNum'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.licenseDocNum  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().licenseDocNum
                                 add_result.standard_value = standard_value
@@ -3922,11 +4416,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -3947,7 +4443,7 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
+                if result_dict:
                     # print(table_name)
 
                     root_div = table
@@ -3970,11 +4466,16 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath("td")
-                            flss.year = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                            flss.tax_rating = try_and_text("variable[2].xpath('./text()')[0]", tds)
-                            flss.tax_type = try_and_text("variable[3].xpath('./text()')[0]", tds)
-                            flss.tax_identification_number = try_and_text("variable[4].xpath('./text()')[0]", tds)
-                            flss.evaluate_department = try_and_text("variable[5].xpath('./text()')[0]", tds)
+                            flss.year = try_and_text(
+                                "variable[1].xpath('./text()')[0]", tds)
+                            flss.tax_rating = try_and_text(
+                                "variable[2].xpath('./text()')[0]", tds)
+                            flss.tax_type = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
+                            flss.tax_identification_number = try_and_text(
+                                "variable[4].xpath('./text()')[0]", tds)
+                            flss.evaluate_department = try_and_text(
+                                "variable[5].xpath('./text()')[0]", tds)
                             flss.txt_id = self.txt_id
                             flss.ent_name = key
                             flss.add_time = func.now()
@@ -3983,13 +4484,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4004,7 +4509,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'year'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.year  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().year
                                 add_result.standard_value = standard_value
@@ -4015,11 +4520,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4040,8 +4547,8 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
+                if result_dict:
+                    # print(table_name)
 
                     root_div = table.xpath('./tbody/tr')
                     if root_div:
@@ -4061,10 +4568,14 @@ class TycDetailParse(object):
                         for tr in root_div:
                             insert_value = ""
                             tds = tr.xpath("./td")
-                            flss.check_date = try_and_text("variable[1].xpath('.//text()')[0]", tds)
-                            flss.type = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                            flss.result = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                            flss.check_department = try_and_text("variable[4].xpath('.//text()')[0]", tds)
+                            flss.check_date = try_and_text(
+                                "variable[1].xpath('.//text()')[0]", tds)
+                            flss.type = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
+                            flss.result = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
+                            flss.check_department = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.add_time = func.now()
@@ -4073,13 +4584,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4095,7 +4610,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'check_date'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.check_date  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().check_date
                                 add_result.standard_value = standard_value
@@ -4106,11 +4621,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4133,7 +4650,7 @@ class TycDetailParse(object):
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     trs = table[0].xpath('./tbody/tr')
                     if trs:
@@ -4150,15 +4667,21 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath('./td')
-                            flss.certificate_type = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
-                            flss.certificate_num = try_and_text("variable[2].xpath('./span/text()')[0]", tds)
-                            flss.send_date = try_and_text("variable[3].xpath('./span/text()')[0]", tds)
-                            flss.off_date = try_and_text("variable[4].xpath('./span/text()')[0]", tds)
+                            flss.certificate_type = try_and_text(
+                                "variable[1].xpath('./span/text()')[0]", tds)
+                            flss.certificate_num = try_and_text(
+                                "variable[2].xpath('./span/text()')[0]", tds)
+                            flss.send_date = try_and_text(
+                                "variable[3].xpath('./span/text()')[0]", tds)
+                            flss.off_date = try_and_text(
+                                "variable[4].xpath('./span/text()')[0]", tds)
                             # certificateInfo.deviceNum = tds[4].xpath('string(.)')
                             # certificateInfo.permitNum = tds[5].xpath('string(.)')
                             # 新增 证书详情
-                            href = try_and_text("variable[1].xpath('./span/@onclick')[0]", tds)
-                            res = re.search(r"certificatePopup\('(.*?)'\)", href).groups(1)
+                            href = try_and_text(
+                                "variable[1].xpath('./span/@onclick')[0]", tds)
+                            res = re.search(
+                                r"certificatePopup\('(.*?)'\)", href).groups(1)
                             href = res[0]
                             text_info = 'NA'
                             try:
@@ -4174,13 +4697,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4195,7 +4722,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'certificateType'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.certificateType  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().certificateType
                                 add_result.standard_value = standard_value
@@ -4206,11 +4733,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4231,8 +4760,8 @@ class TycDetailParse(object):
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
-                if result_dict == True:
-                # print(table_name)
+                if result_dict:
+                    # print(table_name)
 
                     root_div = table
                     if root_div:
@@ -4254,10 +4783,14 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath("./td")
-                            flss.publish_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                            flss.title = try_and_text("variable[2].xpath('./a/text()')[0]", tds)
-                            flss.title_url = try_and_text("variable[2].xpath('./a/@href')[0]", tds)
-                            flss.procurement = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                            flss.publish_date = try_and_text(
+                                "variable[1].xpath('./text()')[0]", tds)
+                            flss.title = try_and_text(
+                                "variable[2].xpath('./a/text()')[0]", tds)
+                            flss.title_url = try_and_text(
+                                "variable[2].xpath('./a/@href')[0]", tds)
+                            flss.procurement = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.add_time = func.now()
@@ -4266,13 +4799,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4288,7 +4825,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'publish_date'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.publish_date  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().publish_date
                                 add_result.standard_value = standard_value
@@ -4299,11 +4836,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4325,7 +4864,7 @@ class TycDetailParse(object):
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     root_div = table.xpath('./tbody/tr')
                     if root_div:
@@ -4347,11 +4886,16 @@ class TycDetailParse(object):
                         for tr in root_div:
                             insert_value = ""
                             tds = tr.xpath("./td")
-                            flss.product_name = try_and_text("variable[1].xpath('.//span/text()')[0]", tds)
-                            flss.product_referred = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                            flss.product_classification = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                            flss.field = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                            href = try_and_text("variable[5].xpath('./a/@href')[0]", tds)
+                            flss.product_name = try_and_text(
+                                "variable[1].xpath('.//span/text()')[0]", tds)
+                            flss.product_referred = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
+                            flss.product_classification = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
+                            flss.field = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
+                            href = try_and_text(
+                                "variable[5].xpath('./a/@href')[0]", tds)
                             text_info = 'NA'
                             try:
                                 text_info = self.detail_info["_container_product"][href.split(
@@ -4368,13 +4912,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4390,7 +4938,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'product_name'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.product_name  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().product_name
                                 add_result.standard_value = standard_value
@@ -4401,11 +4949,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4425,7 +4975,7 @@ class TycDetailParse(object):
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     trs = table.xpath('./tbody/tr')
                     if trs:
@@ -4443,11 +4993,16 @@ class TycDetailParse(object):
 
                         for tr in trs:
                             insert_value = ""
-                            flss.mp_name = try_and_text("variable.xpath('./td')[1].xpath('.//span/text()')[1]", tr)
-                            flss.mp_number = try_and_text("variable.xpath('./td')[2].xpath('./span/text()')[0]", tr)
-                            flss.mp_info = try_and_text("variable.xpath('./td')[4].xpath('./div/div/text()')[0]", tr)
-                            detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
-                            flss.detail = detail.replace(r'\u002F', '/')  # 0614修改
+                            flss.mp_name = try_and_text(
+                                "variable.xpath('./td')[1].xpath('.//span/text()')[1]", tr)
+                            flss.mp_number = try_and_text(
+                                "variable.xpath('./td')[2].xpath('./span/text()')[0]", tr)
+                            flss.mp_info = try_and_text(
+                                "variable.xpath('./td')[4].xpath('./div/div/text()')[0]", tr)
+                            detail = try_and_text(
+                                "variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
+                            flss.detail = detail.replace(
+                                r'\u002F', '/')  # 0614修改
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.mark = 0
@@ -4456,13 +5011,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4477,7 +5036,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'mp_name'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.mp_name  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().mp_name
                                 add_result.standard_value = standard_value
@@ -4488,11 +5047,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4510,7 +5071,7 @@ class TycDetailParse(object):
             table_name = flss.__tablename__
             print('表头核对结果为.....：', result_dict)
             # print(table_name)
-            if result_dict == True:
+            if result_dict:
                 insert_result(self.search_name, table_name, result_dict)
                 root_div = table[0].xpath('./tbody/tr')
                 if root_div:
@@ -4530,12 +5091,17 @@ class TycDetailParse(object):
                     for tr in root_div:
                         insert_value = ""
                         tds = tr.xpath("./td")
-                        flss.register_customs = try_and_text("variable[1].xpath('./text()')[0]", tds)
-                        flss.industry_category = try_and_text("variable[2].xpath('./text()')[0]", tds)
-                        flss.manager_type = try_and_text("variable[3].xpath('./text()')[0]", tds)
-                        flss.register_date = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                        flss.register_customs = try_and_text(
+                            "variable[1].xpath('./text()')[0]", tds)
+                        flss.industry_category = try_and_text(
+                            "variable[2].xpath('./text()')[0]", tds)
+                        flss.manager_type = try_and_text(
+                            "variable[3].xpath('./text()')[0]", tds)
+                        flss.register_date = try_and_text(
+                            "variable[4].xpath('./text()')[0]", tds)
                         flss.detail_info = 'NA'
-                        detail_info = try_and_text("variable[5].xpath('.//script/text()')[0]", tds)
+                        detail_info = try_and_text(
+                            "variable[5].xpath('.//script/text()')[0]", tds)
                         flss.detail_info = replace_special_chars(detail_info)
                         flss.txt_id = self.txt_id
                         flss.company_name = key
@@ -4546,13 +5112,16 @@ class TycDetailParse(object):
                         flss.batch = self.batch
                         flss.customs_number = CURRENT_VERSION_NULL
                         # 解析判断
-                        unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                        unique_field = [
+                            'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
                         check_parse(flss, add_result, unique_field)  # 解析有误判断
 
                         # 验证首页解析，匹配到数据返回True
-                        check_result = check_all_data(add_result, flss, current_class)
+                        check_result = check_all_data(
+                            add_result, flss, current_class)
                         if not first_parse_data:
-                            first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                            first_parse_data = copy.deepcopy(
+                                flss)  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
                         check_first += 1
                         if check_result:
@@ -4567,7 +5136,7 @@ class TycDetailParse(object):
                             add_result.table_field = 'register_customs'  # 保存第一各异常字段名       各表不同
                             add_result.current_value = first_parse_data.register_customs  # 保存第一各异常字段值   各表不同
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().register_customs
                             add_result.standard_value = standard_value
@@ -4578,11 +5147,13 @@ class TycDetailParse(object):
                             print('check all datas error===={}'.format(e))
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
@@ -4603,7 +5174,7 @@ class TycDetailParse(object):
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     root_div = table
                     if root_div:
@@ -4628,12 +5199,18 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath("./td")
-                            flss.publish_date = try_and_text("variable[1].xpath('.//text()')[0]", tds)
-                            flss.bond_name = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                            flss.bond_code = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                            flss.bond_type = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                            flss.latest_rating = try_and_text("variable[5].xpath('.//text()')[0]", tds)
-                            text_info = try_and_text("variable[6].xpath('.//script/text()')[0]", tds)
+                            flss.publish_date = try_and_text(
+                                "variable[1].xpath('.//text()')[0]", tds)
+                            flss.bond_name = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
+                            flss.bond_code = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
+                            flss.bond_type = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
+                            flss.latest_rating = try_and_text(
+                                "variable[5].xpath('.//text()')[0]", tds)
+                            text_info = try_and_text(
+                                "variable[6].xpath('.//script/text()')[0]", tds)
                             # text_info = replace_special_chars(text_info)
                             flss.text_info = text_info.replace(r'\u002F', '')
                             # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
@@ -4645,13 +5222,17 @@ class TycDetailParse(object):
                             flss.agency_name = self.agency_name
                             flss.batch = self.batch
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4667,7 +5248,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'publish_date'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.publish_date  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().publish_date
                                 add_result.standard_value = standard_value
@@ -4678,11 +5259,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4695,14 +5278,22 @@ class TycDetailParse(object):
             # 分页是否解析：传入当前公司名称和当前模块对应的数据表名
             check_next_page(self.search_name, 'tyc_jyzk_gdxx')
         else:
-            table = self.selector.xpath('//div[@id="_container_purchaselandV2"]/table')
-            thead_list = ['序号', '土地坐落', '土地用途', '总面积（公顷）', '行政区', '供应方式', '签订日期']
+            table = self.selector.xpath(
+                '//div[@id="_container_purchaselandV2"]/table')
+            thead_list = [
+                '序号',
+                '土地坐落',
+                '土地用途',
+                '总面积（公顷）',
+                '行政区',
+                '供应方式',
+                '签订日期']
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     trs = table.xpath('./tbody/tr')
                     if trs:
@@ -4720,17 +5311,23 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             # 签订日期
-                            flss.gd_sign_date = try_and_text("variable[6].xpath('./text()')[0]", tds)
+                            flss.gd_sign_date = try_and_text(
+                                "variable[6].xpath('./text()')[0]", tds)
                             # 土地坐落
-                            where = try_and_text("variable[1].xpath('./script/text()')[0]", tds)
+                            where = try_and_text(
+                                "variable[1].xpath('./script/text()')[0]", tds)
                             # 土地用途
-                            todo = try_and_text("variable[2].xpath('./text()')[0]", tds)
+                            todo = try_and_text(
+                                "variable[2].xpath('./text()')[0]", tds)
                             # 总面积（公顷）
-                            gd_area = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                            gd_area = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
                             # 行政区
-                            gd_region = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                            gd_region = try_and_text(
+                                "variable[4].xpath('./text()')[0]", tds)
                             # 供应方式
-                            type = try_and_text("variable[5].xpath('./text()')[0]", tds)
+                            type = try_and_text(
+                                "variable[5].xpath('./text()')[0]", tds)
                             flss.gd_num = CURRENT_VERSION_NULL
                             flss.gd_act_date = CURRENT_VERSION_NULL
                             flss.gd_area = str(gd_area) + '公顷'
@@ -4752,13 +5349,17 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4774,7 +5375,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'located'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.located  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(TycJyzkGdxx).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().located
                                 add_result.standard_value = standard_value
@@ -4785,11 +5386,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4810,7 +5413,7 @@ class TycDetailParse(object):
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     trs = table.xpath('./tbody/tr')
                     if trs:
@@ -4830,13 +5433,17 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath('./td')
                             # 许可证号
-                            flss.license_key = try_and_text("variable[1].xpath('./text()')[0]", tds)
+                            flss.license_key = try_and_text(
+                                "variable[1].xpath('./text()')[0]", tds)
                             # 业务范围
-                            flss.business_sphere = try_and_text("variable[2].xpath('./text()')[0]", tds)
+                            flss.business_sphere = try_and_text(
+                                "variable[2].xpath('./text()')[0]", tds)
                             # 是否有效
-                            flss.available = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                            flss.available = try_and_text(
+                                "variable[3].xpath('./text()')[0]", tds)
                             # 详情
-                            text_info = try_and_text("variable[4].xpath('./script/text()')[0]", tds)
+                            text_info = try_and_text(
+                                "variable[4].xpath('./script/text()')[0]", tds)
                             text_info = replace_special_chars(text_info)
                             flss.detail_info = text_info
 
@@ -4849,13 +5456,17 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -4871,7 +5482,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'license_key'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.license_key  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().license_key
                                 add_result.standard_value = standard_value
@@ -4882,11 +5493,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -4902,13 +5515,21 @@ class TycDetailParse(object):
             # 获得商标信息大标签
             table = self.selector.xpath(
                 '//div[@id= "_container_tmInfo"][position()=1]/div/table')
-            thead_list = ['序号', '申请日期', '商标', '商标名称', '注册号', '国际分类', '商标状态', '操作']
+            thead_list = [
+                '序号',
+                '申请日期',
+                '商标',
+                '商标名称',
+                '注册号',
+                '国际分类',
+                '商标状态',
+                '操作']
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     root_div = table
                     if root_div:
@@ -4932,19 +5553,27 @@ class TycDetailParse(object):
                             insert_value = ""
                             tds = tr.xpath("./td")
                             if tds:
-                                flss.apply_date = try_and_text("variable[1].xpath('.//text()')[0]", tds)
-                                flss.trademark = try_and_text("variable[2].xpath('.//img/@data-src')[0]", tds)
-                                flss.trademark_name = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                                flss.registration_number = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                                flss.type = try_and_text("variable[5].xpath('.//text()')[0]", tds)
-                                flss.status = try_and_text("variable[6].xpath('.//text()')[0]", tds)
-                                href = try_and_text("variable[7].xpath('./a/@href')[0]", tds)
+                                flss.apply_date = try_and_text(
+                                    "variable[1].xpath('.//text()')[0]", tds)
+                                flss.trademark = try_and_text(
+                                    "variable[2].xpath('.//img/@data-src')[0]", tds)
+                                flss.trademark_name = try_and_text(
+                                    "variable[3].xpath('.//text()')[0]", tds)
+                                flss.registration_number = try_and_text(
+                                    "variable[4].xpath('.//text()')[0]", tds)
+                                flss.type = try_and_text(
+                                    "variable[5].xpath('.//text()')[0]", tds)
+                                flss.status = try_and_text(
+                                    "variable[6].xpath('.//text()')[0]", tds)
+                                href = try_and_text(
+                                    "variable[7].xpath('./a/@href')[0]", tds)
                                 # 新增 详情 brand
                                 text_info = "NA"
                                 try:
                                     text_info = self.detail_info["_container_tmInfo"][href.split(
                                         r'/')[-1]]
-                                    text_info = replace_special_chars(text_info)
+                                    text_info = replace_special_chars(
+                                        text_info)
                                 except BaseException:
                                     pass
 
@@ -4959,14 +5588,19 @@ class TycDetailParse(object):
                                 flss.batch = self.batch
 
                                 # 解析判断
-                                unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                                check_parse(flss, add_result, unique_field)  # 解析有误判断
+                                unique_field = [
+                                    'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                                check_parse(
+                                    flss, add_result, unique_field)  # 解析有误判断
 
                                 # 验证首页解析，匹配到数据返回True
-                                check_result = check_all_data(add_result, flss, current_class)
+                                check_result = check_all_data(
+                                    add_result, flss, current_class)
                                 if not first_parse_data:
-                                    first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
-                                print('check_result+++++++++======:', check_result)
+                                    first_parse_data = copy.deepcopy(
+                                        flss)  # 保存第一条解析的数据
+                                print(
+                                    'check_result+++++++++======:', check_result)
                                 check_first += 1
                                 if check_result:
                                     check_flag = 1  # 匹配到数据
@@ -4981,7 +5615,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'apply_date'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.apply_date  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().apply_date
                                 add_result.standard_value = standard_value
@@ -4992,11 +5626,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -5018,7 +5654,7 @@ class TycDetailParse(object):
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     root_div = table
                     if root_div:
@@ -5041,16 +5677,22 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath("./td")
-                            flss.apply_publish_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
-                            flss.patent_name = try_and_text("variable[2].xpath('./span/text()')[0]", tds)
-                            flss.apply_number = try_and_text("variable[3].xpath('./span/text()')[0]", tds)
-                            flss.apply_publish_number = try_and_text("variable[4].xpath('./span/text()')[0]", tds)
+                            flss.apply_publish_date = try_and_text(
+                                "variable[1].xpath('./span/text()')[0]", tds)
+                            flss.patent_name = try_and_text(
+                                "variable[2].xpath('./span/text()')[0]", tds)
+                            flss.apply_number = try_and_text(
+                                "variable[3].xpath('./span/text()')[0]", tds)
+                            flss.apply_publish_number = try_and_text(
+                                "variable[4].xpath('./span/text()')[0]", tds)
 
                             # 新增 专利类型
-                            patent_type = try_and_text("variable[5].xpath('./span/text()')", tds)
+                            patent_type = try_and_text(
+                                "variable[5].xpath('./span/text()')", tds)
                             flss.patent_type = patent_type[0] if patent_type else 'NA'
 
-                            href = try_and_text("variable[6].xpath('./a/@href')[0]", tds)
+                            href = try_and_text(
+                                "variable[6].xpath('./a/@href')[0]", tds)
                             # 新增 详情 brand
                             text_info = 'NA'
                             try:
@@ -5068,13 +5710,17 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -5089,7 +5735,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'apply_publish_date'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.apply_publish_date  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().apply_publish_date
                                 add_result.standard_value = standard_value
@@ -5101,11 +5747,13 @@ class TycDetailParse(object):
 
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -5126,7 +5774,7 @@ class TycDetailParse(object):
             table_name = flss.__tablename__
             print('表头核对结果为.....：', result_dict)
             # print(table_name)
-            if result_dict == True:
+            if result_dict:
 
                 root_div = table
 
@@ -5149,13 +5797,20 @@ class TycDetailParse(object):
                     for tr in trs:
                         insert_value = ""
                         tds = tr.xpath("./td")
-                        flss.approval_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
-                        flss.software_name = try_and_text("variable[2].xpath('./span/text()')[0]", tds)
-                        flss.software_referred = try_and_text("variable[3].xpath('./span/text()')[0]", tds)
-                        flss.registration_number = try_and_text("variable[4].xpath('./span/text()')[0]", tds)
-                        flss.type_number = try_and_text("variable[5].xpath('./span/text()')[0]", tds)
-                        flss.version_number = try_and_text("variable[6].xpath('./span/text()')[0]", tds)
-                        text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
+                        flss.approval_date = try_and_text(
+                            "variable[1].xpath('./span/text()')[0]", tds)
+                        flss.software_name = try_and_text(
+                            "variable[2].xpath('./span/text()')[0]", tds)
+                        flss.software_referred = try_and_text(
+                            "variable[3].xpath('./span/text()')[0]", tds)
+                        flss.registration_number = try_and_text(
+                            "variable[4].xpath('./span/text()')[0]", tds)
+                        flss.type_number = try_and_text(
+                            "variable[5].xpath('./span/text()')[0]", tds)
+                        flss.version_number = try_and_text(
+                            "variable[6].xpath('./span/text()')[0]", tds)
+                        text_info = try_and_text(
+                            "variable[7].xpath('./script/text()')[0]", tds)
                         text_info = replace_special_chars(text_info)
                         flss.detail_info = text_info
 
@@ -5168,13 +5823,16 @@ class TycDetailParse(object):
                         flss.batch = self.batch
 
                         # 解析判断
-                        unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                        unique_field = [
+                            'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
                         check_parse(flss, add_result, unique_field)  # 解析有误判断
 
                         # 验证首页解析，匹配到数据返回True
-                        check_result = check_all_data(add_result, flss, current_class)
+                        check_result = check_all_data(
+                            add_result, flss, current_class)
                         if not first_parse_data:
-                            first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                            first_parse_data = copy.deepcopy(
+                                flss)  # 保存第一条解析的数据
                         print('check_result+++++++++======:', check_result)
                         check_first += 1
                         if check_result:
@@ -5189,7 +5847,7 @@ class TycDetailParse(object):
                             add_result.table_field = 'approval_date'  # 保存第一各异常字段名       各表不同
                             add_result.current_value = first_parse_data.approval_date  # 保存第一各异常字段值   各表不同
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                            add_result.risk_level, add_result.standard_version = 1,1
+                            add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().approval_date
                             add_result.standard_value = standard_value
@@ -5201,11 +5859,13 @@ class TycDetailParse(object):
 
                     elif check_first > 1 and check_flag:
                         # 匹配到但不是第一条，更新页面第一条到标准库
-                        unique_line = single_oracle_orm.query(current_class).first()
+                        unique_line = single_oracle_orm.query(
+                            current_class).first()
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print(
+                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
             else:
                 insert_result(self.search_name, table_name, result_dict)
@@ -5221,13 +5881,20 @@ class TycDetailParse(object):
         else:
             table = self.selector.xpath(
                 '//div[@id="_container_copyrightWorks"]/table')
-            thead_list = ['序号', '作品名称', '登记号', '登记类别', '创作完成日期', '登记日期', '首次发布日期']
+            thead_list = [
+                '序号',
+                '作品名称',
+                '登记号',
+                '登记类别',
+                '创作完成日期',
+                '登记日期',
+                '首次发布日期']
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     root_div = table[0].xpath('./tbody/tr')
                     if root_div:
@@ -5250,12 +5917,18 @@ class TycDetailParse(object):
                             insert_value = ""
                             # 作品名称	登记号	类别	 创作完成日期	登记日期	首次发布日期
                             tds = tr.xpath("./td")
-                            flss.works_name = try_and_text("variable[1].xpath('.//text()')[0]", tds)
-                            flss.register_name = try_and_text("variable[2].xpath('.//text()')[0]", tds)
-                            flss.type = try_and_text("variable[3].xpath('.//text()')[0]", tds)
-                            flss.create_date = try_and_text("variable[4].xpath('.//text()')[0]", tds)
-                            flss.register_date = try_and_text("variable[5].xpath('.//text()')[0]", tds)
-                            flss.firstpublish_date = try_and_text("variable[6].xpath('.//text()')[0]", tds)
+                            flss.works_name = try_and_text(
+                                "variable[1].xpath('.//text()')[0]", tds)
+                            flss.register_name = try_and_text(
+                                "variable[2].xpath('.//text()')[0]", tds)
+                            flss.type = try_and_text(
+                                "variable[3].xpath('.//text()')[0]", tds)
+                            flss.create_date = try_and_text(
+                                "variable[4].xpath('.//text()')[0]", tds)
+                            flss.register_date = try_and_text(
+                                "variable[5].xpath('.//text()')[0]", tds)
+                            flss.firstpublish_date = try_and_text(
+                                "variable[6].xpath('.//text()')[0]", tds)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.add_time = func.now()
@@ -5265,13 +5938,17 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -5287,7 +5964,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'works_name'  # 保存第一各异常字段名       各表不同
                                 add_result.current_value = first_parse_data.works_name  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().works_name
                                 add_result.standard_value = standard_value
@@ -5298,11 +5975,13 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -5324,7 +6003,7 @@ class TycDetailParse(object):
                 table_name = flss.__tablename__
                 print('表头核对结果为.....：', result_dict)
                 # print(table_name)
-                if result_dict == True:
+                if result_dict:
 
                     root_div = table
                     if root_div:
@@ -5347,12 +6026,17 @@ class TycDetailParse(object):
                         for tr in trs:
                             insert_value = ""
                             tds = tr.xpath('./td')
-                            flss.audit_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
-                            flss.web_name = try_and_text("variable[2].xpath('./span/text()')[0]", tds)
-                            flss.web_homepage = try_and_text("variable[3].xpath('.//a//text()')[0]", tds)
-                            domain_name = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                            flss.audit_date = try_and_text(
+                                "variable[1].xpath('./span/text()')[0]", tds)
+                            flss.web_name = try_and_text(
+                                "variable[2].xpath('./span/text()')[0]", tds)
+                            flss.web_homepage = try_and_text(
+                                "variable[3].xpath('.//a//text()')[0]", tds)
+                            domain_name = try_and_text(
+                                "variable[4].xpath('./text()')[0]", tds)
                             flss.domain_name = domain_name if domain_name else 'NA'
-                            record_number = try_and_text("variable[5].xpath('./span/text()')[0]", tds)
+                            record_number = try_and_text(
+                                "variable[5].xpath('./span/text()')[0]", tds)
                             flss.record_number = record_number if record_number else 'NA'
                             flss.txt_id = self.txt_id
                             flss.company_name = key
@@ -5363,13 +6047,17 @@ class TycDetailParse(object):
                             flss.batch = self.batch
 
                             # 解析判断
-                            unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
-                            check_parse(flss, add_result, unique_field)  # 解析有误判断
+                            unique_field = [
+                                'company_name', flss.company_name]  # 该模块中唯一值字段名和值  各表不同
+                            check_parse(
+                                flss, add_result, unique_field)  # 解析有误判断
 
                             # 验证首页解析，匹配到数据返回True
-                            check_result = check_all_data(add_result, flss, current_class)
+                            check_result = check_all_data(
+                                add_result, flss, current_class)
                             if not first_parse_data:
-                                first_parse_data = copy.deepcopy(flss)  # 保存第一条解析的数据
+                                first_parse_data = copy.deepcopy(
+                                    flss)  # 保存第一条解析的数据
                             print('check_result+++++++++======:', check_result)
                             check_first += 1
                             if check_result:
@@ -5384,7 +6072,7 @@ class TycDetailParse(object):
                                 add_result.table_field = 'audit_date'  # 保存第一各异常字段名   各表不同
                                 add_result.current_value = first_parse_data.audit_date  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
-                                add_result.risk_level, add_result.standard_version = 1,1
+                                add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                     company_name=first_parse_data.company_name).first().audit_date
                                 add_result.standard_value = standard_value
@@ -5395,15 +6083,16 @@ class TycDetailParse(object):
                                 print('check all datas error===={}'.format(e))
                         elif check_first > 1 and check_flag:
                             # 匹配到但不是第一条，更新页面第一条到标准库
-                            unique_line = single_oracle_orm.query(current_class).first()
+                            unique_line = single_oracle_orm.query(
+                                current_class).first()
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print(
+                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
-
 
     # 企业年报
     def html_parse_nianbao(self, year):
@@ -5419,8 +6108,7 @@ class TycDetailParse(object):
             table_name = flss.__tablename__
             print('表头核对结果为.....：', result_dict)
             # print(table_name)
-            if result_dict == True:
-
+            if result_dict:
 
                 # 获得企业年报大标签
                 root_div = self.selector.xpath(
@@ -5436,7 +6124,7 @@ class TycDetailParse(object):
 
                     # for a in all_a:
                     if all_a:
-                        a=all_a[0]
+                        a = all_a[0]
 
                         insert_value = ""
                         ss = a.xpath("./@href")[0]
@@ -5448,11 +6136,13 @@ class TycDetailParse(object):
                         except Exception as e:
                             logger.exception(e)
                         try:
-                            self.html_parse_year_wzhwdxx(year_selector, flss.year)
+                            self.html_parse_year_wzhwdxx(
+                                year_selector, flss.year)
                         except Exception as e:
                             logger.exception(e)
                         try:
-                            self.html_parse_year_gdczxx(year_selector, flss.year)
+                            self.html_parse_year_gdczxx(
+                                year_selector, flss.year)
                         except Exception as e:
                             logger.exception(e)
                         try:
@@ -5487,7 +6177,7 @@ class TycDetailParse(object):
 
     # 解析：企业背景-->最终受益人
     def html_parse_zzsyr(self, index):
-    
+
         logger.debug("Parse detail info 最终受益人 {}".format(self.search_name))
 
         if index == 1 and not isinstance(self.selector, int):
@@ -5507,11 +6197,14 @@ class TycDetailParse(object):
                 insert_value = ""
                 tds = tr.xpath('./td')
                 # 最终受益人名称
-                benefitPerson.beneficiary_name = try_and_text("variable[1].xpath('/span/a/text()')[0]", tds)
+                benefitPerson.beneficiary_name = try_and_text(
+                    "variable[1].xpath('/span/a/text()')[0]", tds)
                 # 持股比例
-                benefitPerson.shareholder_proportion = try_and_text("variable[2].xpath('./span/text()')[0]", tds)
+                benefitPerson.shareholder_proportion = try_and_text(
+                    "variable[2].xpath('./span/text()')[0]", tds)
                 # 股权链
-                benefitPerson.equity_chain = try_and_text("variable[3].xpath('./div')[0].xpath('string(.)')", tds)
+                benefitPerson.equity_chain = try_and_text(
+                    "variable[3].xpath('./div')[0].xpath('string(.)')", tds)
 
                 benefitPerson.txt_id = self.txt_id
                 benefitPerson.company_name = key
@@ -5540,7 +6233,7 @@ class TycDetailParse(object):
 
     # 解析：企业背景-->实际控制权
     def html_parse_sjkzq(self, index):
-    
+
         logger.debug("Parse detail info 实际控制权 {}".format(self.search_name))
 
         if index == 1 and not isinstance(self.selector, int):
@@ -5557,11 +6250,14 @@ class TycDetailParse(object):
                 insert_value = ""
                 tds = tr.xpath('./td')
                 # 控股企业名称
-                holdingInfo.holding_name = try_and_text("variable[1].xpath('.//a/txext()')[0]", tds)
+                holdingInfo.holding_name = try_and_text(
+                    "variable[1].xpath('.//a/txext()')[0]", tds)
                 # 投资比例 //*[@id="_container_companyholding"]/table/tbody/tr[1]/td[3]/span
-                holdingInfo.invest_proportion = try_and_text("variable[2].xpath('.//text()')[0]", tds)
+                holdingInfo.invest_proportion = try_and_text(
+                    "variable[2].xpath('.//text()')[0]", tds)
                 # 投资链
-                holdingInfo.equity_chain = try_and_text("variable[3].xpath('string(.)')", tds)
+                holdingInfo.equity_chain = try_and_text(
+                    "variable[3].xpath('string(.)')", tds)
 
                 holdingInfo.txt_id = self.txt_id
                 holdingInfo.company_name = key
@@ -5917,7 +6613,7 @@ def main(i):
                 tyc_Parse.html_parse_baseinfo()
                 print('>>>>>>>>>>>>该模块检测完毕：基本信息')
             except Exception as e:
-                print('>>>>>>>>>>>>该模块检测有误：基本信息',e)
+                print('>>>>>>>>>>>>该模块检测有误：基本信息', e)
                 error_list.append("html_parse_baseinfo")
                 logger.exception(
                     "Detail info html_parse_baseinfo() parse error! company_name：%s ID：%s",
@@ -5929,7 +6625,7 @@ def main(i):
                 tyc_Parse.html_parse_mainPerson()
                 print('>>>>>>>>>>>>该模块检测完毕：主要信息')
             except Exception as e:
-                print('>>>>>>>>>>>>该模块检测有误!!!!!：主要信息',e)
+                print('>>>>>>>>>>>>该模块检测有误!!!!!：主要信息', e)
                 error_list.append("html_parse_mainPerson")
                 logger.exception(
                     "Detail info html_parse_mainPerson() parse error! company_name：%s ID：%s",
@@ -6028,7 +6724,7 @@ def main(i):
                     "Detail info html_parse_branch() parse error! company_name：%s ID：%s",
                     search_name,
                     txt_id)
-                #股权出质
+                # 股权出质
             try:
                 tyc_Parse.html_parse_pledge(0)
                 print('>>>>>>>>>>>>该模块检测完毕：股权出质')
@@ -6529,9 +7225,9 @@ def main(i):
                 # single_mongodb = single_mongodb()
                 # single_oracle = single_oracle()
 
-            #汇总记录翻页有问题的模块，入库check_result表
+            # 汇总记录翻页有问题的模块，入库check_result表
             global NEXT_PAGE_DICT
-            check_company_next_page(NEXT_PAGE_DICT,search_name)
+            check_company_next_page(NEXT_PAGE_DICT, search_name)
 
         else:
             continue
