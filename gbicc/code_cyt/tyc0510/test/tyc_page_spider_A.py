@@ -854,6 +854,7 @@ def main(args):
                 logger.exception("Exception !{}".format(e))
             # 抓取分页
             try:
+                # 获取加密字体
                 font_uri = ps.re_fonts.search(text).group(1)
                 # self.get_dict(font_uri)
                 ps.get_dict(font_uri)
@@ -866,35 +867,45 @@ def main(args):
             except Exception as e:
                 logger.exception("Exception !{}".format(e))
             
-            # 抓取年报
+            # 抓取 detail_href 分页
             try:
-                logger.info('开始抓取年报，公司：{}'.format(ent_name))
-                # year_dict = ps.company_year_spider(ent_name, soup)
-                year_dict = ps.company_detail_href(
-                    soup, href=detail_href['year'])
-                result_res["year"] = year_dict
+                for href_key in list(detail_href.keys()):
+                    logger.info('开始抓取href详情页,key={}'.format(href_key))
+                    result_dict=ps.company_detail_href(soup,href=detail_href[href_key])
+                    result_res[href_key]=result_dict
             except Exception as e:
-                logger.exception("Exception !{}".format(e))
+                logger.exception(e)
+            
+            
+            # 抓取年报
+            # try:
+            #     logger.info('开始抓取年报，公司：{}'.format(ent_name))
+            #     # year_dict = ps.company_year_spider(ent_name, soup)
+            #     year_dict = ps.company_detail_href(
+            #         soup, href=detail_href['year'])
+            #     result_res["year"] = year_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
             
             # 法律诉讼 判决文书抓取
-            try:
-                logger.info('开始法律诉讼 判决文书抓取，公司：{}'.format(ent_name))
-                # law_dict=ps.company_law_spider(ent_name, soup)
-                law_dict = ps.company_detail_href(
-                    soup, href=detail_href['_container_lawsuit'])
-                result_res["_container_lawsuit"] = law_dict
-            except Exception as e:
-                logger.exception("Exception !{}".format(e))
+            # try:
+            #     logger.info('开始法律诉讼 判决文书抓取，公司：{}'.format(ent_name))
+            #     # law_dict=ps.company_law_spider(ent_name, soup)
+            #     law_dict = ps.company_detail_href(
+            #         soup, href=detail_href['_container_lawsuit'])
+            #     result_res["_container_lawsuit"] = law_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
             
             #     法院公告 操作详情
-            try:
-                logger.info('开始法院诉讼 操作详情抓取，公司：{}'.format(ent_name))
-                # court_dict=ps.company_court_spider(ent_name, soup)
-                court_dict = ps.company_detail_href(
-                    soup, detail_href['_container_lawsuit'])
-                result_res["_container_lawsuit"] = court_dict
-            except Exception as e:
-                logger.exception("Exception !{}".format(e))
+            # try:
+            #     logger.info('开始法院诉讼 操作详情抓取，公司：{}'.format(ent_name))
+            #     # court_dict=ps.company_court_spider(ent_name, soup)
+            #     court_dict = ps.company_detail_href(
+            #         soup, detail_href['_container_lawsuit'])
+            #     result_res["_container_lawsuit"] = court_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
             
             # 司法协助 操作详情 https://www.tianyancha.com/company/judicialAidDetail.json?id=37c01954536&_=1542263180441
             try:
@@ -905,26 +916,26 @@ def main(args):
                 logger.exception("Exception !{}".format(e))
             
             # 司法拍卖 拍卖公告抓取
-            try:
-                logger.info('开始司法拍卖——拍卖公告 抓取，公司：{}'.format(ent_name))
-                auction_dict = ps.company_detail_href(
-                    soup, detail_href['_container_judicialSale'])
-                result_res["_container_judicialSale"] = auction_dict
-            except Exception as e:
-                logger.exception("Exception !{}".format(e))
+            # try:
+            #     logger.info('开始司法拍卖——拍卖公告 抓取，公司：{}'.format(ent_name))
+            #     auction_dict = ps.company_detail_href(
+            #         soup, detail_href['_container_judicialSale'])
+            #     result_res["_container_judicialSale"] = auction_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
             
             # 经营状况
             # 招聘信息
-            try:
-                # https://job.tianyancha.com/c5975357d236facc78f3ca4d1f177fd5
-                logger.info('开始招聘信息——操作详情 抓取，公司：{}'.format(ent_name))
-                # href=r'https://job.tianyancha.com/'
-                job_dict = ps.company_detail_href(
-                    soup, detail_href['_container_baipin'])
-                # #print(job_dict)
-                result_res["_container_baipin"] = job_dict
-            except Exception as e:
-                logger.exception("Exception !{}".format(e))
+            # try:
+            #     # https://job.tianyancha.com/c5975357d236facc78f3ca4d1f177fd5
+            #     logger.info('开始招聘信息——操作详情 抓取，公司：{}'.format(ent_name))
+            #     # href=r'https://job.tianyancha.com/'
+            #     job_dict = ps.company_detail_href(
+            #         soup, detail_href['_container_baipin'])
+            #     # #print(job_dict)
+            #     result_res["_container_baipin"] = job_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
             
             # 资质证书
             # https://www.tianyancha.com/company/certificateDetail.json?id=599acc3f57708c2b3095bf6b&_=1542263180445
@@ -958,33 +969,33 @@ def main(args):
                 logger.exception("Exception !{}".format(e))
             
             #  产品信息 https://www.tianyancha.com/product/da76706c9a87b3d96443c45852bfda58
-            try:
-                logger.info('开始产品信息——操作详情 抓取，公司：{}'.format(ent_name))
-                href = r'https://www.tianyancha.com/product/'
-                product_dict = ps.company_detail_href(
-                    soup, detail_href['_container_product'])
-                result_res["_container_product"] = product_dict
-            except Exception as e:
-                logger.exception("Exception !{}".format(e))
+            # try:
+            #     logger.info('开始产品信息——操作详情 抓取，公司：{}'.format(ent_name))
+            #     href = r'https://www.tianyancha.com/product/'
+            #     product_dict = ps.company_detail_href(
+            #         soup, detail_href['_container_product'])
+            #     result_res["_container_product"] = product_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
             
             # 知识产权
             # 商标信息 操作详情抓取 https://www.tianyancha.com/company/courtDetail.json?regNo={22274593}&courtClass=35-&_={1542248889558}
-            try:
-                logger.info('开始商标信息信息——操作详情 抓取，公司：{}'.format(ent_name))
-                brand_dict = ps.company_detail_href(
-                    soup, detail_href['_container_tmInfo'])
-                result_res["_container_tmInfo"] = brand_dict
-            except Exception as e:
-                logger.exception("Exception !{}".format(e))
-            
+            # try:
+            #     logger.info('开始商标信息信息——操作详情 抓取，公司：{}'.format(ent_name))
+            #     brand_dict = ps.company_detail_href(
+            #         soup, detail_href['_container_tmInfo'])
+            #     result_res["_container_tmInfo"] = brand_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
+            #
             # 专利信息 操作详情抓取  https://www.tianyancha.com/patent/5e89a48b287d29e0f6bee885c713e17f
-            try:
-                logger.info('开始专利信息——操作详情 抓取，公司：{}'.format(ent_name))
-                patent_dict = ps.company_detail_href(
-                    soup, detail_href['_container_patent'])
-                result_res["_container_patent"] = patent_dict
-            except Exception as e:
-                logger.exception("Exception !{}".format(e))
+            # try:
+            #     logger.info('开始专利信息——操作详情 抓取，公司：{}'.format(ent_name))
+            #     patent_dict = ps.company_detail_href(
+            #         soup, detail_href['_container_patent'])
+            #     result_res["_container_patent"] = patent_dict
+            # except Exception as e:
+            #     logger.exception("Exception !{}".format(e))
     
             result_res["parse"] = 0
             # 公司详细信息页面存入mongodb
@@ -1003,7 +1014,10 @@ def main(args):
                         elif k == '_container_recruit':
                             result_res['_container_baipin'][s] = t
                         else:
-                            result_res[k][s] = t
+                            if k in result_res:
+                                result_res[k][s] = t
+                            else:
+                                result_res[k]=t
             
             # #print(result_res)
             # #print(mongo_update_where)
