@@ -90,13 +90,13 @@ def check_company_next_page(NEXT_PAGE_DICT,search_name):
     # global NEXT_PAGE_DICT
     if NEXT_PAGE_DICT[search_name]:
         # 记录未成功解析的企业和对应的模块，并入库记录
-        not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].values()))[1:-1].replace('\'',
-                                                                                              '')  # 得出未解析的模块名称拼接字符串
+        # not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].values()))[1:-1].replace('\'',
+        #                                                                                       '')  # 得出未解析的模块名称拼接字符串
         next_page_parse = CheckResult()
         next_page_parse.company_name = search_name
         next_page_parse.add_time = func.now()
-        next_page_parse.different_reason = '分页未解析模块:' + not_parse_table_names
-        next_page_parse.table_name = str(list(NEXT_PAGE_DICT[search_name].keys()))[1:-1].replace('\'', '')
+        # next_page_parse.different_reason = '分页未解析模块:' + not_parse_table_names
+        # next_page_parse.table_name = str(list(NEXT_PAGE_DICT[search_name].keys()))[1:-1].replace('\'', '')
         next_page_parse.table_field = '-'
         next_page_parse.standard_value = '-'
         next_page_parse.current_value = '-'
@@ -104,8 +104,11 @@ def check_company_next_page(NEXT_PAGE_DICT,search_name):
         next_page_parse.standard_version = 1
         try:
             print('next_page_parse=================', next_page_parse.__dict__)
-            single_oracle_orm.add(next_page_parse)
-            single_oracle_orm.commit()
+            for one_table_name,one_table_show in NEXT_PAGE_DICT[search_name].items():
+                next_page_parse.table_name = one_table_name
+                next_page_parse.different_reason = '分页解析异常模块:' + one_table_show
+                single_oracle_orm.add(next_page_parse)
+                single_oracle_orm.commit()
         except Exception as e:
             single_oracle_orm.rollback()
             print('分页未解析模块提交异常：{}'.format(e), '\n', next_page_parse.different_reason)
@@ -120,18 +123,20 @@ def check_parse(flss, add_result, unique_field):
     :param flss:当前模块对象
     :return:
     '''
-    print('开始核对字段解析是否有误:{}==={}'.format(flss.company_name,add_result.table_name))
+    print('开始核对字段解析:{}==={}'.format(flss.company_name,add_result.table_name))
     flss_dict = flss.__dict__
     if flss_dict:
-        #print('check_parse flss_dict=============', flss_dict)
+
         for table_field, current_value in flss_dict.items():
 
             if current_value == '解析有误':
+                # print('check_parse flss_dict=============', flss_dict)
                 add_result.table_field = table_field
                 add_result.current_value = current_value
                 add_result.different_reason = '页面解析异常'
+                add_result.standard_version = 1
                 qurey_import_and_standard(add_result, unique_field)
-                print('解析有误查询标准值>>>>>>>>>')
+                print('解析有误查询标准值>>>>>>>>>',table_field,current_value)
                 return 1
 
 
@@ -154,8 +159,8 @@ def qurey_import_and_standard(add_result, unique_field):
         add_result.risk_level = single_oracle_orm.query(check_import_field).filter_by(
             column_name=table_field).first().column_level  # 查询当前字段的重要等级
     except Exception as e:
-        add_result.risk_level = 0
-        print('CheckImportField search error === {}'.format(e))
+        add_result.risk_level = 2
+        print('CheckImportField not found === {}'.format(e))
     try:
         query_sql = "select " + table_field + " from " + current_table + " WHERE " + unique_field_name + " = '" + unique_field_value + "'"
         add_result.standard_value = orc_conn.execute(query_sql).fetchone()[0]  # 查询当前字段的唯一标准值
@@ -163,6 +168,7 @@ def qurey_import_and_standard(add_result, unique_field):
     except Exception as e:
         print('CheckImportField search error === {}'.format(e))
     try:
+        #print('异常解析：：：：：',add_result.__dict__)
         single_oracle_orm.add(add_result)
         single_oracle_orm.commit()
     except Exception as e:
@@ -180,9 +186,21 @@ def check_obj(cls_spider, cls_standard):
     cls_standard_dict = cls_standard.__dict__
     change_dict = {}
     pass_k = ['detail', 'txt_id', 'batch', 'id', 'agency_name', 'agency_num', '_sa_instance_state', 'add_time',
-              'judgment_document','standard_version','detail_status','mark']
+              'judgment_document','standard_version','detail_status','mark','detail_info']
     for k, v in cls_spider_dict.items():
-        if 'detail' in k:
+        if k == 'judgment_date':     #核对错误字段时打印日志对比当前两组值
+            if 'detail_info' in cls_spider_dict :
+                cls_spider_dict.pop('detail_info')
+            if 'detail_info' in cls_standard_dict :
+                cls_standard_dict.pop('detail_info')
+            if 'judgment_document' in cls_spider_dict :
+                cls_spider_dict.pop('judgment_document')
+            if 'judgment_document' in cls_standard_dict :
+                cls_standard_dict.pop('judgment_document')
+            print('对比异常字段：：：：：spider:',cls_spider_dict)
+            print('对比异常字段：：：：：standard:',cls_standard_dict)
+
+        if 'detail' in k or 'document' in k:
             if not v:        #判断detail字段是否不为空
                 return 1     #如果detail为空则，返回True，认为该行数据不是全字段匹配
         if k in pass_k:
@@ -518,6 +536,9 @@ class TycDetailParse(object):
                     standard_data = single_oracle_orm.query(TycQybjJbxx).filter_by(company_name=key).first()
                     try:
                         change_dict = check_obj(baseinfo, standard_data)
+                        print('核对基本信息不通过++++======')
+                        print(baseinfo.__dict__)
+                        print(standard_data.__dict__)
                         print('核对结果为：', change_dict)
 
                         checkResult = CheckResult()
@@ -2109,6 +2130,7 @@ class TycDetailParse(object):
                         sfxzInfo.equity_amount = try_and_text("variable[2].xpath('./text()')[0]", tds)
                         # 执行法院
                         sfxzInfo.executive_court = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                        # sfxzInfo.executive_court = '解析有误'
                         # 执行通知文号
                         sfxzInfo.approval_num = try_and_text("variable[4].xpath('./text()')[0]", tds)
                         # 类型|状态
@@ -2452,13 +2474,10 @@ class TycDetailParse(object):
                         "variable[2].xpath('text()')[0] ", tds)
                     illegalSerious.office = try_and_text(
                         "variable[3].xpath('text()')[0]", tds)
-                    # 新增移出
-                    illegalSerious.out_date = CURRENT_VERSION_NULL
-                    illegalSerious.out_reason = CURRENT_VERSION_NULL
-                    illegalSerious.out_department = CURRENT_VERSION_NULL
+
                     # 移出日期
                     try:
-                        out_date = try_and_text("variable[4].xpath('./text()')", tds)
+                        out_date = tds[4].xpath('./text()')[0]
                         illegalSerious.out_date = out_date[0] if out_date else 'NA'
                         # 移出原因
                         out_reason = try_and_text("variable[5].xpath('./text()')[0]", tds)
@@ -2467,7 +2486,11 @@ class TycDetailParse(object):
                         out_department = try_and_text("variable[6].xpath('./text()')[0]", tds)
                         illegalSerious.out_department = out_department[0] if out_department else 'NA'
                     except BaseException:
-                        pass
+                        # 新增移出
+                        illegalSerious.out_date = CURRENT_VERSION_NULL
+                        illegalSerious.out_reason = CURRENT_VERSION_NULL
+                        illegalSerious.out_department = CURRENT_VERSION_NULL
+
 
                     illegalSerious.txt_id = self.txt_id
                     illegalSerious.company_name = key
