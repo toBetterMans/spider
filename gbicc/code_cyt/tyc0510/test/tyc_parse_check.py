@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from bson import ObjectId
 # from cpca import *
 # from cpca import transform
+from cpca import transform
 from lxml import etree
 from sqlalchemy import select
 import copy
@@ -286,51 +287,6 @@ def create_insert_sql(table_name, table_column, column_count):
     insert_sql += 'sysdate)'
     return insert_sql
 
-
-def replace_special_string(strings=''):
-    return strings.replace(
-        u'<em>',
-        u'').replace(
-        u'</em>',
-        u'').replace(
-        u'\ue004',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\u2022',
-        u'').replace(
-        u'\xb3',
-        u'').replace(
-        u'\ue005',
-        u'').replace(
-        u'\xa9',
-        '').replace(
-        u'\u003C',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\ufffd',
-        u'').replace(
-        u'\xa9',
-        u'').replace(
-        u'\u002F',
-        u'').replace(
-        u'\u003E',
-        u'').replace(
-        u"'",
-        u'"').replace(
-        u'\u003c\u0065\u006d\u003e',
-        u'').replace(
-        u'\u003c\u002f\u0065\u006d\u003e',
-        '').replace(
-        u'\xa5',
-        u'').replace(
-        u'\xa0',
-        u'').replace(r'\uff08', '(').replace(u'\u0029', ')').replace('（', '(').replace('）', ')')
-
-
 class TycDetailParse(object):
     txt_id = ''
     entName = ''
@@ -371,7 +327,7 @@ class TycDetailParse(object):
                 email = email[0]
             except:
                 email = 'NA'
-            baseinfo.email = email.replace(u'"', u'').replace(u'[', u'').replace(u']', u'')
+            baseinfo.email = email.replace(r'"', r'').replace(r'[', r'').replace(r']', r'')
             # print(baseinfo.email)
             detail_basic = top.xpath(
                 './/div[@class="box -company-box "]/div[@class="content"]/div[contains(@class,"detail")]')
@@ -385,7 +341,7 @@ class TycDetailParse(object):
                         './div[position()=1]/div[position()=1]/span[2]/text()')
 
                 baseinfo.telephone = telephone[0].replace(
-                    u'"', u'').replace(u'[', u'').replace(u']', u'')
+                    r'"', r'').replace(r'[', r'').replace(r']', r'')
                 urls = detail_basic.xpath(
                     './div[position()=2]//a[@class="company-link"][position()=1]/text()')
                 baseinfo.url = urls[0] if urls else 'NA'
@@ -462,7 +418,7 @@ class TycDetailParse(object):
                         baseinfo.address_2 = df.loc[addr].values[1]
                         baseinfo.address_3 = df.loc[addr].values[2]
 
-                    businessScope = replace_special_string(
+                    businessScope = replace_special_chars(
                         try_and_text("variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1))
                     baseinfo.business_scope = businessScope.replace(
                         "'", '') if businessScope else 'NA'
@@ -634,7 +590,7 @@ class TycDetailParse(object):
                     # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                     print('首页没有匹配到数据》》》》》》》》》')
                     try:
-                        # TODO :
+    
                         add_result.table_field = 'position'  # 保存第一各异常字段名   各模块手动添加
                         add_result.current_value = first_parse_data.position  # 保存第一各异常字段值   各模块手动添加
                         add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -741,7 +697,7 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-                            # TODO :
+    
                             add_result.table_field = 'shareholder'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.shareholder  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -838,7 +794,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'invest_company'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.investCompany  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -919,14 +875,14 @@ class TycDetailParse(object):
                 alterBefor = try_and_text("variable[3].xpath('./div')[0].xpath('string(.)')", tds)
 
                 try:
-                    alterBefor = replace_special_string(alterBefor)
+                    alterBefor = replace_special_chars(alterBefor)
                 except:
-                    alterBefor = replace_special_string(alterBefor)
+                    alterBefor = replace_special_chars(alterBefor)
                 alterRecord.alterBefor = alterBefor
                 alterAfter = try_and_text("variable[4].xpath('./div')[0].xpath('string(.)')", tds)
-                # alterAfter = replace_special_string(alterAfter)
+                # alterAfter = replace_special_chars(alterAfter)
 
-                alterAfter = replace_special_string(alterAfter)
+                alterAfter = replace_special_chars(alterAfter)
 
                 alterRecord.alterAfter = alterAfter
                 # <em><font color="#EF5644">长</font></em>
@@ -958,7 +914,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'alter_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.alterDate  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -996,7 +952,7 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 年报基本解析 {}".format(self.search_name))
         # 获得大标签
         if year_selector:
-            year_selector = year_selector.replace(u'企业基本信息', 'year_basic_info')
+            year_selector = year_selector.replace(r'企业基本信息', 'year_basic_info')
             year_selector = etree.HTML(year_selector)
         trs = year_selector.xpath('// div[text()="year_basic_info"]/parent::*/div/table/tr')
         insert_value = ""
@@ -1063,7 +1019,7 @@ class TycDetailParse(object):
     def html_parse_year_wzhwdxx(self, year_selector, year):
         logger.debug("Parse detail info 企业年报网站信息 {}".format(self.search_name))
         website = TycYearWzhwdxx()
-        year_selector = year_selector.replace(u'网站或网店信息', 'year_wangzhan')
+        year_selector = year_selector.replace(r'网站或网店信息', 'year_wangzhan')
         if year_selector:
             year_selector = etree.HTML(year_selector)
             # trs = year_selector.xpath('//div[contains(text(),"year_wangzhan")//table/tbody/tr')
@@ -1141,7 +1097,7 @@ class TycDetailParse(object):
                     print('首页没有匹配到数据》》》》》》》》》')
 
                     try:
-                        # TODO :
+    
                         add_result.table_field = 'website_type'  # 保存第一各异常字段名   各模块手动添加
                         add_result.current_value = first_parse_data.website_type  # 保存第一各异常字段值   各模块手动添加
                         add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -1180,7 +1136,7 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 股份出资信息 {}".format(self.search_name))
         gdcz = TycYearGdczxx()
         # 获得分支机构大标签
-        year_selector = year_selector.replace(u'股东及出资信息', 'year_gudongchuzi')
+        year_selector = year_selector.replace(r'股东及出资信息', 'year_gudongchuzi')
         if year_selector:
             year_selector = etree.HTML(year_selector)
 
@@ -1255,7 +1211,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'shareholder'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.shareholder  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -1295,10 +1251,10 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 资产状况 {}".format(self.search_name))
         # 获得大标签
         year_selector = year_selector.replace(
-            u'企业资产状况信息', 'year_ent_money_info')
+            r'企业资产状况信息', 'year_ent_money_info')
         if year_selector:
             year_selector = etree.HTML(year_selector)
-        info = u'企业资产状况信息'
+        info = r'企业资产状况信息'
         trs = year_selector.xpath(
             '//div[text()="year_ent_money_info"]/parent::*//table//tr')
         insert_value = ""
@@ -1383,7 +1339,7 @@ class TycDetailParse(object):
         dwtz = TycYearDwtz()
 
         year_selector = year_selector.replace(
-            u'对外投资信息', 'year_outbound_company')
+            r'对外投资信息', 'year_outbound_company')
         if year_selector:
             year_selector = etree.HTML(year_selector)
             # trs = year_selector.xpath('//div[contains(text(),"year_outbound_company")')
@@ -1452,7 +1408,7 @@ class TycDetailParse(object):
                     print('首页没有匹配到数据》》》》》》》》》')
 
                     try:
-                        # TODO :
+    
                         add_result.table_field = 'credit_num'  # 保存第一各异常字段名   各模块手动添加
                         add_result.current_value = first_parse_data.credit_num  # 保存第一各异常字段值   各模块手动添加
                         add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -1568,7 +1524,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'ent_name'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.ent_name  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -1662,7 +1618,7 @@ class TycDetailParse(object):
                 # 详情 \u003C\u002Fa\u003E
 
                 detail = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
-                ktggInfo.detail = replace_special_string(detail)
+                ktggInfo.detail = replace_special_chars(detail)
 
                 ktggInfo.txt_id = self.txt_id
                 ktggInfo.company_name = key
@@ -1691,7 +1647,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'trial_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.trialDate  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -1811,7 +1767,7 @@ class TycDetailParse(object):
                     except BaseException:
                         pass
 
-                    flss.judgment_document = replace_special_string(text_info)
+                    flss.judgment_document = replace_special_chars(text_info)
 
                     unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
                     check_parse(flss, add_result, unique_field)
@@ -1833,7 +1789,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'judgment_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.judgment_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -1919,7 +1875,7 @@ class TycDetailParse(object):
                 flss.announcement_type = try_and_text("variable[4].xpath('string(.)')", tds)
                 flss.court = try_and_text("variable[5].xpath('string(.)')", tds)
                 text_info = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
                 flss.txt_id = self.txt_id
                 flss.company_name = key
@@ -1929,7 +1885,6 @@ class TycDetailParse(object):
                 flss.agency_name = self.agency_name
                 flss.batch = self.batch
 
-                # TODO :
                 unique_field = ['company_name', flss.company_name]  # 该模块中唯一值字段名和值
                 check_parse(flss, add_result, unique_field)
 
@@ -1949,7 +1904,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'announcement_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.announcement_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2045,7 +2000,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_dishonest"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail_info = text_info
@@ -2078,7 +2033,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'case_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.case_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2163,7 +2118,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_zhixing"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 flss.detail = text_info
@@ -2196,7 +2151,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'record_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.record_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2288,7 +2243,7 @@ class TycDetailParse(object):
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_judicialAid"][href]
-                    text_info = replace_special_string(text_info)
+                    text_info = replace_special_chars(text_info)
                 except BaseException:
                     pass
                 sfxzInfo.detail = text_info
@@ -2320,7 +2275,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'enforcement_person'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.enforcementPerson  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2453,7 +2408,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'insert_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.insert_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2583,7 +2538,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'decision_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.decision_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2705,7 +2660,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'illegal_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.illegalDate  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2790,7 +2745,7 @@ class TycDetailParse(object):
                 flss.status = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 flss.pledged_amount = try_and_text("variable[6].xpath('.//text()')[0]", tds)
                 text_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 flss.detail_info = text_info
                 # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
                 flss.txt_id = self.txt_id
@@ -2821,7 +2776,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'announcement_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.announcement_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2906,7 +2861,7 @@ class TycDetailParse(object):
 
                 detail_info = try_and_text("variable[7].xpath('.//script/text()')[0]", tds)
                 # tds[7].text.replace("详情 》", "").strip().replace("'", '\\"')
-                flss.detail_info = replace_special_string(detail_info)
+                flss.detail_info = replace_special_chars(detail_info)
                 flss.txt_id = self.txt_id
                 flss.company_name = key
                 flss.add_time = func.now()
@@ -2935,7 +2890,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'registration_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.registration_date  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -3045,7 +3000,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'taxes_date'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.taxesDate  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -3133,7 +3088,7 @@ class TycDetailParse(object):
                     text_info = self.detail_info["_container_judicialSale"][href.split('/')[-1].replace('.', '_')]
                 except BaseException:
                     pass
-                sfpaInfo.auction_detail = replace_special_string(text_info)
+                sfpaInfo.auction_detail = replace_special_chars(text_info)
 
                 # sfpaInfo.auction_detail = '详情'
 
@@ -3165,7 +3120,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'auction_notice'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.auctionNotice  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -3322,7 +3277,7 @@ class TycDetailParse(object):
                 gscgInfo.announcementDate = try_and_text("variable[5].xpath('.//text()')[0]", tds)
                 # 详情
                 text_info = try_and_text("variable[6].xpath('.//text()')[0]", tds)
-                text_info = replace_special_string(text_info)
+                text_info = replace_special_chars(text_info)
                 gscgInfo.detail = text_info
 
                 gscgInfo.txt_id = self.txt_id
@@ -3353,7 +3308,7 @@ class TycDetailParse(object):
                 print('首页没有匹配到数据》》》》》》》》》')
 
                 try:
-                    # TODO :
+    
                     add_result.table_field = 'bill_number'  # 保存第一各异常字段名   各模块手动添加
                     add_result.current_value = first_parse_data.billNumber  # 保存第一各异常字段值   各模块手动添加
                     add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -6517,16 +6472,27 @@ def main(i):
 
             # 分页检测
             # 解析完成后统计翻页解析总体情况，未正常解析翻页的记录入库：
-            global NEXT_PAGE_DICT
+            # global NEXT_PAGE_DICT
 
             if NEXT_PAGE_DICT[search_name]:
                 # 记录未成功解析的企业和对应的模块，并入库记录
-                not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].values()))[1:-1]  # 得出未解析的模块名称拼接字符串
+                ll = {'北京百度网讯科技有限公司': {'tyc_zscq_wzba': '网站备案', 'tyc_qybj_dwtz': '对外投资', 'tyc_jyfx_xzcf': '行政处罚 工商局',
+                                       'tyc_qybj_bgjl': '变更记录', 'tyc_sffx_ktgg': '开庭公告', 'tyc_sffx_flss': '法律诉讼',
+                                       'tyc_sffx_fygg': '法院公告',
+                                       'tyc_jyfx_gqcz': '股权出质', 'tyc_qyfz_hxtd': '核心团队', 'tyc_qyfz_qyyw': '企业业务',
+                                       'tyc_qyfz_tzsj': '投资事件',
+                                       'tyc_qyfz_jpxx': '竞品信息', 'tyc_jyzk_zp': '招聘信息', 'tyc_jyzk_gsj': '行政许可 工商局',
+                                       'tyc_jyzk_ccjc': '抽查检查',
+                                       'tyc_jyzk_zzzs': '资质证书', 'tyc_jyzk_ztb': '招投标', 'tyc_jyzk_cpxx': '产品信息',
+                                       'tyc_jyzk_wxgzh': '微信公众号',
+                                       'tyc_zscq_sbxx': '商标信息', 'tyc_zscq_zl': '专利', 'tyc_zscq_zzq': '软件著作权',
+                                       'tyc_zscq_zpzzq': '作品著作权'}}
+                not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].keys()))[1:-1]  # 得出未解析的模块名称拼接字符串
                 next_page_parse = CheckResult()
                 next_page_parse.company_name = search_name
                 next_page_parse.add_time = func.now()
-                next_page_parse.different_reason = '分页未解析模块:' + not_parse_table_names
-                next_page_parse.table_name = '-'
+                next_page_parse.different_reason = '分页未解析模块:' + str(list(NEXT_PAGE_DICT[search_name].values()))[1:-1]
+                next_page_parse.table_name = not_parse_table_names
                 next_page_parse.table_field = '-'
                 next_page_parse.standard_value = '-'
                 next_page_parse.current_value = '-'
