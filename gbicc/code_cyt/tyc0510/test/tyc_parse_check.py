@@ -101,6 +101,7 @@ def check_company_next_page(NEXT_PAGE_DICT,search_name):
         next_page_parse.standard_value = '-'
         next_page_parse.current_value = '-'
         next_page_parse.risk_level = 1
+        next_page_parse.standard_version = 1
         try:
             print('next_page_parse=================', next_page_parse.__dict__)
             single_oracle_orm.add(next_page_parse)
@@ -995,7 +996,11 @@ class TycDetailParse(object):
 
             print('正在核实的公司是{}'.format(key))
             # print('该公司的实际信息是： {}'.format(baseinfo.__dict__))
-
+            # single_oracle_orm.add(flss)
+            # print('年报基本信息：============',flss.__dict__)
+            # y2017 = single_oracle_orm.query(TycYearJbxx).filter_by(year=2017,company_name='佐源集团有限公司').first()
+            # single_oracle_orm.delete()
+            # single_oracle_orm.commit()
             standard_data = single_oracle_orm.query(TycYearJbxx).filter_by(company_name=key).first()
 
             try:
@@ -1009,7 +1014,7 @@ class TycDetailParse(object):
                 for k, v in change_dict.items():
                     checkResult.current_value = v
                     checkResult.table_field = k
-                    checkResult.table_name = ''
+                    checkResult.table_name = 'tyc_year_jbxx'
                     checkResult.standard_value = standard_data.__dict__[k]
                     checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(key, k)
                     import_field = single_oracle.oracle_find_by_param_all(
@@ -1116,6 +1121,7 @@ class TycDetailParse(object):
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
                                 company_name=first_parse_data.company_name).first().website_type
                             add_result.standard_value = standard_value
+                            add_result.table_name = table_name
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -1266,7 +1272,11 @@ class TycDetailParse(object):
 
             print('正在核实的公司是{}'.format(key))
             # print('该公司的实际信息是： {}'.format(baseinfo.__dict__))
-
+            # single_oracle_orm.add(flss)
+            # print('企业资产状况信息：============', flss.__dict__)
+            # y2017 = single_oracle_orm.query(TycYearJbxx).filter_by(year=2017, company_name='佐源集团有限公司').first()
+            # single_oracle_orm.delete()
+            # single_oracle_orm.commit()
             standard_data = single_oracle_orm.query(TycQybjJbxx).filter_by(company_name=key).first()
 
             try:
@@ -2960,6 +2970,11 @@ class TycDetailParse(object):
 
 
                 print('正在核实的公司是{}'.format(key))
+                # single_oracle_orm.add(qsxxInfo)
+                # print('清算信息：============', qsxxInfo.__dict__)
+                # y2017 = single_oracle_orm.query(TycYearJbxx).filter_by(year=2017, company_name='佐源集团有限公司').first()
+                # single_oracle_orm.delete()
+                # single_oracle_orm.commit()
                 standard_data = single_oracle_orm.query(TycJyfxQsxx).filter_by(company_name=key).first()
 
                 try:
@@ -5250,7 +5265,10 @@ class TycDetailParse(object):
                 all_a = root_div.xpath(
                     '//a[contains(@href,"https://www.tianyancha.com/reportContent")]')
 
-                for a in all_a:
+                # for a in all_a:
+                if all_a:
+                    a=all_a[0]
+
                     insert_value = ""
                     ss = a.xpath("./@href")[0]
                     flss.year = ss[-4:].strip()
