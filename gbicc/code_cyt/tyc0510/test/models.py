@@ -4,7 +4,8 @@ from sqlalchemy.dialects.oracle import NUMBER
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('oracle://tyc:tyc@10.10.82.12:1521/tycprd', echo=True)
+# engine = create_engine('oracle://tyc:tyc@10.10.82.12:1521/tycprd', echo=True)
+engine = create_engine('oracle://c##ljj:123456@127.0.0.1:1521/orcl', echo=True)
 Database = sessionmaker(bind=engine)
 single_oracle_orm = Database()
 Base = declarative_base()

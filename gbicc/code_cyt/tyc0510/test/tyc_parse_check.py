@@ -1009,7 +1009,7 @@ class TycDetailParse(object):
                 for k, v in change_dict.items():
                     checkResult.current_value = v
                     checkResult.table_field = k
-
+                    checkResult.table_name = ''
                     checkResult.standard_value = standard_data.__dict__[k]
                     checkResult.different_reason = '{}表中字段{}的值未核对成功'.format(key, k)
                     import_field = single_oracle.oracle_find_by_param_all(
