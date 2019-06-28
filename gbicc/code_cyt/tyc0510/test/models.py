@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 # engine = create_engine('oracle://tyc:tyc@10.10.82.12:1521/tycprd', echo=True)
-engine = create_engine('oracle://c##ljj:123456@127.0.0.1:1521/orcl', echo=True)
+engine = create_engine('oracle://c##ljj:123456@127.0.0.1:1521/orcl', echo=True, encoding='utf-8')
 Database = sessionmaker(bind=engine)
 single_oracle_orm = Database()
 Base = declarative_base()
@@ -62,10 +62,10 @@ class CheckImportField(Base):
 
 class CheckResult(Base):
     __tablename__ = 'check_result'
-    
-    id = Column(NUMBER(asdecimal=False), primary_key=True, server_default=text("0 "))
+
+    id = Column(NUMBER(asdecimal=False), primary_key=True, server_default=text("0"))
     add_time = Column(DateTime, nullable=False)
-    table_name = Column(VARCHAR(200))
+    table_name = Column(VARCHAR(200), server_default=text("0"))
     table_field = Column(VARCHAR(200))
     standard_value = Column(VARCHAR(2000))
     current_value = Column(VARCHAR(2000))
@@ -73,9 +73,7 @@ class CheckResult(Base):
     company_name = Column(VARCHAR(2000), nullable=False)
     different_reason = Column(VARCHAR(2000), nullable=False)
     risk_level = Column(NUMBER(asdecimal=False))
-    task_status = Column(NUMBER(asdecimal=False), server_default=text("""\
-0
-"""))
+    task_status = Column(NUMBER(asdecimal=False), server_default=text("0"))
 
 t_company_11315 = Table(
     'company_11315', metadata,
