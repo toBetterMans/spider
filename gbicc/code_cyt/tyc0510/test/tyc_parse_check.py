@@ -136,7 +136,7 @@ def check_next_page(company_name, table_name):
         print('check next page errot:{}'.format(e))
 
 
-def check_company_next_page(NEXT_PAGE_DICT, search_name):
+def check_company_next_page(NEXT_PAGE_DICT,search_name):
     '''
     汇总结算当前公司所有翻页模块是否正常解析，把未正常翻页的模块对应表名入库check_result
     :param NEXT_PAGE_DICT: 标杆企业有分页的表格键值对
@@ -146,14 +146,13 @@ def check_company_next_page(NEXT_PAGE_DICT, search_name):
     # global NEXT_PAGE_DICT
     if NEXT_PAGE_DICT[search_name]:
         # 记录未成功解析的企业和对应的模块，并入库记录
-        not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].values()))[
-            1:-1].replace('\'', '')  # 得出未解析的模块名称拼接字符串
+        # not_parse_table_names = str(list(NEXT_PAGE_DICT[search_name].values()))[1:-1].replace('\'',
+        #                                                                                       '')  # 得出未解析的模块名称拼接字符串
         next_page_parse = CheckResult()
         next_page_parse.company_name = search_name
         next_page_parse.add_time = func.now()
-        next_page_parse.different_reason = '分页未解析模块:' + not_parse_table_names
-        next_page_parse.table_name = str(list(NEXT_PAGE_DICT[search_name].keys()))[
-            1:-1].replace('\'', '')
+        # next_page_parse.different_reason = '分页未解析模块:' + not_parse_table_names
+        # next_page_parse.table_name = str(list(NEXT_PAGE_DICT[search_name].keys()))[1:-1].replace('\'', '')
         next_page_parse.table_field = '-'
         next_page_parse.standard_value = '-'
         next_page_parse.current_value = '-'
@@ -161,12 +160,14 @@ def check_company_next_page(NEXT_PAGE_DICT, search_name):
         next_page_parse.standard_version = 1
         try:
             print('next_page_parse=================', next_page_parse.__dict__)
-            single_oracle_orm.add(next_page_parse)
-            single_oracle_orm.commit()
+            for one_table_name,one_table_show in NEXT_PAGE_DICT[search_name].items():
+                next_page_parse.table_name = one_table_name
+                next_page_parse.different_reason = '分页解析异常模块:' + one_table_show
+                single_oracle_orm.add(next_page_parse)
+                single_oracle_orm.commit()
         except Exception as e:
             single_oracle_orm.rollback()
-            print('分页未解析模块提交异常：{}'.format(e), '\n',
-                  next_page_parse.different_reason)
+            print('分页未解析模块提交异常：{}'.format(e), '\n', next_page_parse.different_reason)
 
 
 def check_parse(flss, add_result, unique_field):
@@ -691,8 +692,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().position
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.position if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -798,8 +799,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().shareholder
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.shareholder if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -917,8 +918,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().invest_company
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.invest_company if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -1053,8 +1054,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().alter_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.alter_date if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -1255,8 +1256,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().website_type
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.website_type if standard_value else '-'
                                 add_result.table_name = table_name
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -1378,8 +1379,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().shareholder
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.shareholder if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -1567,8 +1568,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().credit_num
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.credit_num if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -1632,7 +1633,7 @@ class TycDetailParse(object):
                         tds = tr.xpath("./td")
                         ent_name = try_and_text(
                             "variable[1].xpath('.//td/a/text()')", tds)
-                        flss.ent_name = ent_name[0] if ent_name else self.search_name
+                        flss.company_name = ent_name[0] if ent_name else self.search_name
 
                         flss.registere_date = try_and_text(
                             "variable[3].xpath('.//text()')[0]", tds)
@@ -1681,13 +1682,13 @@ class TycDetailParse(object):
 
                         try:
 
-                            add_result.table_field = 'ent_name'  # 保存第一各异常字段名   各模块手动添加
-                            add_result.current_value = first_parse_data.ent_name  # 保存第一各异常字段值   各模块手动添加
+                            add_result.table_field = 'company_name'  # 保存第一各异常字段名   各模块手动添加
+                            add_result.current_value = first_parse_data.company_name  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().ent_name
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.company_name if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -1814,12 +1815,12 @@ class TycDetailParse(object):
                             try:
 
                                 add_result.table_field = 'trial_date'  # 保存第一各异常字段名   各模块手动添加
-                                add_result.current_value = first_parse_data.trialDate  # 保存第一各异常字段值   各模块手动添加
+                                add_result.current_value = first_parse_data.trial_date  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().trial_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.trial_date if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -1962,8 +1963,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().judgment_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.judgment_date if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -2075,8 +2076,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().announcement_date
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.announcement_date if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -2206,8 +2207,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().case_date
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.case_date if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -2321,8 +2322,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().record_date
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.record_date if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
@@ -2582,8 +2583,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().insert_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.insert_date if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -2713,8 +2714,8 @@ class TycDetailParse(object):
                         add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                         add_result.risk_level, add_result.standard_version = 1, 1
                         standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                            company_name=first_parse_data.company_name).first().decision_date
-                        add_result.standard_value = standard_value
+                            company_name=first_parse_data.company_name).first()
+                        add_result.standard_value = standard_value.decision_date if standard_value else '-'
                         single_oracle_orm.add(add_result)
                         single_oracle_orm.commit()
                     except Exception as e:
@@ -2826,8 +2827,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().illegal_date
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.illegal_date if standard_value else '-'
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
                         except Exception as e:
@@ -2955,8 +2956,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().announcement_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.announcement_date if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -3079,8 +3080,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().registration_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.registration_date if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -3196,12 +3197,12 @@ class TycDetailParse(object):
                             try:
                                 # TODO :
                                 add_result.table_field = 'taxes_date'  # 保存第一各异常字段名   各模块手动添加
-                                add_result.current_value = first_parse_data.taxesDate  # 保存第一各异常字段值   各模块手动添加
+                                add_result.current_value = first_parse_data.taxes_date  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().taxes_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.taxes_date if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -3318,12 +3319,12 @@ class TycDetailParse(object):
                             try:
                                 # TODO :
                                 add_result.table_field = 'auction_notice'  # 保存第一各异常字段名   各模块手动添加
-                                add_result.current_value = first_parse_data.auctionNotice  # 保存第一各异常字段值   各模块手动添加
+                                add_result.current_value = first_parse_data.auction_notice  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().auction_notice
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.auction_notice if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -3505,12 +3506,12 @@ class TycDetailParse(object):
                             try:
                                 # TODO :
                                 add_result.table_field = 'bill_number'  # 保存第一各异常字段名   各模块手动添加
-                                add_result.current_value = first_parse_data.billNumber  # 保存第一各异常字段值   各模块手动添加
+                                add_result.current_value = first_parse_data.bill_number  # 保存第一各异常字段值   各模块手动添加
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().bill_number
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.bill_number if standard_value else '-'
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
                             except Exception as e:
@@ -3616,13 +3617,13 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-                            add_result.table_field = 'financeDate'  # 保存第一各异常字段名       各表不同
-                            add_result.current_value = first_parse_data.financeDate  # 保存第一各异常字段值   各表不同
+                            add_result.table_field = 'finance_date'  # 保存第一各异常字段名       各表不同
+                            add_result.current_value = first_parse_data.finance_date  # 保存第一各异常字段值   各表不同
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().financeDate
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.finance_date if standard_value else '-'
                             add_result.standard_version = 1
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
@@ -3683,14 +3684,14 @@ class TycDetailParse(object):
                                 personName = tds[1].xpath('.//a/text()')[0]
                             else:
                                 personName = tds[1].xpath('.//span/text()')[1]
-                            flss.personName = personName
+                            flss.person_name = personName
 
                             flss.position = try_and_text(
                                 "variable[2].xpath('.//text()')[0]", tds)
                             personInfo = try_and_text(
                                 "variable[3].xpath('./div/div/text()')[0]", tds)
 
-                            flss.personInfo = ''.join(personInfo)
+                            flss.person_info = ''.join(personInfo)
                             flss.txt_id = self.txt_id
                             flss.company_name = key
                             flss.mark = 0
@@ -3721,13 +3722,13 @@ class TycDetailParse(object):
                             # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                             print('首页没有匹配到数据》》》》》》》》》')
                             try:
-                                add_result.table_field = 'personName'  # 保存第一各异常字段名       各表不同
-                                add_result.current_value = first_parse_data.personName  # 保存第一各异常字段值   各表不同
+                                add_result.table_field = 'person_name'  # 保存第一各异常字段名       各表不同
+                                add_result.current_value = first_parse_data.person_name  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().personName
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.person_name if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -3818,13 +3819,13 @@ class TycDetailParse(object):
                             # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                             print('首页没有匹配到数据》》》》》》》》》')
                             try:
-                                add_result.table_field = 'businessName'  # 保存第一各异常字段名       各表不同
-                                add_result.current_value = first_parse_data.businessName  # 保存第一各异常字段值   各表不同
+                                add_result.table_field = 'business_name'  # 保存第一各异常字段名       各表不同
+                                add_result.current_value = first_parse_data.business_name  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(TycQyfzQyyw).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().businessName
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.business_name if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -3933,13 +3934,13 @@ class TycDetailParse(object):
                             # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                             print('首页没有匹配到数据》》》》》》》》》')
                             try:
-                                add_result.table_field = 'touziDate'  # 保存第一各异常字段名       各表不同
-                                add_result.current_value = first_parse_data.touziDate  # 保存第一各异常字段值   各表不同
+                                add_result.table_field = 'touzi_date'  # 保存第一各异常字段名       各表不同
+                                add_result.current_value = first_parse_data.touzi_date  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().touziDate
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.touzi_date if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4039,13 +4040,13 @@ class TycDetailParse(object):
                             # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                             print('首页没有匹配到数据》》》》》》》》》')
                             try:
-                                add_result.table_field = 'jpProduct'  # 保存第一各异常字段名       各表不同
-                                add_result.current_value = first_parse_data.jpProduct  # 保存第一各异常字段值   各表不同
+                                add_result.table_field = 'jp_product'  # 保存第一各异常字段名       各表不同
+                                add_result.current_value = first_parse_data.jp_product  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().jpProduct
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.jp_product if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4188,8 +4189,8 @@ class TycDetailParse(object):
                         add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                         add_result.risk_level, add_result.standard_version = 1, 1
                         standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                            company_name=first_parse_data.company_name).first().recruitment_job
-                        add_result.standard_value = standard_value
+                            company_name=first_parse_data.company_name).first()
+                        add_result.standard_value = standard_value.recruitment_job if standard_value else '-'
                         add_result.standard_version = 1
                         single_oracle_orm.add(add_result)
                         single_oracle_orm.commit()
@@ -4295,13 +4296,13 @@ class TycDetailParse(object):
                             # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                             print('首页没有匹配到数据》》》》》》》》》')
                             try:
-                                add_result.table_field = 'licenseDocNum'  # 保存第一各异常字段名       各表不同
-                                add_result.current_value = first_parse_data.licenseDocNum  # 保存第一各异常字段值   各表不同
+                                add_result.table_field = 'license_documet_num'  # 保存第一各异常字段名       各表不同
+                                add_result.current_value = first_parse_data.license_documet_num  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().licenseDocNum
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.license_documet_num if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4402,13 +4403,13 @@ class TycDetailParse(object):
                             print('首页没有匹配到数据》》》》》》》》》')
 
                             try:
-                                add_result.table_field = 'licenseDocNum'  # 保存第一各异常字段名       各表不同
-                                add_result.current_value = first_parse_data.licenseDocNum  # 保存第一各异常字段值   各表不同
+                                add_result.table_field = 'license_documet_num'  # 保存第一各异常字段名       各表不同
+                                add_result.current_value = first_parse_data.license_documet_num  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().licenseDocNum
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.license_documet_num if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4477,7 +4478,7 @@ class TycDetailParse(object):
                             flss.evaluate_department = try_and_text(
                                 "variable[5].xpath('./text()')[0]", tds)
                             flss.txt_id = self.txt_id
-                            flss.ent_name = key
+                            flss.company_name = key
                             flss.add_time = func.now()
                             flss.mark = 0
                             flss.agency_num = self.agency_num
@@ -4511,8 +4512,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().year
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.year if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4612,8 +4613,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().check_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.check_date if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4719,13 +4720,13 @@ class TycDetailParse(object):
                             # 如果首页没有匹配到，则保存首页第一条数据到标准库，并记录其中一个字段
                             print('首页没有匹配到数据》》》》》》》》》')
                             try:
-                                add_result.table_field = 'certificateType'  # 保存第一各异常字段名       各表不同
-                                add_result.current_value = first_parse_data.certificateType  # 保存第一各异常字段值   各表不同
+                                add_result.table_field = 'certificate_type'  # 保存第一各异常字段名       各表不同
+                                add_result.current_value = first_parse_data.certificate_type  # 保存第一各异常字段值   各表不同
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().certificateType
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.certificate_type if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4827,8 +4828,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().publish_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.publish_date if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4940,8 +4941,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().product_name
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.product_name if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -4977,7 +4978,7 @@ class TycDetailParse(object):
                 # print(table_name)
                 if result_dict:
 
-                    trs = table.xpath('./tbody/tr')
+                    trs = table[0].xpath('./tbody/tr')
                     if trs:
 
                         key = self.search_name
@@ -5038,8 +5039,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().mp_name
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.mp_name if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -5138,8 +5139,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().register_customs
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.register_customs if standard_value else '-'
                             add_result.standard_version = 1
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
@@ -5250,8 +5251,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().publish_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.publish_date if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -5295,7 +5296,7 @@ class TycDetailParse(object):
                 # print(table_name)
                 if result_dict:
 
-                    trs = table.xpath('./tbody/tr')
+                    trs = table[0].xpath('./tbody/tr')
                     if trs:
                         key = self.search_name
                         # 创建新增对象
@@ -5377,8 +5378,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(TycJyzkGdxx).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().located
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.located if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -5415,7 +5416,7 @@ class TycDetailParse(object):
                 # print(table_name)
                 if result_dict:
 
-                    trs = table.xpath('./tbody/tr')
+                    trs = table[0].xpath('./tbody/tr')
                     if trs:
 
                         key = self.search_name
@@ -5484,8 +5485,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().license_key
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.license_key if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -5617,8 +5618,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().apply_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.apply_date if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -5737,8 +5738,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().apply_publish_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.apply_publish_date if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -5849,8 +5850,8 @@ class TycDetailParse(object):
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                             add_result.risk_level, add_result.standard_version = 1, 1
                             standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                company_name=first_parse_data.company_name).first().approval_date
-                            add_result.standard_value = standard_value
+                                company_name=first_parse_data.company_name).first()
+                            add_result.standard_value = standard_value.approval_date if standard_value else '-'
                             add_result.standard_version = 1
                             single_oracle_orm.add(add_result)
                             single_oracle_orm.commit()
@@ -5966,8 +5967,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().works_name
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.works_name if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
@@ -6074,8 +6075,8 @@ class TycDetailParse(object):
                                 add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
                                 add_result.risk_level, add_result.standard_version = 1, 1
                                 standard_value = single_oracle_orm.query(current_class).filter_by(  # 各表不同
-                                    company_name=first_parse_data.company_name).first().audit_date
-                                add_result.standard_value = standard_value
+                                    company_name=first_parse_data.company_name).first()
+                                add_result.standard_value = standard_value.audit_date if standard_value else '-'
                                 add_result.standard_version = 1
                                 single_oracle_orm.add(add_result)
                                 single_oracle_orm.commit()
