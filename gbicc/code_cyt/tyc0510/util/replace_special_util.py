@@ -31,12 +31,13 @@ def replace_special_chars(text: str):
             .replace(r'\xa9', r'') \
             .replace(r'\u002F', r'/') \
             .replace(r'\u003E', r'') \
-            .replace(u"'", r'"') \
+            .replace(r"'", r'"') \
             .replace(r'\u003c\u0065\u006d\u003e', r'') \
             .replace(r'\u003c\u002f\u0065\u006d\u003e', '') \
             .replace(r'\xa5', r'') \
             .replace(r'\xa0', r'') \
-            .replace(r'\uff08', '(').replace(r'\u0029', ')') \
+            .replace(r'\uff08', '(') \
+            .replace(r'\u0029', ')') \
             .replace(r'（', '(').replace(r'）', ')').replace(r'\u3000', '')
     except Exception as e:
         print(e)
