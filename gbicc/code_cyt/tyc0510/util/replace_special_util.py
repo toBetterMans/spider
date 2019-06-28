@@ -16,29 +16,29 @@ def replace_special_chars(text: str):
     :return: 字符串
     '''
     try:
-        text = text.replace(u'<em>', u'') \
-            .replace(u'</em>', u'') \
-            .replace(u'\ue004', u'') \
-            .replace(u'\ufffd', u'') \
-            .replace(u'\u2022', u'') \
-            .replace(u'\xb3', u'') \
-            .replace(u'\ue005', u'') \
-            .replace(u'\xa9', '') \
-            .replace(u'\u003C', u'') \
-            .replace(u'\u003E', u'') \
-            .replace(u'\ufffd', u'') \
-            .replace(u'\ufffd', u'') \
-            .replace(u'\xa9', u'') \
-            .replace(u'\u002F', u'/') \
-            .replace(u'\u003E', u'') \
-            .replace(r"'", u'"') \
-            .replace(u'\u003c\u0065\u006d\u003e', u'') \
-            .replace(u'\u003c\u002f\u0065\u006d\u003e', '') \
-            .replace(u'\xa5', u'') \
-            .replace(u'\xa0', u'') \
-            .replace(u'\uff08', '(') \
-            .replace(u'\u0029', ')') \
-            .replace(u'（', '(').replace(u'）', ')').replace(u'\u3000', '')
+        text = text.replace(r'<em>', r'') \
+            .replace(r'</em>', r'') \
+            .replace(r'\ue004', r'') \
+            .replace(r'\ufffd', r'') \
+            .replace(r'\u2022', r'') \
+            .replace(r'\xb3', r'') \
+            .replace(r'\ue005', r'') \
+            .replace(r'\xa9', '') \
+            .replace(r'\u003C', r'') \
+            .replace(r'\u003E', r'') \
+            .replace(r'\ufffd', r'') \
+            .replace(r'\ufffd', r'') \
+            .replace(r'\xa9', r'') \
+            .replace(r'\u002F', r'/') \
+            .replace(r'\u003E', r'') \
+            .replace(r"'", r'"') \
+            .replace(r'\u003c\u0065\u006d\u003e', r'') \
+            .replace(r'\u003c\u002f\u0065\u006d\u003e', '') \
+            .replace(r'\xa5', r'') \
+            .replace(r'\xa0', r'').replace(u'\xa0', u'') \
+            .replace(r'\uff08', '(') \
+            .replace(r'\u0029', ')') \
+            .replace(r'（', '(').replace(r'）', ')').replace(r'\u3000', '')
     except Exception as e:
         print(e)
     return text
