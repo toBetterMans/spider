@@ -364,7 +364,7 @@ def insert_result(company_name, table_name, result_dict):
         checkResult.task_status = 0
 
         if result_dict['res'] == 'False':
-            # print(result_dict['mesg'])
+            # print(result_dict['mesg'])5
             checkResult.different_reason = result_dict['mesg']
         print(checkResult.different_reason)
         single_oracle_orm.add(checkResult)
