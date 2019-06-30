@@ -283,9 +283,11 @@ def check_all_data(add_result, cls_spider, current_class):
             add_result.table_name))
     change_flag = 0
     company_name = cls_spider.company_name
-    standard_datas = single_oracle_orm.query(
-        current_class).filter_by(company_name=company_name).all()
-
+    try:
+        standard_datas = single_oracle_orm.query(
+            current_class).filter_by(company_name=company_name).all()
+    except Exception as e:
+        print('首页全字段数据 根据公司名称查询异常:',e)
     for cls_standard in standard_datas:
 
         check_res = check_obj(cls_spider, cls_standard)
@@ -367,11 +369,13 @@ def insert_result(company_name, table_name, result_dict):
             # print(result_dict['mesg'])5
             checkResult.different_reason = result_dict['mesg']
         print(checkResult.different_reason)
-        single_oracle_orm.add(checkResult)
-        single_oracle_orm.commit()
+        try:
+            single_oracle_orm.add(checkResult)
+            single_oracle_orm.commit()
+        except Exception as e:
+            print('表头插入失败：',e)
 
 
-###########################################################################
 
 def decode_dict_date(word, dicts):
     logger.debug('decode_dict_date  yuan==='.format(word))
@@ -413,7 +417,8 @@ class TycDetailParse(object):
         single_oracle = oracle
         self.dicts = {}
         self.search_name = search_name
-        ############################################################
+
+#################################解析方法开始
 
     # 解析：企业背景-->基本信息(工商信息)
     def html_parse_baseinfo(self):
@@ -705,8 +710,7 @@ class TycDetailParse(object):
                         single_oracle_orm.delete(unique_line)
                         single_oracle_orm.add(first_parse_data)
                         single_oracle_orm.commit()
-                        print(
-                            '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                        print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
             else:
                 insert_result(self.search_name, table_name, result_dict)
 
@@ -812,8 +816,7 @@ class TycDetailParse(object):
                             single_oracle_orm.delete(unique_line)
                             single_oracle_orm.add(first_parse_data)
                             single_oracle_orm.commit()
-                            print(
-                                '首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
+                            print('首页已匹配到数据，但不是第一条,更新为当前页第一条》》》》》》》！{}'.format(key))
 
                 else:
                     insert_result(self.search_name, table_name, result_dict)
@@ -1635,7 +1638,7 @@ class TycDetailParse(object):
                             "variable[1].xpath('.//td/a/text()')", tds)
                         flss.company_name = ent_name[0] if ent_name else self.search_name
 
-                        flss.registere_date = try_and_text(
+                        flss.register_date = try_and_text(
                             "variable[3].xpath('.//text()')[0]", tds)
                         flss.status = 'NA'
 
@@ -1681,7 +1684,6 @@ class TycDetailParse(object):
                         print('首页没有匹配到数据》》》》》》》》》')
 
                         try:
-
                             add_result.table_field = 'company_name'  # 保存第一各异常字段名   各模块手动添加
                             add_result.current_value = first_parse_data.company_name  # 保存第一各异常字段值   各模块手动添加
                             add_result.different_reason = '该页信息都不匹配，请通知数据管理员'
@@ -2017,9 +2019,7 @@ class TycDetailParse(object):
                     check_flag = 0  # 检测首页是否有匹配到的一行数据
                     check_first = 0  # 检测首页是否有匹配到的第一行数据
 
-                    root_div = root_div[0]
-                    trs = root_div.xpath("./tbody/tr")
-
+                    trs = root_div[0].xpath("./tbody/tr")
                     for tr in trs:
                         insert_value = ""
                         tds = tr.xpath("./td")
@@ -2686,6 +2686,8 @@ class TycDetailParse(object):
                     flss.agency_num = self.agency_num
                     flss.agency_name = self.agency_name
                     flss.batch = self.batch
+
+
 
                     unique_field = [
                         'company_name', flss.company_name]  # 该模块中唯一值字段名和值
@@ -3553,7 +3555,7 @@ class TycDetailParse(object):
             if result_dict:
                 # print(table_name)
 
-                trs = table.xpath('./tbody/tr')
+                trs = table[0].xpath('./tbody/tr')
                 if trs:
 
                     key = self.search_name
@@ -3765,7 +3767,7 @@ class TycDetailParse(object):
                 if result_dict:
                     # print(table_name)
 
-                    trs = table.xpath('./tbody/tr')
+                    trs = table[0].xpath('./tbody/tr')
                     if trs:
 
                         key = self.search_name
@@ -4551,7 +4553,7 @@ class TycDetailParse(object):
                 if result_dict:
                     # print(table_name)
 
-                    root_div = table.xpath('./tbody/tr')
+                    root_div = table[0].xpath('./tbody/tr')
                     if root_div:
 
                         key = self.search_name
@@ -4867,7 +4869,7 @@ class TycDetailParse(object):
                 # print(table_name)
                 if result_dict:
 
-                    root_div = table.xpath('./tbody/tr')
+                    root_div = table[0].xpath('./tbody/tr')
                     if root_div:
 
                         key = self.search_name
@@ -5213,7 +5215,7 @@ class TycDetailParse(object):
                             text_info = try_and_text(
                                 "variable[6].xpath('.//script/text()')[0]", tds)
                             # text_info = replace_special_chars(text_info)
-                            flss.text_info = text_info.replace(r'\u002F', '')
+                            flss.detail_info = text_info.replace(r'\u002F', '')
                             # tds[6].text.replace("详情 》", "").strip().replace("'", '\\"')
                             flss.txt_id = self.txt_id
                             flss.company_name = key
