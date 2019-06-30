@@ -43,5 +43,6 @@ def replace_special_chars(text: str):
         print(e)
     return text
 
+
 if __name__ == "__main__":
     pass

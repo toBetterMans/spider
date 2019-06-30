@@ -998,7 +998,7 @@ class TycDetailParse(object):
                         "variable[1].xpath('./span/text()')[0]", tds)
                     flss.judgment_document = try_and_text(
                         "variable[2].xpath('./a/text()')[0]", tds)
-    
+
                     tds_href = try_and_text(
                         "variable[2].xpath('./a/@href')[0]", tds)
                     flss.judgment_name = try_and_text(
@@ -3686,7 +3686,7 @@ class TycDetailParse(object):
                 # 招聘
         elif key == "_container_baipin" or key == 'nav-main-recruitCount' or key == '_container_recruit':
             try:
-    
+
                 self.html_parse_recruitment(index=index)
             except Exception as e:
                 logger.exception(
@@ -3694,7 +3694,7 @@ class TycDetailParse(object):
                 # 法律诉讼
         elif key == "_container_lawsuit" or key == 'nav-main-lawsuitCount':
             try:
-    
+
                 self.html_parse_lawsuit(index=index)
             except Exception as e:
                 logger.exception(
