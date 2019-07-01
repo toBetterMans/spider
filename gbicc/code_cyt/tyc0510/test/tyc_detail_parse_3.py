@@ -2624,7 +2624,7 @@ class TycDetailParse(object):
                 # certificateInfo.permitNum = tds[5].xpath('string(.)')
                 # 新增 证书详情
                 href = try_and_text(
-                    "variable[1].xpath('./span/@onclick')[0]", tds)
+                    "variable[5].xpath('./a/@onclick')[0]", tds)
                 res = re.search(r"certificatePopup\('(.*?)'\)", href).groups(1)
                 href = res[0]
                 text_info = 'NA'
@@ -2806,8 +2806,8 @@ class TycDetailParse(object):
                     "variable.xpath('./td')[2].xpath('./span/text()')[0]", tr)
                 entWeChat.mp_info = try_and_text(
                     "variable.xpath('./td')[4].xpath('./div/div/text()')[0]", tr)
-                entWeChat.detail = try_and_text(
-                    "variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 新增
+                # entWeChat.detail = try_and_text("variable.xpath('./td')[5].xpath('./script/text()')[0]", tr)  # 详情取消
+                entWeChat.detail = try_and_text("variable.xpath('./td')[3].xpath('.//img/@data-src", tr)  # 新增二维码url
 
                 entWeChat.txtId = self.txtId
                 entWeChat.company_name = key
@@ -2991,7 +2991,7 @@ class TycDetailParse(object):
                     "variable[6].xpath('./text()')[0]", tds)
                 # 土地坐落
                 where = try_and_text(
-                    "variable[1].xpath('./script/text()')[0]", tds)
+                    "variable[1].xpath('./text()')[0]", tds)
                 # 土地用途
                 todo = try_and_text("variable[2].xpath('./text()')[0]", tds)
                 # 总面积（公顷）
@@ -3001,6 +3001,7 @@ class TycDetailParse(object):
                     "variable[4].xpath('./text()')[0]", tds)
                 # 供应方式
                 type = try_and_text("variable[5].xpath('./text()')[0]", tds)
+                buyInfo.gd_info = try_and_text("variable[7].xpath('./script/text()')[0]", tds)
                 buyInfo.gdNum = CURRENT_VERSION_NULL
                 buyInfo.gdActDate = CURRENT_VERSION_NULL
                 buyInfo.gdArea = str(gd_area) + '公顷'

@@ -366,7 +366,7 @@ def insert_result(company_name, table_name, result_dict):
         checkResult.task_status = 0
 
         if result_dict['res'] == 'False':
-            # print(result_dict['mesg'])5
+            # print(result_dict['mesg'])
             checkResult.different_reason = result_dict['mesg']
         print(checkResult.different_reason)
         try:
@@ -4648,6 +4648,7 @@ class TycDetailParse(object):
             table = self.selector.xpath(
                 '//div[@id="_container_certificate"][position()=1]//table[position()=1]')
             thead_list = ['序号', '证书类型', '证书编号', '发证日期', '截止日期']
+            #new head_list = "序号	发证日期	证书类型	证书编号	截止日期	操作"
             if table:
                 result_dict = check_thead(table, thead_list)
                 table_name = flss.__tablename__
