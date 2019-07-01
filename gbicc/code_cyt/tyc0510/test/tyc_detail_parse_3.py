@@ -83,11 +83,12 @@ class TycDetailParse(object):
             # 新增异常捕获，无邮箱信息无class=email
             try:
                 email = top.xpath('.//span[@class="email"]/text()')[0]
-            except BaseException:
+            except:
                 email = 'NA'
             baseinfo.email = email
             detail_basic = top.xpath(
                 './/div[@class="box -company-box "]/div[@class="content"]/div[contains(@class,"detail")]')
+
             if detail_basic:
                 insert_value = ""
                 detail_basic = detail_basic[0]
@@ -98,7 +99,7 @@ class TycDetailParse(object):
                         './div[position()=1]/div[position()=1]/span[2]/text()')
 
                 baseinfo.telephone = telephone[0].replace(
-                    u'"', u'').replace(u'[', u'').replace(u']', u'')
+                    '"', '').replace('[', '').replace(']', '')
                 urls = detail_basic.xpath(
                     './div[position()=2]//a[@class="company-link"][position()=1]/text()')
                 baseinfo.url = urls[0] if urls else 'NA'
@@ -110,31 +111,40 @@ class TycDetailParse(object):
                 trs1 = table_lists[1].xpath('./tbody/tr')
                 if trs0 and trs1:
                     # dict_list
-                    logger.debug('Traceback: lenth()={}'.format(len(trs1)))
-                    dicts = self.dicts
+                    # logger.debug('Traceback: lenth()={}'.format(len(trs1)))
+                    # dicts = dicts
+                    # 注册资本
                     try:
-                        registerFund = trs1[0].xpath(
-                            './td/div/@title')[0] or 'NA'
+                        registerFund = trs1[0].xpath('./td/div/@title')[0] or 'NA'
 
-                    except BaseException:
+                    except:
                         registerFund = trs1[0].xpath('./td//text()')[0]
                     baseinfo.registerFund = registerFund
-
-                    baseinfo.companyStatus = trs1[1].xpath(
-                        './td[2]//text()')[0]
-                    baseinfo.registerNum = trs1[1].xpath('./td[4]//text()')[0]
-                    baseinfo.tissueNum = trs1[2].xpath(
-                        './td[position()=4]/text()')[0]
-                    baseinfo.creditNum = trs1[2].xpath(
-                        './td[position()=2]/text()')[0]
-                    baseinfo.companyType = trs1[3].xpath(
-                        './td[4]')[0].xpath('string(.)')
-                    baseinfo.taxpayerNum = trs1[3].xpath(
-                        './td[2]')[0].xpath('string(.)')
-                    baseinfo.industry = trs1[4].xpath(
-                        './td[4]')[0].xpath('string(.)')
-                    businessTerm = trs1[4].xpath(
-                        './td[2]')[0].xpath('string(.)')
+                    print(baseinfo.registerFund)
+                    # 企业状态(经营状态)
+                    baseinfo.companyStatus = trs1[1].xpath('./td[4]//text()')[0]
+                    print(baseinfo.companyStatus)
+                    # 工商注册号
+                    baseinfo.registerNum = trs1[2].xpath('./td[4]//text()')[0]
+                    print(baseinfo.registerNum)
+                    # 组织机构代码
+                    baseinfo.tissueNum = trs1[3].xpath('./td[position()=4]/text()')[0]
+                    print(baseinfo.tissueNum)
+                    # 统一社会信用代码
+                    baseinfo.creditNum = trs1[2].xpath('./td[position()=2]/text()')[0]
+                    print(baseinfo.creditNum)
+                    # 企业类型(公司类型)
+                    baseinfo.companyType = trs1[4].xpath('./td[2]')[0].xpath('string(.)')
+                    print(baseinfo.companyType)
+                    # 纳税人识别号
+                    baseinfo.taxpayerNum = trs1[3].xpath('./td[2]')[0].xpath('string(.)')
+                    print(baseinfo.taxpayerNum)
+                    # 行业
+                    baseinfo.industry = trs1[4].xpath('./td[4]')[0].xpath('string(.)')
+                    print(baseinfo.industry)
+                    # 营业期限
+                    businessTerm = trs1[6].xpath('./td[2]')[0].xpath('string(.)')
+                    print(businessTerm)
                     if businessTerm == '-' or businessTerm == '未公开':
                         business_term_begin = business_term_end = '-'
                     else:
@@ -142,43 +152,39 @@ class TycDetailParse(object):
                         business_term_end = businessTerm.split('至')[1]
                         if business_term_end == '无固定期限':
                             business_term_end = '2999-12-31'
-
-                    registerDate = try_and_text(
-                        "variable[0].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    # 注册时间
+                    registerDate = try_and_text("variable[1].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    print(registerDate)
                     # 新增 纳税人资质
-                    taxQualificate = try_and_text(
-                        "variable[5].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    taxQualificate = try_and_text("variable[6].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     baseinfo.taxQualificate = taxQualificate[0] if taxQualificate else 'NA'
+                    print(baseinfo.taxQualificate)
+                    # 核准日期
+                    checkDate = try_and_text("variable[5].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    print(checkDate)
 
-                    checkDate = try_and_text(
-                        "variable[5].xpath('./td[4]')[0].xpath('string(.)')", trs1)
-                    #
-                    regDate = ''.join(registerDate.strip('-'))
-                    checDate = ''.join(checkDate.strip('-'))
-                    if self.dicts:
-                        if checDate > '20191231' or checDate < '19500101':
-                            checkDate = decode_dict_date(checkDate, dicts)
-                        if regDate > '20191231' or regDate < '19500101':
-                            registerDate = decode_dict_date(
-                                registerDate, dicts)
-                    #
+                    # regDate = ''.join(registerDate.strip('-'))
+                    # checDate = ''.join(checkDate.strip('-'))
+                    # if dicts:
+                    #     if checDate > '20191231' or checDate < '19500101':
+                    #         checkDate = decode_dict_date(checkDate, dicts)
+                    #     if regDate > '20191231' or regDate < '19500101':
+                    #         registerDate = decode_dict_date(
+                    #             registerDate, dicts)
+                    # #
                     baseinfo.businessTerm = businessTerm
                     baseinfo.registerDate = registerDate
                     baseinfo.checkDate = checkDate
-
-                    baseinfo.englishName = try_and_text(
-                        "variable[8].xpath('./td[4]')[0].xpath('string(.)')",
-                        trs1).replace(
-                        "'",
-                        '|')
+                    # 英文名
+                    baseinfo.englishName = try_and_text("variable[8].xpath('./td[4]')[0].xpath('string(.)')", trs1)
                     # 此处改为曾用名
-                    baseinfo.used_name = try_and_text(
-                        "variable[8].xpath('./td[2]')[0].xpath('string(.)')", trs1)
-                    baseinfo.registerSite = try_and_text(
-                        "variable[9].xpath('./td[2]')[0].xpath('string(.)')",
-                        trs1).replace(
-                        '附近公司',
-                        '')
+                    baseinfo.used_name = try_and_text("variable[8].xpath('./td[2]')[0].xpath('string(.)')",
+                                                      trs1).replace('查看更多', '')
+                    print(baseinfo.used_name)
+                    # 注册地址
+                    baseinfo.registerSite = try_and_text("variable[9].xpath('./td[2]')[0].xpath('string(.)')",
+                                                         trs1).replace(
+                        '附近公司', '')
                     address_1 = address_2 = address_3 = 'NA'
 
                     df = transform([baseinfo.registerSite], cut=False)
@@ -188,23 +194,20 @@ class TycDetailParse(object):
                         address_2 = df.loc[addr].values[1]
                         address_3 = df.loc[addr].values[2]
 
-                    businessScope = try_and_text(
-                        "variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    businessScope = try_and_text("variable[10].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     baseinfo.businessScope = businessScope.replace(
                         "'", '') if businessScope else 'NA'
 
                     # 人员规模
-                    baseinfo.persionSize = try_and_text(
-                        "variable[6].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    baseinfo.persionSize = try_and_text("variable[7].xpath('./td[2]')[0].xpath('string(.)')", trs1)
                     # 实缴资本：
-                    baseinfo.paidCapital = try_and_text(
-                        "variable[6].xpath('./td[2]')[0].xpath('string(.)')", trs1)
+                    baseinfo.paidCapital = try_and_text("variable[0].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    print(baseinfo.paidCapital)
                     # 参保人数：
-                    baseinfo.insuredPersion = try_and_text(
-                        "variable[7].xpath('./td[2]')[0].xpath('string(.)')", trs1)
-                    baseinfo.registerOffice = try_and_text(
-                        "variable[7].xpath('./td[4]')[0].xpath('string(.)')", trs1)
-                    baseinfo.txtId = self.txtId or 'NA'
+                    baseinfo.insuredPersion = try_and_text("variable[7].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    # 登记机关
+                    baseinfo.registerOffice = try_and_text("variable[5].xpath('./td[4]')[0].xpath('string(.)')", trs1)
+                    baseinfo.txtId = self.txt_id or 'NA'
                     baseinfo.entName = key
                     baseinfo.mark = 0
                     baseinfo.addtime = 'sysdate'
@@ -218,7 +221,7 @@ class TycDetailParse(object):
                         baseinfo.taxQualificate,
                         baseinfo.persionSize,
                         baseinfo.paidCapital,
-                        baseinfo.txtId,
+                        baseinfo.txt_id,
                         baseinfo.entName,
                         baseinfo.registerNum,
                         baseinfo.tissueNum,
@@ -252,7 +255,7 @@ class TycDetailParse(object):
                         business_term_end
                     ]
 
-                    # logger.debug('基本信息获取到数据====', value_list)
+                    # logger.debug(value_list)
                     value_list = [
                         "'" + str(value) + "'" for value in value_list]
                     insert_value = '(' + ','.join(value_list) + \
@@ -279,17 +282,13 @@ class TycDetailParse(object):
                 # xuhao = .xpath('./td')[0].xpath('string(.)')
                 position = div.xpath('./td[3]//text()')
 
-                mainPerson.position = ''.join(position).replace(
-                    '\n', '').replace(
-                    "'", '') if position else 'NA'
-                name = div.xpath('./td[2]//div//a/text()')
+                mainPerson.position = ''.join(position).replace('\n', '').replace("'", '') if position else 'NA'
+                name = div.xpath('.//tr/td[2]/a/text()')
                 try:
-                    mainPerson.name = name[0].replace(
-                        '\n', '').replace(
-                        "'", '') if name else 'NA'
-                except BaseException:
+                    mainPerson.name = name[0].replace('\n', '').replace("'", '') if name else 'NA'
+                except:
                     mainPerson.name = 'ERROR'
-                mainPerson.txtId = self.txtId
+                mainPerson.txt_id = self.txt_id
                 mainPerson.entName = key
                 mainPerson.mark = 0
                 mainPerson.addtime = 'sysdate'
@@ -298,7 +297,7 @@ class TycDetailParse(object):
                 mainPerson.batch = self.batch
 
                 value_list = [
-                    mainPerson.txtId,
+                    mainPerson.txt_id,
                     mainPerson.entName,
                     mainPerson.position,
                     mainPerson.name,
@@ -334,13 +333,10 @@ class TycDetailParse(object):
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath('./td')
-                shareholderInfo.shareholder = try_and_text(
-                    "variable[1].xpath('.//a/text()')[0]", tds)
-                shareholderInfo.fundRatio = try_and_text(
-                    "variable[2].xpath('.//text()')[0]", tds)
-                shareholderInfo.fundSubcribe = try_and_text(
-                    "variable[3].xpath('.//text()')[0]", tds)
-                shareholderInfo.txtId = self.txtId
+                shareholderInfo.shareholder = try_and_text("variable[1].xpath('.//a/text()')[0]", tds)
+                shareholderInfo.fundRatio = try_and_text("variable[2].xpath('.//text()')[0]", tds)
+                shareholderInfo.fundSubcribe = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+                shareholderInfo.txt_id = self.txt_id
                 shareholderInfo.company_name = key
                 shareholderInfo.mark = 0
                 shareholderInfo.addtime = 'sysdate'
@@ -349,12 +345,13 @@ class TycDetailParse(object):
                 shareholderInfo.batch = self.batch
 
                 # 增加 出资时间
-                fundTime = try_and_text("variable[4].xpath('.//text()')", tds)
-                shareholderInfo.fundTime = fundTime[0] if fundTime else 'NA'
+                # fundTime = try_and_text("variable[4].xpath('.//text()')", tds)
+                # shareholderInfo.fundTime = fundTime[0] if fundTime else 'NA'
+                shareholderInfo.fundTime = CURRENT_VERSION_NULL
 
                 value_list = [
                     shareholderInfo.fundTime,
-                    shareholderInfo.txtId,
+                    shareholderInfo.txt_id,
                     shareholderInfo.company_name,
                     shareholderInfo.shareholder,
                     shareholderInfo.fundRatio,
@@ -392,27 +389,31 @@ class TycDetailParse(object):
                 insert_value = ""
                 tds = tr.xpath('./td')
                 try:
-                    investInfo.investCompany = try_and_text(
-                        "variable[1].xpath('.//text()')[-1]", tds)
-                except BaseException:
+                    # TODO: 627
+                    investInfo.investCompany = try_and_text("variable[1].xpath('.//text()')[1]", tds)
+                except:
                     investInfo.investCompany = 'ERROR'
                 try:
-                    investInfo.investPerson = try_and_text(
-                        "variable[2].xpath('.//a')[0].xpath('./text()')[0]", tds)
-                except BaseException:
+                    investInfo.investPerson = try_and_text("variable[2].xpath('.//a')[0].xpath('./text()')[0]", tds)
+                except:
                     investInfo.investPerson = 'ERROR'
+                # 注册资本
+                investInfo.investFund = try_and_text("variable[4].xpath('.//text()')[0]", tds)
 
-                investInfo.investRatio = try_and_text(
-                    "variable[3].xpath('.//text()')[0]", tds)
-                # investInfo.investAmount = tds[4].xpath('string(.)')
-                investInfo.investAmount = CURRENT_VERSION_NULL
-                investInfo.investFund = try_and_text(
-                    "variable[4].xpath('.//text()')[0]", tds)
-                investInfo.investDate = try_and_text(
-                    "variable[5].xpath('.//text()')[0]", tds)
-                investInfo.investStatus = try_and_text(
-                    "variable[6].xpath('.//text()')[0]", tds)
-                investInfo.txtId = self.txtId
+                # investInfo.investAmount = tds[4].xpath('string(.)').replace('\n', '').replace("'", '')
+                investInfo.investAmount = '页面上无此信息'
+                # 投资占比
+                investInfo.investRatio = try_and_text("variable[5].xpath('.//text()')[0]", tds)
+                # 注册时间
+                investInfo.investDate = try_and_text("variable[3].xpath('.//text()')[0]", tds)
+                # 状态
+                investInfo.investStatus = try_and_text("variable[6].xpath('.//text()')[0]", tds)
+                # TODO:627新增 关联产品
+                investInfo.related_products = try_and_text("variable[7].xpath('.//text()')[0]", tds)
+                # TODO:627新增 关联机构
+                investInfo.associated_agencies = try_and_text("variable[8].xpath('.//text()')[0]", tds)
+
+                investInfo.txt_id = self.txt_id
                 investInfo.company_name = key
                 investInfo.mark = 0
                 investInfo.addtime = 'sysdate'
@@ -420,7 +421,7 @@ class TycDetailParse(object):
                 investInfo.agency_name = self.agency_name
                 investInfo.batch = self.batch
                 value_list = [
-                    investInfo.txtId,
+                    investInfo.txt_id,
                     investInfo.company_name,
                     investInfo.investCompany,
                     investInfo.investPerson,
@@ -429,11 +430,13 @@ class TycDetailParse(object):
                     investInfo.investRatio,
                     investInfo.investDate,
                     investInfo.investStatus,
+                    investInfo.related_products,
+                    investInfo.associated_agencies,
                     investInfo.mark,
                     investInfo.agency_num,
                     investInfo.agency_name,
                     investInfo.batch]
-                column_name = "(txt_id,company_name,invest_company,invest_person,invest_fund,invest_amount,invest_ratio,invest_date,invest_status,mark,agency_num,agency_name,batch,add_time)"
+                # column_name = "(txt_id,company_name,invest_company,invest_person,invest_fund,invest_amount,invest_ratio,invest_date,invest_status,related_products,associated_agencies,mark,agency_num,agency_name,batch,add_time)"
                 value_list = ["'" + str(value) + "'" for value in value_list]
                 insert_value += '(' + ','.join(value_list) + ',sysdate' + ')'
 
@@ -441,6 +444,7 @@ class TycDetailParse(object):
                     investInfo.table_name,
                     investInfo.column_name,
                     insert_value)
+
 
     # 解析：企业背景-->变更记录
     def html_parse_alterRecord(self, index):
@@ -462,26 +466,24 @@ class TycDetailParse(object):
                 tds_len = len(tds)
                 alterDate = try_and_text("variable[1].xpath('./text()')", tds)
                 alterRecord.alterDate = alterDate[0] if alterDate else 'NA'
-                alterProject = try_and_text(
-                    "variable[2].xpath('./text()')", tds)
+                # TODO: 627
+                alterProject = try_and_text("variable[2].xpath('./div/text()')", tds)
                 alterRecord.alterProject = alterProject[0] if alterProject else 'NA'
-                alterBefor = try_and_text(
-                    "variable[3].xpath('./div')[0].xpath('string(.)')", tds)
+                alterBefor = try_and_text("variable[3].xpath('./div')[0].xpath('string(.)')", tds)
 
                 try:
-                    alterBefor = replace_special_chars(alterBefor)
-                except BaseException:
-                    alterBefor = replace_special_chars(alterBefor)
+                    alterBefor = replace_special_string(alterBefor)
+                except:
+                    alterBefor = replace_special_string(alterBefor)
                 alterRecord.alterBefor = alterBefor
-                alterAfter = try_and_text(
-                    "variable[4].xpath('./div')[0].xpath('string(.)')", tds)
-                # alterAfter = replace_special_chars(alterAfter)
+                alterAfter = try_and_text("variable[4].xpath('./div')[0].xpath('string(.)')", tds)
+                # alterAfter = replace_special_string(alterAfter)
 
-                alterAfter = replace_special_chars(alterAfter)
+                alterAfter = replace_special_string(alterAfter)
 
                 alterRecord.alterAfter = alterAfter
                 # <em><font color="#EF5644">长</font></em>
-                alterRecord.txtId = self.txtId
+                alterRecord.txt_id = self.txt_id
                 alterRecord.company_name = key
                 # alterRecord.company_name = key
                 alterRecord.mark = 0
@@ -490,7 +492,7 @@ class TycDetailParse(object):
                 alterRecord.agency_name = self.agency_name
                 alterRecord.batch = self.batch
                 value_list = [
-                    alterRecord.txtId,
+                    alterRecord.txt_id,
                     alterRecord.company_name,
                     alterRecord.alterDate,
                     alterRecord.alterProject,
@@ -510,6 +512,7 @@ class TycDetailParse(object):
                     create_insert_sql(
                         alterRecord.table_name, alterRecord.column_name, len(
                             alterRecord.column_name.split(','))), value_list)
+                # single_oracle.oracle_insert(alterRecord.table_name, alterRecord.column_name, insert_value)
                 # single_oracle.oracle_insert(alterRecord.table_name, alterRecord.column_name, insert_value)
 
     # 年报 企业基本信息 第一个table
@@ -585,7 +588,7 @@ class TycDetailParse(object):
     # 解析年报网站信息
     def html_parse_year_wzhwdxx(self, year_selector, year):
         logger.debug("Parse detail info 企业年报网站信息 {}".format(self.search_name))
-        year_selector = year_selector.replace(u'网站或网店信息', 'year_wangzhan')
+        year_selector = year_selector.replace('网站或网店信息', 'year_wangzhan')
         if year_selector:
             year_selector = etree.HTML(year_selector)
             # trs = year_selector.xpath('//div[contains(text(),"year_wangzhan")//table/tbody/tr')
@@ -602,20 +605,18 @@ class TycDetailParse(object):
                 for tr in trs:
                     insert_value = ""
                     tds = tr.xpath("./td")
-                    website.website_type = try_and_text(
-                        'variable[0].xpath(".//text()")[0]', tds)
-                    website.web_name = try_and_text(
-                        'variable[1].xpath(".//text()")[0]', tds)
-                    web_url = try_and_text(
-                        'variable[2].xpath(".//text()")', tds)
+                    website.website_type = try_and_text('variable[1].xpath(".//text()")[0]', tds)
+                    website.web_name = try_and_text('variable[2].xpath("./div/text()")[0]', tds)
+                    web_url = try_and_text('variable[3].xpath("./div/a/text()")', tds)
                     logger.debug(
                         'web_url={} {}'.format(
+
                             web_url, type(web_url)))
                     if web_url:
                         web_url = web_url[0] or 'NA'
                     website.web_url = web_url or 'NA'
                     website.year = year
-                    website.txt_id = self.txtId
+                    website.txt_id = self.txt_id
                     website.company_name = key
                     website.add_time = 'sysdate'
                     website.mark = 0
@@ -635,7 +636,7 @@ class TycDetailParse(object):
                         website.batch]
 
                     #
-                    # column_name = "(website_type,web_name,web_url,year,txt_id,company_name,mark,agency_num,agency_name,batch,add_time)"
+                    column_name = "(website_type,web_name,web_url,year,txt_id,company_name,mark,agency_num,agency_name,batch,add_time)"
 
                     value_list = [
                         "'" + str(value) + "'" for value in value_list]
@@ -650,7 +651,7 @@ class TycDetailParse(object):
     def html_parse_year_gdczxx(self, year_selector, year):
         logger.debug("Parse detail info 股份出资信息 {}".format(self.search_name))
         # 获得分支机构大标签
-        year_selector = year_selector.replace(u'股东及出资信息', 'year_gudongchuzi')
+        year_selector = year_selector.replace('股东及出资信息', 'year_gudongchuzi')
         if year_selector:
             year_selector = etree.HTML(year_selector)
         trs = year_selector.xpath(
@@ -665,26 +666,19 @@ class TycDetailParse(object):
                 insert_value = ""
                 tds = tr.xpath("./td")
 
-                gdcz.shareholder = try_and_text(
-                    "variable[0].xpath('.//text()')[0]", tds)
-                gdcz.subscirbe_contribution = try_and_text(
-                    "variable[1].xpath('./text()')[0]", tds)
+                gdcz.shareholder = try_and_text("variable[1].xpath('.//tr/td/a/text()')[0]", tds)
+                gdcz.subscirbe_contribution = try_and_text("variable[2].xpath('./text()')[0]", tds)
 
-                gdcz.contribution_time = try_and_text(
-                    "variable[2].xpath('./text()')[0]", tds)
-                gdcz.contribution_style = try_and_text(
-                    "variable[3].xpath('./text()')[0]", tds)
-                actual_contribution = try_and_text(
-                    "variable[4].xpath('./text()')", tds)
+                gdcz.contribution_time = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                gdcz.contribution_style = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                actual_contribution = try_and_text("variable[5].xpath('./text()')", tds)
                 gdcz.actual_contribution = 'NA'
                 if actual_contribution:
                     gdcz.actual_contribution = actual_contribution[0]
-                gdcz.actual_time = try_and_text(
-                    "variable[5].xpath('./text()')[0]", tds)
-                gdcz.actual_style = try_and_text(
-                    "variable[6].xpath('./text()')[0]", tds)
+                gdcz.actual_time = try_and_text("variable[6].xpath('./text()')[0]", tds)
+                gdcz.actual_style = try_and_text("variable[7].xpath('./text()')[0]", tds)
                 gdcz.year = year
-                gdcz.txt_id = self.txtId
+                gdcz.txt_id = self.txt_id
                 gdcz.company_name = key
                 gdcz.add_time = 'sysdate'
                 gdcz.mark = 0
@@ -718,10 +712,10 @@ class TycDetailParse(object):
         logger.debug("Parse detail info 资产状况 {}".format(self.search_name))
         # 获得大标签
         year_selector = year_selector.replace(
-            u'企业资产状况信息', 'year_ent_money_info')
+            '企业资产状况信息', 'year_ent_money_info')
         if year_selector:
             year_selector = etree.HTML(year_selector)
-        info = u'企业资产状况信息'
+        info = '企业资产状况信息'
         trs = year_selector.xpath(
             '//div[text()="year_ent_money_info"]/parent::*//table//tr')
         insert_value = ""
@@ -731,25 +725,25 @@ class TycDetailParse(object):
             # root_div = root_div[2]
             # 一行是一个tr
 
-            flss.total_assets = try_and_text(
-                "variable[0].xpath('./td[position()=2]/text()')[0]", trs)
-            flss.total_income = try_and_text(
-                "variable[0].xpath('td[position()=4]/text()')[0]", trs)
-            flss.total_sales = try_and_text(
-                "variable[1].xpath('td[position()=2]/text()')[0]", trs)
-            flss.total_profit = try_and_text(
-                "variable[1].xpath('td[position()=4]/text()')[0]", trs)
-            flss.operation_income = try_and_text(
-                "variable[2].xpath('td[position()=2]/text()')[0]", trs)
-            flss.net_profit = try_and_text(
-                "variable[2].xpath('td[position()=4]/text()')[0]", trs)
-            flss.total_tax = try_and_text(
-                "variable[3].xpath('td[position()=2]/text()')[0]", trs)
-            flss.total_debt = try_and_text(
-                "variable[3].xpath('td[position()=4]/text()')[0]", trs)
+            flss.total_assets = replace_special_string(
+                try_and_text('''variable[0].xpath("./td[position()=2]/text()")[0]''', trs))
+            flss.total_income = replace_special_string(
+                try_and_text('''variable[0].xpath("td[position()=4]/text()")[0]''', trs))
+            flss.total_sales = replace_special_string(
+                try_and_text('''variable[1].xpath("td[position()=2]/text()")[0]''', trs))
+            flss.total_profit = replace_special_string(
+                try_and_text('''variable[1].xpath("td[position()=4]/text()")[0]''', trs))
+            flss.operation_income = replace_special_string(
+                try_and_text('''variable[2].xpath("td[position()=2]/text()")[0]''', trs))
+            flss.net_profit = replace_special_string(
+                try_and_text('''variable[2].xpath("td[position()=4]/text()")[0]''', trs))
+            flss.total_tax = replace_special_string(
+                try_and_text('''variable[3].xpath("td[position()=2]/text()")[0]''', trs))
+            flss.total_debt = replace_special_string(
+                try_and_text('''variable[3].xpath("td[position()=4]/text()")[0]''', trs))
 
             flss.year = year
-            flss.txt_id = self.txtId
+            flss.txt_id = self.txt_id
             flss.company_name = key
             flss.add_time = 'sysdate'
             flss.mark = 0
@@ -784,8 +778,9 @@ class TycDetailParse(object):
     # 年报 对外投资
     def html_parse_year_dwtz(self, year_selector, year):
         logger.debug("Parse detail info 对外投资 {}".format(self.search_name))
+        # 获得分支机构大标签
         year_selector = year_selector.replace(
-            u'对外投资信息', 'year_outbound_company')
+            '对外投资信息', 'year_outbound_company')
         if year_selector:
             year_selector = etree.HTML(year_selector)
             # trs = year_selector.xpath('//div[contains(text(),"year_outbound_company")')
@@ -803,13 +798,11 @@ class TycDetailParse(object):
                 for tr in trs:
                     insert_value = ""
                     tds = tr.xpath("./td")
-                    dwtz.credit_num = try_and_text(
-                        "variable[0].xpath('string(.)')", tds)
-                    dwtz.outbound_company = try_and_text(
-                        "variable[1].xpath('string(.)')", tds)
+                    dwtz.credit_num = try_and_text("variable[0].xpath('string(.)')", tds)
+                    dwtz.outbound_company = try_and_text("variable[1].xpath('string(.)')", tds)
 
                     dwtz.year = year
-                    dwtz.txt_id = self.txtId
+                    dwtz.txt_id = self.txt_id
                     dwtz.company_name = key
                     dwtz.add_time = 'sysdate'
                     dwtz.mark = 0
@@ -855,19 +848,15 @@ class TycDetailParse(object):
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
-                ent_name = try_and_text(
-                    "variable[1].xpath('.//td/a/text()')", tds)
+                ent_name = try_and_text("variable[1].xpath('.//td/a/text()')", tds)
                 flss.ent_name = ent_name[0] if ent_name else self.search_name
 
-                flss.registered_date = try_and_text(
-                    "variable[3].xpath('.//text()')[0]", tds)
+                flss.registered_date = try_and_text("variable[3].xpath('.//text()')[0]", tds)
                 flss.status = 'NA'
 
-                flss.status = try_and_text(
-                    "variable[4].xpath('.//text()')[0]", tds)
-
-                legal_representative = try_and_text(
-                    "variable[2].xpath('./div/div[2]/a/text()')", tds)
+                flss.status = try_and_text("variable[4].xpath('.//text()')[0]", tds)
+                # TODO： 627
+                legal_representative = try_and_text("variable[2].xpath('.//tr//td[2]/a/text()')", tds)
                 logger.debug(
                     '负责人={} type={}'.format(
                         legal_representative,
@@ -876,7 +865,7 @@ class TycDetailParse(object):
                     flss.legal_representative = legal_representative[0]
                 else:
                     flss.legal_representative = 'NA'
-                flss.txt_id = self.txtId
+                flss.txt_id = self.txt_id
                 flss.company_name = key
                 flss.add_time = 'sysdate'
                 flss.mark = 0
@@ -924,14 +913,11 @@ class TycDetailParse(object):
                 insert_value = ""
                 tds = tr.xpath('./td')
                 # 开庭日期
-                ktggInfo.trialDate = try_and_text(
-                    "variable[1].xpath('./text()')[0]", tds)
+                ktggInfo.trialDate = try_and_text("variable[1].xpath('./text()')[0]", tds)
                 # 案号
-                ktggInfo.reference_num = try_and_text(
-                    "variable[2].xpath('.//text()')[0]", tds)
+                ktggInfo.reference_num = try_and_text("variable[2].xpath('.//text()')[0]", tds)
                 # 案由
-                ktggInfo.causeAction = try_and_text(
-                    "variable[3].xpath('.//text()')[0]", tds)
+                ktggInfo.causeAction = try_and_text("variable[3].xpath('.//text()')[0]", tds)
                 # 原告/上诉人
                 plaintiff = try_and_text("variable[4].xpath('string(.)')", tds)
                 ktggInfo.plaintiff = plaintiff if plaintiff else 'NA'
@@ -944,11 +930,10 @@ class TycDetailParse(object):
                     logger.debug(e)
                 # 详情 \u003C\u002Fa\u003E
 
-                detail = try_and_text(
-                    "variable[6].xpath('./script/text()')[0]", tds)
-                ktggInfo.detail = replace_special_chars(detail)
+                detail = try_and_text("variable[6].xpath('./script/text()')[0]", tds)
+                ktggInfo.detail = replace_special_string(detail)
 
-                ktggInfo.txtId = self.txtId
+                ktggInfo.txt_id = self.txt_id
                 ktggInfo.company_name = key
                 ktggInfo.mark = 0
                 ktggInfo.add_time = datetime.now()
@@ -968,7 +953,8 @@ class TycDetailParse(object):
                     ktggInfo.agency_num,
                     ktggInfo.mark,
                     ktggInfo.company_name,
-                    ktggInfo.txtId]
+                    ktggInfo.txt_id]
+                # (detail,defendant,plaintiff,reference_num,cause_action,trial_date,batch,agency_name,agency_num,mark,company_name,txt_id,add_time)
                 insert_sql = create_insert_sql(
                     ktggInfo.table_name, ktggInfo.column_name, len(
                         ktggInfo.column_name.split(',')))
@@ -978,7 +964,7 @@ class TycDetailParse(object):
     def html_parse_lawsuit(self, index):
         logger.debug("Parse detail info 法律诉讼 {}".format(self.search_name))
         if index == 1:
-            root_div = self.selector.xpath('//table/tbody/tr')
+            root_div = self.selector.xpath('//table')
         else:
             root_div = self.selector.xpath(
                 '//div[@id="_container_lawsuit"]/table/tbody/tr')
@@ -994,45 +980,49 @@ class TycDetailParse(object):
                 insert_value = ""
                 tds = tr.xpath("./td")
                 if tds:
-                    flss.judgment_date = try_and_text(
-                        "variable[1].xpath('./span/text()')[0]", tds)
-                    flss.judgment_document = try_and_text(
-                        "variable[2].xpath('./a/text()')[0]", tds)
+                    flss.judgment_date = try_and_text("variable[1].xpath('./span/text()')[0]", tds)
 
-                    tds_href = try_and_text(
-                        "variable[2].xpath('./a/@href')[0]", tds)
-                    flss.judgment_name = try_and_text(
-                        "variable[2].xpath('./a//text()')[0]", tds)
-                    name = try_and_text(
-                        "variable[2].xpath('./a/text()')[0]", tds)
-                    flss.document_url = tds_href if tds_href else 'NA'
-                    case_type = try_and_text(
-                        "variable[3].xpath('./span/text()')", tds)
+                    flss.judgment_name = try_and_text("variable[2].xpath('./text()')[0]", tds)
+                    flss.judgment_document = try_and_text("variable[2].xpath('./text()')[0]", tds)
+
+                    case_type = try_and_text("variable[3].xpath('./span/text()')", tds)
                     flss.case_type = case_type[0] if case_type else 'NA'
-                    case_identity = try_and_text(
-                        "variable[4].xpath('.//text()')", tds)
-                    flss.case_identity = ','.join(
-                        case_identity) if case_identity else 'NA'
-                    case_number = try_and_text(
-                        "variable[5].xpath('./span/text()')", tds)
+                    # case_identity = try_and_text("variable[4].xpath('.//text()')", tds)
+                    # flss.case_identity = ','.join(
+                    #     case_identity) if case_identity else 'NA'
+                    case_number = try_and_text("variable[5].xpath('./span/text()')", tds)
                     flss.case_number = case_number[0] if case_number else 'NA'
-                    flss.txt_id = self.txtId
+
+                    s1 = s2 = ''
+                    plaintiff = try_and_text("variable[4].xpath('./div[position()=1]//text()')", tds)
+                    defendant = try_and_text("variable[4].xpath('./div[position()=2]//text()')", tds)
+                    if len(plaintiff) != 0:
+                        for i in plaintiff:
+                            s1 += i
+                    if len(defendant) != 0:
+                        for j in defendant:
+                            s2 += j
+                    flss.case_identity = s1 + ';' + s2
+                    flss.txt_id = self.txt_id
+
+                    tds_href = try_and_text("variable[6].xpath('./a/@href')[0]", tds)
+                    flss.document_url = tds_href if tds_href else 'NA'
 
                     flss.company_name = key
                     flss.add_time = 'sysdate'
                     flss.mark = 0
+                    flss.detail_status = 0
                     flss.agency_num = self.agency_num
                     flss.agency_name = self.agency_name
                     # 区别key
                     flss.batch = self.batch
                     text_info = 'NA'
                     try:
-                        text_info = self.detail_info['_container_lawsuit'][tds_href.split(
-                            r'/')[-1]]
+                        text_info = self.detail_info['_container_lawsuit'][tds_href.split(r'/')[-1]]
                     except BaseException:
                         pass
 
-                    flss.text_info = replace_special_chars(text_info)
+                    flss.text_info = replace_special_string(text_info)
                     value_list = [
                         flss.txt_id,
                         flss.company_name,
@@ -1048,13 +1038,12 @@ class TycDetailParse(object):
                         flss.detail_status,
                         flss.agency_num,
                         flss.agency_name,
-                        flss.batch
-                    ]
-                    insert_sql = create_insert_sql(
-                        flss.table_name, flss.column_name, len(
-                            flss.column_name.split(',')))
-                    single_oracle.oracle_insert_sql_param(
-                        insert_sql, value_list)
+                        flss.batch]
+                    #
+                    # column_name = "(txt_id, company_name, judgment_date, judgment_name, judgment_document, case_type, case_identity, case_number, document_url, text_info, mark, detail_status, agency_num, agency_name, batch, add_time)"
+
+                    insert_sql = create_insert_sql(flss.table_name, flss.column_name, len(flss.column_name.split(',')))
+                    single_oracle.oracle_insert_sql_param(insert_sql, value_list)
 
     # 法院公告
     def html_parse_announcement(self, index):
@@ -1076,23 +1065,19 @@ class TycDetailParse(object):
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
-                flss.announcement_date = try_and_text(
-                    "variable[1].xpath('./text()')[0]", tds)
+                flss.announcement_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
                 plaintiff = try_and_text("variable[2].xpath('string(.)')", tds)
                 if plaintiff:
                     flss.plaintiff = plaintiff
                 defendant = try_and_text("variable[3].xpath('string(.)')", tds)
                 flss.defendant = defendant if defendant else 'NA'
 
-                flss.announcement_type = try_and_text(
-                    "variable[4].xpath('string(.)')", tds)
-                flss.court = try_and_text(
-                    "variable[5].xpath('string(.)')", tds)
-                text_info = try_and_text(
-                    "variable[6].xpath('./script/text()')[0]", tds)
-                text_info = replace_special_chars(text_info)
+                flss.announcement_type = try_and_text("variable[4].xpath('string(.)')", tds)
+                flss.court = try_and_text("variable[5].xpath('string(.)')", tds)
+                text_info = try_and_text('''variable[6].xpath('./script/text()')[0].replace("'", '')''', tds)
+                text_info = replace_special_string(text_info)
                 flss.detail_info = text_info
-                flss.txt_id = self.txtId
+                flss.txt_id = self.txt_id
                 flss.company_name = key
                 flss.add_time = 'sysdate'
                 flss.mark = 0
@@ -1137,34 +1122,33 @@ class TycDetailParse(object):
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
-                case_date = try_and_text("variable[1].xpath('.//text()')", tds)
-                case_number = try_and_text(
-                    "variable[2].xpath('.//text()')", tds)
-                execution_court = try_and_text(
-                    "variable[3].xpath('.//text()')", tds)
-                performance_state = try_and_text(
-                    "variable[4].xpath('.//text()')", tds)
-                execute_number = try_and_text(
-                    "variable[5].xpath('.//text()')", tds)
+                # TODO: 627 发布日期
+                publication_date = try_and_text("variable[1].xpath('.//text()')", tds)
 
+                case_date = try_and_text("variable[2].xpath('.//text()')", tds)
+                case_number = try_and_text("variable[3].xpath('.//text()')", tds)
+                execution_court = try_and_text("variable[4].xpath('.//text()')", tds)
+                performance_state = try_and_text("variable[5].xpath('.//text()')", tds)
+                execute_number = try_and_text("variable[6].xpath('.//text()')", tds)
+
+                flss.publication_date = publication_date[0] if case_date else 'NA'
                 flss.case_date = case_date[0] if case_date else 'NA'
                 flss.case_number = case_number[0] if case_number else 'NA'
                 flss.execution_court = execution_court[0] if execution_court else 'NA'
                 flss.performance_state = performance_state[0] if performance_state else 'NA'
                 flss.execute_number = execute_number[0] if execute_number else 'NA'
-                href = try_and_text(
-                    "variable[6].xpath('./span/@onclick')[0]", tds)
+                href = try_and_text("variable[7].xpath('./span/@onclick')[0]", tds)
                 res = re.search(r'"(.*?)"', href).groups(1)
                 href = res[0]
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_dishonest"][href]
-                    text_info = replace_special_chars(text_info)
+                    text_info = replace_special_string(text_info)
                 except BaseException:
                     pass
                 flss.detail_info = text_info
 
-                flss.txt_id = self.txtId
+                flss.txt_id = self.txt_id
                 flss.company_name = key
                 flss.add_time = 'sysdate'
                 flss.mark = 0
@@ -1174,6 +1158,7 @@ class TycDetailParse(object):
                 value_list = [
                     flss.txt_id,
                     flss.company_name,
+                    flss.publication_date,
                     flss.case_date,
                     flss.case_number,
                     flss.execution_court,
@@ -1197,6 +1182,7 @@ class TycDetailParse(object):
 
     # 被执行人
     def html_parse_executed(self, index):
+        # TODO 新增被执行人详情    onclick事件，需要分页抓取
         logger.debug("Parse detail info 被执行人{}".format(self.search_name))
         if index == 1 and not isinstance(self.selector, int):
             root_div = self.selector.xpath("//table[position()=1]")
@@ -1214,27 +1200,22 @@ class TycDetailParse(object):
             for tr in trs:
                 insert_value = ""
                 tds = tr.xpath("./td")
-                flss.record_date = try_and_text(
-                    "variable[1].xpath('./text()')[0]", tds)
-                flss.execute_underlying = try_and_text(
-                    "variable[2].xpath('./text()')[0]", tds)
-                flss.case_number = try_and_text(
-                    "variable[3].xpath('./text()')[0]", tds)
-                flss.court = try_and_text(
-                    "variable[4].xpath('./text()')[0]", tds)
-                href = try_and_text(
-                    "variable[5].xpath('./span/@onclick')[0]", tds)
+                flss.record_date = try_and_text("variable[1].xpath('./text()')[0]", tds)
+                flss.execute_underlying = try_and_text("variable[2].xpath('./text()')[0]", tds)
+                flss.case_number = try_and_text("variable[3].xpath('./text()')[0]", tds)
+                flss.court = try_and_text("variable[4].xpath('./text()')[0]", tds)
+                href = try_and_text("variable[5].xpath('./span/@onclick')[0]", tds)
                 res = re.search(r'"(.*?)"', href).groups(1)
                 href = res[0]
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_zhixing"][href]
-                    text_info = replace_special_chars(text_info)
+                    text_info = replace_special_string(text_info)
                 except BaseException:
                     pass
                 flss.detail = text_info
 
-                flss.txt_id = self.txtId
+                flss.txt_id = self.txt_id
                 flss.company_name = key
                 flss.add_time = 'sysdate'
                 flss.mark = 0
@@ -1277,32 +1258,26 @@ class TycDetailParse(object):
                 insert_value = ""
                 tds = tr.xpath('./td')
                 # 被执行人
-                sfxzInfo.enforcementPerson = try_and_text(
-                    "variable[1].xpath('./text()')[0]", tds)
+                sfxzInfo.enforcementPerson = try_and_text("variable[1].xpath('.a/text()')[0]", tds)
                 # 股权数额
-                sfxzInfo.equityAmount = try_and_text(
-                    "variable[2].xpath('./text()')[0]", tds)
+                sfxzInfo.equityAmount = try_and_text("variable[2].xpath('./text()')[0]", tds)
                 # 执行法院
-                sfxzInfo.executiveCourt = try_and_text(
-                    "variable[3].xpath('./text()')[0]", tds)
+                sfxzInfo.executiveCourt = try_and_text("variable[3].xpath('./text()')[0]", tds)
                 # 执行通知文号
-                sfxzInfo.approvalNum = try_and_text(
-                    "variable[4].xpath('./text()')[0]", tds)
+                sfxzInfo.approvalNum = try_and_text("variable[4].xpath('./text()')[0]", tds)
                 # 类型|状态
-                sfxzInfo.status = try_and_text(
-                    "variable[5].xpath('./text()')[0]", tds)
-                href = try_and_text(
-                    "variable[6].xpath('./span/@onclick')[0]", tds)
+                sfxzInfo.status = try_and_text("variable[5].xpath('./text()')[0]", tds)
+                href = try_and_text("variable[6].xpath('./span/@onclick')[0]", tds)
                 res = re.search(r'"(.*?)"', href).groups(1)
                 href = res[0]
                 text_info = 'NA'
                 try:
                     text_info = self.detail_info["_container_judicialAid"][href]
-                    text_info = replace_special_chars(text_info)
+                    text_info = replace_special_string(text_info)
                 except BaseException:
                     pass
                 sfxzInfo.detail = text_info
-                sfxzInfo.txtId = self.txtId
+                sfxzInfo.txt_id = self.txt_id
                 sfxzInfo.company_name = key
                 sfxzInfo.mark = 0
                 sfxzInfo.add_time = datetime.now()
@@ -1311,7 +1286,7 @@ class TycDetailParse(object):
                 sfxzInfo.batch = self.batch
 
                 value_list = [
-                    sfxzInfo.txtId,
+                    sfxzInfo.txt_id,
                     sfxzInfo.company_name,
                     sfxzInfo.mark,
                     sfxzInfo.agency_num,

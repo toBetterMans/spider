@@ -150,7 +150,7 @@ class TycQybjGdxx(object):
 # 企业背景-->对外投资
 class TycQybjDwtz(object):
     # mongodb文本ID
-    txtId = ''
+    txt_id = ''
     # 所属公司名称
     entName = ''
     # 被投资企业名称
@@ -167,6 +167,10 @@ class TycQybjDwtz(object):
     investDate = ''
     # 状态
     investStatus = ''
+    # 关联产品
+    related_products = ''
+    # 关联机构
+    associated_agencies = ''
     # 标记号
     mark = ''
     # 添加时间
@@ -178,7 +182,7 @@ class TycQybjDwtz(object):
     # 批次
     batch = ''
     table_name = "tyc_qybj_dwtz"
-    column_name = "(txt_id,company_name,invest_company,invest_person,invest_fund,invest_amount,invest_ratio,invest_date,invest_status,mark,agency_num,agency_name,batch,add_time)"
+    column_name = "(txt_id,company_name,invest_company,invest_person,invest_fund,invest_amount,invest_ratio,invest_date,invest_status,related_products,associated_agencies,mark,agency_num,agency_name,batch,add_time)"
     
     # sql = "insert into tyc_qybj_dwtz (txt_id,company_name,invest_company,invest_person,invest_fund,invest_amount,invest_ratio,invest_date,invest_status,mark,add_time,agency_num,agency_name,batch) values ('{}','{}','{}','{}','{}','{}','{}','{}','{}',{},{},'{}','{}','{}')".formate(txt_id,company_name,invest_company,invest_person,invest_fund,invest_amount,invest_ratio,invest_date,invest_status,mark,add_time,agency_num,agency_name,batch)
 
@@ -848,6 +852,9 @@ class TycZscqWzba(object):
 
 # 失信人
 class TycSffxSxr(object):
+
+    # 发布日期
+    publication_date = ''
     # 立案日期
     case_date = ""
     # 案号
@@ -874,9 +881,10 @@ class TycSffxSxr(object):
     agency_name = ''
     # 批次
     batch = ''
-    
+
     table_name = "tyc_sffx_sxr"
-    column_name = "(txt_id,company_name,case_date,case_number,execution_court,performance_state,execute_number,detail_info,mark,agency_num,agency_name,batch,add_time)"
+    column_name = "(txt_id,company_name,publication_date,case_date,case_number,execution_court,performance_state,execute_number,detail_info,mark,agency_num,agency_name,batch,add_time)"
+
     
     # sql = "insert into tyc_sffx_sxr (txt_id,company_name,case_date,case_number,execution_court,performance_state,execute_number,detail_info,mark,add_time,agency_num,agency_name,batch) values ('{}','{}','{}','{}','{}','{}','{}','{}',{},{},'{}','{}','{}')".formate(txt_id,company_name,case_date,case_number,execution_court,performance_state,execute_number,detail_info,mark,add_time,agency_num,agency_name,batch)
 
